@@ -6,6 +6,8 @@ const routes = {
   "/work": true,
   "/blog": false,
   "/gallery": true,
+  "/resume": true,
+  "/license": true,
 };
 
 // Enable password protection on selected routes
@@ -106,4 +108,22 @@ const mailchimp = {
   },
 };
 
-export { routes, protectedRoutes, effects, style, display, mailchimp, baseURL };
+const resume = {
+  label: "Resume",
+};
+
+const license = {
+  label: "License",
+};
+
+export {
+  routes,
+  protectedRoutes,
+  effects,
+  style,
+  display,
+  mailchimp,
+  baseURL,
+  resume,
+  license,
+};
