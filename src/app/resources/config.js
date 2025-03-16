@@ -108,22 +108,4 @@ const mailchimp = {
   },
 };
 
-const resume = {
-  label: "Resume",
-};
-
-const license = {
-  label: "License",
-};
-
-export {
-  routes,
-  protectedRoutes,
-  effects,
-  style,
-  display,
-  mailchimp,
-  baseURL,
-  resume,
-  license,
-};
+export { routes, protectedRoutes, effects, style, display, mailchimp, baseURL };

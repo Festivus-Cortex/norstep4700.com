@@ -7,8 +7,15 @@ import { Fade, Flex, Line, ToggleButton } from "@/once-ui/components";
 import styles from "@/components/Header.module.scss";
 
 import { routes, display } from "@/app/resources";
-import { person, about, blog, work, gallery } from "@/app/resources/content";
-import { license, resume } from "@/app/resources/config";
+import {
+  person,
+  about,
+  blog,
+  work,
+  gallery,
+  resume,
+  license,
+} from "@/app/resources/content";
 
 type TimeDisplayProps = {
   timeZone: string;

@@ -7,7 +7,7 @@ const person = {
     return `${this.firstName} ${this.lastName}`;
   },
   role: "Game Developer",
-  avatar: "/images/avatar.jpg",
+  avatar: "/images/avatar.webp",
   location: "America/New_York", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: [], // optional: Leave the array empty if you don't want to display languages
 };
@@ -15,12 +15,7 @@ const person = {
 const newsletter = {
   display: false,
   title: <>Subscribe to {person.firstName}'s Newsletter</>,
-  description: (
-    <>
-      I occasionally write about design, technology, and share thoughts on the
-      intersection of creativity and engineering.
-    </>
-  ),
+  description: <>Nope.avi - Replace this if newsletter is enabled.</>,
 };
 
 const social = [
@@ -42,7 +37,7 @@ const home = {
   label: "Home",
   title: `${person.name}'s Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Design engineer and builder</>,
+  headline: <>Game Developer and Audio Explorer</>,
   subline: (
     <>
       I'm Preston, a game developer at <InlineCode>MahiGaming</InlineCode>,
@@ -54,7 +49,7 @@ const home = {
 const about = {
   label: "About",
   title: "About me",
-  description: `Meet ${person.name}, ${person.role} from ${person.location}`,
+  description: `Hello from ${person.name}, ${person.role} at ${person.location}`,
   tableOfContent: {
     display: true,
     subItems: false,
@@ -63,7 +58,7 @@ const about = {
     display: true,
   },
   calendar: {
-    display: true,
+    display: false,
     link: "https://cal.com",
   },
   intro: {
@@ -79,6 +74,7 @@ const about = {
   work: {
     display: true, // set to false to hide this section
     title: "Work Experience",
+    // FIXME: ADD MORE XP!
     experiences: [
       {
         company: "MahiGaming",
@@ -89,7 +85,7 @@ const about = {
             FIXME: Tweak or remove this Optimizied audio pipeline to save 8% RAM
             usage on audio buffers at runtime.
           </>,
-          <>SAMPLE 2</>,
+          <>FIXME: SAMPLE 2</>,
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -171,4 +167,25 @@ const gallery = {
   ],
 };
 
-export { person, social, newsletter, home, about, blog, work, gallery };
+const resume = {
+  title: "Resume",
+  label: "Resume",
+  description: "Resume for Preston Johnson",
+};
+
+const license = {
+  label: "License",
+};
+
+export {
+  person,
+  social,
+  newsletter,
+  home,
+  about,
+  blog,
+  work,
+  gallery,
+  resume,
+  license,
+};
