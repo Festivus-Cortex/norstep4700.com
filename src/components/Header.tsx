@@ -194,13 +194,13 @@ export const Header = () => {
                     className="s-flex-hide"
                     prefixIcon="book"
                     href="/license"
-                    label="License"
+                    label={license.label}
                     selected={pathname.startsWith("/license")}
                   />
                   <ToggleButton
                     className="s-flex-show"
                     prefixIcon="book"
-                    href={license.label}
+                    href="/license"
                     selected={pathname.startsWith("/license")}
                   />
                 </>

@@ -41,7 +41,7 @@ const home = {
   subline: (
     <>
       I'm Preston, a game developer at <InlineCode>MahiGaming</InlineCode>,
-      where I... FIXME: ADD DESCIPTION
+      where I... FIXME: ADD DESCRIPTION
     </>
   ),
 };
@@ -82,7 +82,7 @@ const about = {
         role: "Game Developer Group Lead",
         achievements: [
           <>
-            FIXME: Tweak or remove this Optimizied audio pipeline to save 8% RAM
+            FIXME: Tweak or remove this Optimized audio pipeline to save 8% RAM
             usage on audio buffers at runtime.
           </>,
           <>FIXME: SAMPLE 2</>,
@@ -99,7 +99,7 @@ const about = {
     title: "Education",
     institutions: [
       {
-        name: "Rochester Insititute of Technology",
+        name: "Rochester Institute of Technology",
         description: <>FIXME: Add RIT detail</>,
       },
     ],
@@ -175,6 +175,9 @@ const resume = {
 
 const license = {
   label: "License",
+  title: "License",
+  description:
+    "Shows applicable licenses for external content used in this portfolio site.",
 };
 
 export {
