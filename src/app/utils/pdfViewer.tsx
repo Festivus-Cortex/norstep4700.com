@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { Document } from "react-pdf";
+import React, { useEffect, useState } from "react";
+import { Document, Page } from "react-pdf";
 import { pdfjs } from "react-pdf";
 
 /**
@@ -18,6 +18,12 @@ interface IPdfViewerProps {
  * Generic pdf viewing component for modern browsers.
  */
 export default function PdfViewer({ pdfUrl }: IPdfViewerProps) {
+  const [numPages, setNumPages] = useState<number>();
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    setNumPages(numPages);
+  }
+
   useEffect(() => {
     // TODO: Investigate using a locally generated worker
     /*pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -27,5 +33,9 @@ export default function PdfViewer({ pdfUrl }: IPdfViewerProps) {
     pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
   }, []);
 
-  return <Document file={pdfUrl} />;
+  return (
+    <Document file={pdfUrl}>
+      <Page pageNumber={1} />
+    </Document>
+  );
 }

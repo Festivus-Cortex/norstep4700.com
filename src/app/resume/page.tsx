@@ -22,8 +22,12 @@ export async function generateMetadata() {
 export default function Resume() {
   return (
     <>
+      <h2>
+        <a href="docs/Preston-Johnson-Resume.pdf">
+          "FIXME: INSERT DOWNLOAD LINK
+        </a>
+      </h2>
       <PdfViewer pdfUrl="docs/Preston-Johnson-Resume.pdf" />
-      TEST
     </>
   );
 }
