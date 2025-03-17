@@ -25,12 +25,11 @@ export default function PdfViewer({ pdfUrl }: IPdfViewerProps) {
   }
 
   useEffect(() => {
-    // TODO: Investigate using a locally generated worker
-    /*pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();*/
-    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+    // Use server copy of worker. Copied during postinstall of the package.
+    pdfjs.GlobalWorkerOptions.workerSrc = "/scripts/pdf.worker.min.mjs";
+
+    // Use CDN copy of worker.
+    // pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
   }, []);
 
   return (
