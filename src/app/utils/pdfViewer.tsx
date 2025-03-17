@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Document, Page } from "react-pdf";
 import { pdfjs } from "react-pdf";
-
+import styles from "./pdfViewer.module.css";
 /**
  * Props for the PdfViewer component.
  */
@@ -34,8 +34,17 @@ export default function PdfViewer({ pdfUrl }: IPdfViewerProps) {
   }, []);
 
   return (
-    <Document file={pdfUrl}>
-      <Page pageNumber={1} />
-    </Document>
+    <div className={styles.pdfContainer}>
+      <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+        {Array.from(new Array(numPages), (element, index) => (
+          <Page
+            key={`page_${index + 1}`}
+            pageNumber={index + 1}
+            renderAnnotationLayer={false}
+            renderTextLayer={false}
+          />
+        ))}
+      </Document>
+    </div>
   );
 }

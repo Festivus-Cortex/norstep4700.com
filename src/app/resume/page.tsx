@@ -21,13 +21,18 @@ export async function generateMetadata() {
 
 export default function Resume() {
   return (
-    <>
-      <h2>
-        <a href="docs/Preston-Johnson-Resume.pdf">
-          "FIXME: INSERT DOWNLOAD LINK
-        </a>
-      </h2>
-      <PdfViewer pdfUrl="docs/Preston-Johnson-Resume.pdf" />
-    </>
+    <div>
+      <div>
+        <h3>
+          <a href="docs/Preston-Johnson-Resume.pdf" download>
+            Download a Copy
+          </a>
+        </h3>
+      </div>
+      <br />
+      <div>
+        <PdfViewer pdfUrl="docs/Preston-Johnson-Resume.pdf" />
+      </div>
+    </div>
   );
 }

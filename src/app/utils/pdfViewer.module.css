@@ -1,0 +1,14 @@
+.pdfContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.pdfContainer :global(.react-pdf__Page) {
+  margin-bottom: 16px;
+}
+
+.pdfContainer :global(.react-pdf__Page):last-child {
+  margin-bottom: 0;
+}
