@@ -31,6 +31,11 @@ const social = [
     icon: "email",
     link: "mailto:norstep4700@gmail.com",
   },
+  {
+    name: "GitHub",
+    icon: "github",
+    link: "https://github.com/Norstep",
+  },
 ];
 
 const home = {
@@ -135,7 +140,7 @@ const about = {
   },
 };
 
-// Blog Disabled  currently.
+// Blog Disabled currently.
 const blog = {
   label: "Blog",
   title: "Disabled blog with sample :p Maybe some audio and dev stuff later",
@@ -145,18 +150,17 @@ const blog = {
 };
 
 const work = {
-  label: "Work",
-  title: "My projects",
-  description: `Design and dev projects by ${person.name}`,
+  label: "Projects",
+  title: "Games and Projects - Preston Johnson",
+  description: `Game Development, Audio, and Miscellaneous projects by ${person.name}`,
   // Create new project pages by adding a new .mdx file to app/blog/posts
   // All projects will be listed on the /home and /work routes
 };
 
 const gallery = {
   label: "Gallery",
-  title: "My photo gallery",
-  description: `A photo collection by ${person.name}`,
-  // Images from https://pexels.com
+  title: "Pictures of Preston Johnson",
+  description: `Pictures of ${person.name} and his adventures`,
   images: [
     // FIXME: Add/Replace images
     {
