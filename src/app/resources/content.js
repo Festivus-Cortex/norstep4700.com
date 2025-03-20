@@ -57,7 +57,7 @@ const about = {
   description: `Hello from ${person.name}, ${person.role} at ${person.location}`,
   tableOfContent: {
     display: true,
-    subItems: false,
+    subItems: true,
   },
   avatar: {
     display: true,

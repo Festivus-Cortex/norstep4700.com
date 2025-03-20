@@ -36,4 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 # The PDF worker script is copied from node_modules to public folder
-/public/scripts/pdf.worker.min.mjs
+public/scripts/pdf.worker.min.mjs

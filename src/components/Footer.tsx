@@ -29,7 +29,7 @@ export const Footer = () => {
           <Text paddingX="4">{person.name}</Text>
 
           {
-            /* If the eplcit license page is on then reference that. */
+            /* If the explicit license page is on then reference that. */
             routes["/license"] && (
               <Text onBackground="neutral-weak">
                 with help from<SmartLink href="/license">licensed</SmartLink>
@@ -38,7 +38,7 @@ export const Footer = () => {
             )
           }
           {
-            /* If the explict license page is not turned on then give the fall back attribution here. */
+            /* If the explicit license page is not turned on then give the fall back attribution here. */
             !routes["/license"] && (
               <Text onBackground="neutral-weak">
                 {/* Usage of this template requires attribution. Please don't remove the link to Once UI. */}

@@ -16,8 +16,11 @@ interface IPdfViewerProps {
 
 /**
  * Generic pdf viewing component for modern browsers.
+ * Leverages the react-pdf library to render the PDF.
+ *
+ * @param pdfProps The properties for the PdfViewer component.
  */
-export default function PdfViewer({ pdfUrl }: IPdfViewerProps) {
+export default function PdfViewer(pdfProps: IPdfViewerProps) {
   const [numPages, setNumPages] = useState<number>();
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
@@ -34,7 +37,7 @@ export default function PdfViewer({ pdfUrl }: IPdfViewerProps) {
 
   return (
     <div className={styles.pdfContainer}>
-      <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+      <Document file={pdfProps.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
         {Array.from(new Array(numPages), (element, index) => (
           <Page
             key={`page_${index + 1}`}

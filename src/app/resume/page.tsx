@@ -1,8 +1,12 @@
 import React from "react";
 import { baseURL } from "@/app/resources";
 import { resume } from "@/app/resources/content";
-import PdfViewer from "../utils/pdfViewer";
+import PdfViewer from "../../components/utils/pdfViewer";
+import { Column, Heading, SmartLink } from "@/once-ui/components";
 
+/**
+ * Generate the metadata for the resume page.
+ */
 export async function generateMetadata() {
   const title = resume.title;
   const description = resume.description;
@@ -19,20 +23,23 @@ export async function generateMetadata() {
   };
 }
 
+/**
+ * The resume page content.
+ */
 export default function Resume() {
   return (
-    <div>
-      <div>
-        <h3>
+    <Column maxWidth="m" gap="m">
+      <Column center>
+        <Heading variant="display-strong-s">
+          {/*The "download" flag is not respected properly with a "SmartLink". Therefore use the native 'a' tag.*/}
           <a href="docs/Preston-Johnson-Resume.pdf" download>
             Download a Copy
           </a>
-        </h3>
-      </div>
-      <br />
-      <div>
+        </Heading>
+      </Column>
+      <Column>
         <PdfViewer pdfUrl="docs/Preston-Johnson-Resume.pdf" />
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }
