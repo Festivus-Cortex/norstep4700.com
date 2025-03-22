@@ -33,7 +33,6 @@ export async function generateMetadata() {
  * The license page content.
  */
 export default function License() {
-  // FIXME: Correct the font display of smart links so they stand out properly.
   return (
     <Column width="m" gap="m" marginBottom="40" onBackground="brand-medium">
       <Heading>Grateful for help from...</Heading>
