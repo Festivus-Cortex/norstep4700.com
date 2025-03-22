@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Document, Page } from "react-pdf";
 import { pdfjs } from "react-pdf";
-import styles from "./pdfViewer.module.css";
-import { Column } from "@/once-ui/components";
+import styles from "./pdfViewer.module.scss";
 /**
  * Props for the PdfViewer component.
  */
