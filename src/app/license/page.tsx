@@ -1,6 +1,13 @@
 import { license } from "@/app/resources/content";
 import { baseURL } from "@/app/resources";
-import { Column, Heading, SmartLink, Text } from "@/once-ui/components";
+import {
+  Column,
+  Heading,
+  Row,
+  SmartImage,
+  SmartLink,
+  Text,
+} from "@/once-ui/components";
 import { Header } from "@/components";
 
 /**
@@ -43,17 +50,27 @@ export default function License() {
           CC BY-NC 4.0
         </SmartLink>
         license.
+      </Text>
+      <Row
+        style={{
+          position: "relative",
+          left: "-8px",
+        }}
+      >
         <SmartLink
           href="https://github.com/once-ui-system/magic-portfolio.git"
-          style={{ textDecoration: "underline" }}
+          style={{
+            textDecoration: "underline",
+          }}
         >
-          Check out the original template!
+          Check out the Once UI template repository!
         </SmartLink>
-      </Text>
+        <SmartImage src="trademark/icon-dark.svg" width={2.25} height={2.25} />
+      </Row>
       <Text variant="body-default-m">
-        AI chat bots like Co-Pilot were used to help educate me on various
-        topics like next.js and extend the functionality of the site. Unless
-        otherwise stated inline, no media has been AI generated.
+        AI chat bots like Github Co-Pilot were used to help educate me on
+        various topics like next.js and extend the functionality of the site.
+        Unless otherwise stated inline, no media has been AI generated.
       </Text>
     </Column>
   );

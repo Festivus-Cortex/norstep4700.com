@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Document, Page } from "react-pdf";
 import { pdfjs } from "react-pdf";
 import styles from "./pdfViewer.module.css";
+import { Column } from "@/once-ui/components";
 /**
  * Props for the PdfViewer component.
  */
@@ -36,17 +37,19 @@ export default function PdfViewer(pdfProps: IPdfViewerProps) {
   }, []);
 
   return (
-    <div className={styles.pdfContainer}>
-      <Document file={pdfProps.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-        {Array.from(new Array(numPages), (element, index) => (
-          <Page
-            key={`page_${index + 1}`}
-            pageNumber={index + 1}
-            renderAnnotationLayer={false}
-            renderTextLayer={false}
-          />
-        ))}
-      </Document>
-    </div>
+    <Document
+      className={styles.pdfContainer}
+      file={pdfProps.pdfUrl}
+      onLoadSuccess={onDocumentLoadSuccess}
+    >
+      {Array.from(new Array(numPages), (element, index) => (
+        <Page
+          key={`page_${index + 1}`}
+          pageNumber={index + 1}
+          renderAnnotationLayer={false}
+          renderTextLayer={false}
+        />
+      ))}
+    </Document>
   );
 }
