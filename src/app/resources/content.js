@@ -8,7 +8,8 @@ const person = {
   },
   role: "Game Developer",
   avatar: "/images/avatar.webp",
-  location: "America/New_York", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+  timeZone: "America/New_York", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+  location: "USA, Florida",
   languages: [], // optional: Leave the array empty if you don't want to display languages
 };
 

@@ -66,8 +66,9 @@ const effects = {
 };
 
 const display = {
-  location: true,
+  timeZone: true,
   time: true,
+  location: true,
 };
 
 const mailchimp = {
