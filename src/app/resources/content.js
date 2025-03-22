@@ -162,11 +162,61 @@ const gallery = {
   title: "Pictures of Preston Johnson",
   description: `Pictures of ${person.name} and his adventures`,
   images: [
-    // FIXME: Add/Replace images
     {
-      src: "/images/gallery/img-01.jpg",
+      src: "/images/gallery/preston-suit.jpg",
       alt: "image",
       orientation: "vertical",
+    },
+    {
+      src: "/images/avatar.webp",
+      alt: "image",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/preston-rit-mahis.jpg",
+      alt: "image",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/preston-joey-rit-2020.jpg",
+      alt: "image",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/preston-mahi-gdc.jpg",
+      alt: "image",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/preston-emily-roth-wedding.jpg",
+      alt: "image",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/preston-ren-fair.jpg",
+      alt: "image",
+      orientation: "horizontal",
+    },
+    {
+      src: "/images/gallery/preston-durban-1.jpg",
+      alt: "image",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/preston-durban-2.jpg",
+      alt: "image",
+      orientation: "vertical",
+    },
+
+    {
+      src: "/images/gallery/mr-kitty-lizard.jpg",
+      alt: "image",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/gallery/preston-emily-festival-2021.jpg",
+      alt: "image",
+      orientation: "horizontal",
     },
   ],
 };
