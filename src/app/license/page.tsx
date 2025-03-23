@@ -71,6 +71,17 @@ export default function License() {
         various topics like next.js and extend the functionality of the site.
         Unless otherwise stated inline, no media has been AI generated.
       </Text>
+      <Text variant="body-default-m">
+        The slot machine image used for the favicon was created by
+        <SmartLink
+          href="https://vectorportal.com/vector/777-slot-machine.ai/34117"
+          style={{
+            textDecoration: "underline",
+          }}
+        >
+          Vector Portal
+        </SmartLink>
+      </Text>
     </Column>
   );
 }

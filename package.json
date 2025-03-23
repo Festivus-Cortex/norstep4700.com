@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "copy node_modules\\pdfjs-dist\\build\\pdf.worker.min.mjs public\\scripts\\pdf.worker.min.mjs"
+    "postinstall": "copy node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/scripts/pdf.worker.min.mjs"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.1",
