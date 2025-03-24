@@ -11,6 +11,7 @@ import { Source_Code_Pro } from "next/font/google";
 
 import { person, home } from "@/app/resources/content";
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
+import { AudioEffectAnimatorStrength } from "@/hooks/audioEffectAnimator/audioEffectAnimatorConfig";
 
 export async function generateMetadata() {
   return {
@@ -69,6 +70,13 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
+  const mask = {
+    cursor: effects.mask.cursor,
+    x: effects.mask.x,
+    y: effects.mask.y,
+    radius: effects.mask.radius,
+  };
+
   return (
     <Flex
       as="html"
@@ -87,18 +95,31 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         primary.variable,
         secondary ? secondary.variable : "",
         tertiary ? tertiary.variable : "",
-        code.variable,
+        code.variable
       )}
     >
       <ToastProvider>
-        <Column style={{ minHeight: "100vh" }} as="body" fillWidth margin="0" padding="0">
+        <Column
+          style={{ minHeight: "100vh" }}
+          as="body"
+          fillWidth
+          margin="0"
+          padding="0"
+        >
           <Background
-            mask={{
-              cursor: effects.mask.cursor,
-              x: effects.mask.x,
-              y: effects.mask.y,
-              radius: effects.mask.radius,
+            audioEffectAnimatorConfig={{
+              props: {
+                strength: AudioEffectAnimatorStrength.AVERAGE,
+              },
+              targets: [
+                {
+                  // FIXME: Will this mask ref work form here? object may get copied...
+                  obj: mask,
+                  propNames: ["radius"],
+                },
+              ],
             }}
+            mask={mask}
             gradient={{
               display: effects.gradient.display,
               x: effects.gradient.x,
