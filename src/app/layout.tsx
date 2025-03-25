@@ -11,7 +11,6 @@ import { Source_Code_Pro } from "next/font/google";
 
 import { person, home } from "@/app/resources/content";
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
-import { AudioEffectAnimatorStrength } from "@/hooks/audioEffectAnimator/audioEffectAnimatorConfig";
 
 export async function generateMetadata() {
   return {
@@ -107,7 +106,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           padding="0"
         >
           <Background
-            audioEffectAnimatorConfig={{
+            // FIXME: Config for this will need adjusted. some will be handled internally
+            /* audioEffectAnimatorConfig={{
               props: {
                 strength: AudioEffectAnimatorStrength.AVERAGE,
               },
@@ -118,7 +118,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                   propNames: ["radius"],
                 },
               ],
-            }}
+            }}*/
             mask={mask}
             gradient={{
               display: effects.gradient.display,

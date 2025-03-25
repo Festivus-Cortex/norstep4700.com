@@ -1,35 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AudioEffectAnimatorConfig } from "./audioEffectAnimatorConfig";
 
 function useAudioEffectAnimator(config: AudioEffectAnimatorConfig) {
   const [animatorEnabled, setAnimatorEnabled] = useState(true);
-  const updateAnimation = (currentTime: number) => {
-    /*console.log(
-      "updateAnimation - animatorEnabled is %s and currentTime is %d",
-      animatorEnabled.toString(),
-      currentTime
-    );*/
-    if (!animatorEnabled) {
-      return;
-    }
-    requestAnimationFrame(updateAnimation);
-  };
+  const updateAnimation = useCallback(
+    (currentTime: number) => {
+      /*console.log(
+        "updateAnimation - animatorEnabled is %s and currentTime is %d",
+        animatorEnabled.toString(),
+        currentTime
+      );*/
+      if (!animatorEnabled) {
+        return;
+      }
+      // FIXME: TESTING
+      const mask = { radius: Math.random() * 100 };
+      config.targets[0].obj(mask);
+      requestAnimationFrame(updateAnimation);
+    },
+    [animatorEnabled]
+  );
 
   // Initialize update loop and one off items
   useEffect(() => {
-    requestAnimationFrame(updateAnimation);
-    return () => setAnimatorEnabled(false);
+    const animationFrameId = requestAnimationFrame(updateAnimation);
+    return () => {
+      setAnimatorEnabled(false);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, []);
-
-  // Re-enable updates when the enabled state is turned to true.
-  useEffect(() => {
-    if (!animatorEnabled) {
-      return;
-    }
-    requestAnimationFrame(updateAnimation);
-  }, [animatorEnabled]);
 
   return { animatorEnabled, setAnimatorEnabled };
 }

@@ -15,7 +15,7 @@ const person = {
 
 const newsletter = {
   display: false,
-  title: <>Subscribe to {person.firstName}'s Newsletter</>,
+  title: <>Subscribe to {person.firstName}&apos;s Newsletter</>,
   description: <>Nope.avi - Replace this if newsletter is enabled.</>,
 };
 
@@ -46,7 +46,7 @@ const home = {
   headline: <>Game Developer and Audio Explorer</>,
   subline: (
     <>
-      I'm Preston, a game developer at <InlineCode>MahiGaming</InlineCode>,
+      I am Preston, a game developer at <InlineCode>MahiGaming</InlineCode>,
       where I... FIXME: ADD DESCRIPTION
     </>
   ),

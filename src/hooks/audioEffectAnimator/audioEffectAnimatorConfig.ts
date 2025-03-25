@@ -11,7 +11,7 @@ export interface AudioEffectAnimatorConfig {
     strength: AudioEffectAnimatorStrength;
   };
   targets: {
-    obj: Object;
+    obj: React.Dispatch<React.SetStateAction<any>>; // object;
     propNames: string[];
     // TODO: Add more properties here, particularly mapping to an audio source somehow
   }[];

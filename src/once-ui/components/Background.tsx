@@ -13,7 +13,10 @@ import { DisplayProps } from "../interfaces";
 import styles from "./Background.module.scss";
 import classNames from "classnames";
 import { useAudioEffectAnimator } from "@/hooks/audioEffectAnimator/useAudioEffectAnimator";
-import { AudioEffectAnimatorConfig } from "@/hooks/audioEffectAnimator/audioEffectAnimatorConfig";
+import {
+  AudioEffectAnimatorConfig,
+  AudioEffectAnimatorStrength,
+} from "@/hooks/audioEffectAnimator/audioEffectAnimatorConfig";
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
@@ -100,10 +103,36 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
     const backgroundRef = useRef<HTMLDivElement>(null);
 
+    // expose mask to allow for effect interfacing.
+    const [getMask, setMask] = useState({} as Partial<MaskProps>);
+
+    // FIXME: don't hardcode this :p
+    const tmpAudioEffectAnimatorConfig = {
+      props: {
+        strength: AudioEffectAnimatorStrength.AVERAGE,
+      },
+      targets: [
+        {
+          // FIXME: Will this mask ref work form here? object may get copied...
+          // NO IT DOEST WORK WHEN PROP IS PASSED!! NEEDS FANCY REACT STUFF
+          obj: setMask,
+          propNames: ["radius"],
+        },
+      ],
+    };
+
     // Set up animation effects based on audio if requested.
-    if (audioEffectAnimatorConfig) {
-      useAudioEffectAnimator(audioEffectAnimatorConfig);
+    if (tmpAudioEffectAnimatorConfig) {
+      useAudioEffectAnimator(tmpAudioEffectAnimatorConfig);
     }
+
+    // FIXME: Consider inverting flow of control with this. I.E. ask animator for updates versus it pushing updates.
+    useEffect(() => {
+      const keys = Object.keys(getMask);
+      keys.forEach((key) => {
+        mask[key] = getMask[key];
+      });
+    }, [setMask, getMask]);
 
     useEffect(() => {
       setRef(forwardedRef, backgroundRef.current);
@@ -121,6 +150,16 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
       };
 
       document.addEventListener("mousemove", handleMouseMove);
+
+      // FIXME: testing stuffz - remove
+      /*const swapRadius = () => {
+        if (!mask.radius) {
+          return;
+        }
+        mask.radius = Math.random();
+        setTimeout(swapRadius, 5000);
+      };
+      setTimeout(swapRadius, 5000);*/
 
       return () => {
         document.removeEventListener("mousemove", handleMouseMove);
