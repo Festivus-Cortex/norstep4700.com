@@ -47,7 +47,7 @@ const home = {
   subline: (
     <>
       I am Preston, a game developer at <InlineCode>MahiGaming</InlineCode>,
-      where I... FIXME: ADD DESCRIPTION
+      where I lead product teams to rapidly deliver premium casino games.
     </>
   ),
 };
