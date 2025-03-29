@@ -226,6 +226,7 @@ const resume = {
   title: "Resume",
   label: "Resume",
   description: "Resume for Preston Johnson",
+  pdfSrc: "docs/Preston-Johnson-Resume.pdf",
 };
 
 const license = {

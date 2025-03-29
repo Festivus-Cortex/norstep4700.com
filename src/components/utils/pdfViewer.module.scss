@@ -3,17 +3,16 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-height: calc(100vh - 60px);
-  overflow-y: auto;
+  //  max-height: calc(100vh - 60px);
+  overflow-y: visible;
   padding-bottom: 60px;
-  background: white;
 }
 
 .pdfContainer :global(.react-pdf__Page) {
   margin-bottom: 16px;
   width: 100% !important;
   max-width: min(100%, 1200px) !important;
-  height: auto !important;
+  height: visible !important;
   display: flex;
   justify-content: center;
 }
@@ -32,7 +31,7 @@
 /* Mobile optimization */
 @media screen and (max-width: 768px) {
   .pdfContainer {
-    max-height: calc(100vh - 80px);
+    // max-height: calc(100vh - 80px);
     padding-bottom: 80px;
   }
 

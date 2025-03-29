@@ -16,9 +16,9 @@ function useAudioEffectAnimator(config: AudioEffectAnimatorConfig) {
         return;
       }
       // FIXME: TESTING
-      const mask = { radius: Math.random() * 100 };
+      /*const mask = { radius: Math.random() * 100 };
       config.targets[0].obj(mask);
-      requestAnimationFrame(updateAnimation);
+      requestAnimationFrame(updateAnimation);*/
     },
     [animatorEnabled]
   );
