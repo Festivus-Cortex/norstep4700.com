@@ -3,7 +3,6 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  //  max-height: calc(100vh - 60px);
   overflow-y: visible;
   padding-bottom: 60px;
 }
@@ -31,7 +30,6 @@
 /* Mobile optimization */
 @media screen and (max-width: 768px) {
   .pdfContainer {
-    // max-height: calc(100vh - 80px);
     padding-bottom: 80px;
   }
 
