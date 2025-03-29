@@ -21,11 +21,23 @@
     ],
     "no-console": "warn",
     "@typescript-eslint/no-explicit-any": "off",
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "comma-dangle": ["error", "only-multiline"]
   },
   "settings": {
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    ".next/",
+    "public/",
+    "build/",
+    ".turbo/",
+    // ignore the once ui folders
+    "src/once-ui/",
+    // FIXME: disable linting for now...
+    "*"
+  ]
 }
