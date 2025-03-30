@@ -226,14 +226,31 @@ const resume = {
   title: "Resume",
   label: "Resume",
   description: "Resume for Preston Johnson",
-  pdfSrc: "docs/Preston-Johnson-Resume.pdf",
+  pdfSource: "docs/Preston-Johnson-Resume.pdf",
 };
 
 const license = {
   label: "License",
   title: "License",
   description:
-    "Shows applicable licenses for external content used in this portfolio site.",
+    "Shows applicable attribution for external content used in this portfolio site.",
+};
+
+const audio = {
+  bufferSources: [
+    {
+      name: "A.V. Zone 1",
+      sources: [
+        "/audio/zone1/deactivator.mp3",
+        "/audio/zone1/elasticity.mp3",
+        "/audio/zone1/freezer.mp3",
+        "/audio/zone1/initiator.mp3",
+        "/audio/zone1/scrambler.mp3",
+        "/audio/zone1/velocity.mp3",
+      ],
+      isDefault: true,
+    },
+  ],
 };
 
 export {

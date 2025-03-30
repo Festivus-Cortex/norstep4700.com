@@ -35,4 +35,8 @@ function useAudioEffectAnimator(config: AudioEffectAnimatorConfig) {
   return { animatorEnabled, setAnimatorEnabled };
 }
 
+const calculateEffectMapping = () => {
+  // const analyser = ctx.createAnalyser();*/
+};
+
 export { useAudioEffectAnimator };

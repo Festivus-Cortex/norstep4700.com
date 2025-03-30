@@ -1,3 +1,4 @@
+// FIXME: Add comments to this file
 export enum AudioEffectAnimatorStrength {
   SUBTLE = "subtle",
   AVERAGE = "average",

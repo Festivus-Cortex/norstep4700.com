@@ -32,13 +32,13 @@ export default function Resume() {
       <Column center>
         <Heading variant="display-strong-s">
           {/*The "download" flag is not respected properly with a "SmartLink". Therefore use the native 'a' tag.*/}
-          <a href={resume.pdfSrc} download>
+          <a href={resume.pdfSource} download>
             Download a Copy
           </a>
         </Heading>
       </Column>
       <Column overflow="visible">
-        <PdfViewer pdfUrl={resume.pdfSrc} />
+        <PdfViewer pdfUrl={resume.pdfSource} />
       </Column>
     </Column>
   );
