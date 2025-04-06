@@ -5,4 +5,8 @@ const audioCtx = new AudioContext();
 const audioRoot = audioCtx.createGain();
 audioRoot.connect(audioCtx.destination);
 
-export { audioCtx, audioRoot };
+const audioAnalyzer = audioCtx.createAnalyser();
+audioAnalyzer.fftSize = 1024;
+audioAnalyzer.connect(audioRoot);
+
+export { audioCtx, audioRoot, audioAnalyzer };
