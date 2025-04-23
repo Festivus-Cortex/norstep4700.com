@@ -46,15 +46,17 @@ const home = {
   headline: <>Game Developer and Audio Explorer</>,
   subline: (
     <>
-      I am Preston, a game developer at <InlineCode>MahiGaming</InlineCode>,
-      where I lead product teams to rapidly deliver premium casino games.
+      Hello World! I am {person.firstName}, a game developer at{" "}
+      <InlineCode>MahiGaming</InlineCode>, where I lead product teams to rapidly
+      deliver premium online slot machine games to the global market on a real
+      money casino platform.
     </>
   ),
 };
 
 const about = {
   label: "About",
-  title: "About me",
+  title: "About Me",
   description: `Hello from ${person.name}, ${person.role} at ${person.location}`,
   tableOfContent: {
     display: true,
@@ -236,6 +238,7 @@ const license = {
     "Shows applicable attribution for external content used in this portfolio site.",
 };
 
+// FIXME: Finish using audio in the project after main content is done.
 const audio = {
   bufferSources: [
     {
