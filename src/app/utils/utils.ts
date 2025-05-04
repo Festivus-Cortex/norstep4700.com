@@ -9,7 +9,7 @@ type Team = {
   linkedIn: string;
 };
 
-type Metadata = {
+export type MdxMetadata = {
   title: string;
   publishedAt: string;
   summary: string;
@@ -20,7 +20,7 @@ type Metadata = {
   link?: string;
 };
 
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
 function getMDXFiles(dir: string) {
   if (!fs.existsSync(dir)) {
@@ -31,14 +31,14 @@ function getMDXFiles(dir: string) {
 }
 
 function readMDXFile(filePath: string) {
-    if (!fs.existsSync(filePath)) {
-        notFound();
-    }
+  if (!fs.existsSync(filePath)) {
+    notFound();
+  }
 
   const rawContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(rawContent);
 
-  const metadata: Metadata = {
+  const metadata: MdxMetadata = {
     title: data.title || "",
     publishedAt: data.publishedAt,
     summary: data.summary || "",

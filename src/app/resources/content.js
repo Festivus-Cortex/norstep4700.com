@@ -153,7 +153,7 @@ const blog = {
 };
 
 const work = {
-  label: "Projects",
+  label: "Work",
   title: "Games and Projects - Preston Johnson",
   description: `Game Development, Audio, and Miscellaneous projects by ${person.name}`,
   // Create new project pages by adding a new .mdx file to app/blog/posts
