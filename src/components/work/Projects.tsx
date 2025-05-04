@@ -6,9 +6,10 @@ interface ProjectsProps {
   range?: [number, number?];
 
   /**
-   * Allows selection of project by using the title name instead of sorted index
+   * Allows selection of project by using the title names instead of sorted
+   * index.
    */
-  byTitle?: string;
+  byTitle?: string[];
 }
 
 export function Projects({ range, byTitle }: ProjectsProps) {
@@ -40,15 +41,24 @@ export function Projects({ range, byTitle }: ProjectsProps) {
   // Add functionality to find by title then fall back to using range or using
   // all projects if no filters are provided.
   if (byTitle) {
-    const foundProject = allProjects.find(
-      (project) => project.metadata.title === byTitle
-    );
-    if (!foundProject) {
+    if (byTitle.length === 0) {
       throw new Error(
-        `Project with title '${byTitle}' not found. Please check the title and try again.`
+        "No project titles provided. Please provide at least one title."
       );
     }
-    displayedProjects = [foundProject];
+
+    displayedProjects = [];
+    byTitle.forEach((title) => {
+      const foundProject = allProjects.find(
+        (project) => project.metadata.title === title
+      );
+      if (!foundProject) {
+        throw new Error(
+          `Project with title '${byTitle}' not found. Please check the title and try again.`
+        );
+      }
+      displayedProjects.push(foundProject);
+    });
   } else if (range) {
     displayedProjects = sortedProjects.slice(
       range[0] - 1,

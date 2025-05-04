@@ -121,9 +121,10 @@ export default function Home() {
           </RevealFx>
         </Column>
       </Column>
-      {/* FIXME: UPDATE PROJECTS */}
       <RevealFx translateY="16" delay={0.6}>
-        <Projects byTitle="MahiGaming" />
+        <Projects
+          byTitle={["MahiGaming", "Keywords - Skills and Experience"]}
+        />
       </RevealFx>
       {routes["/blog"] && (
         <Flex fillWidth gap="24" mobileDirection="column">

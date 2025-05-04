@@ -57,7 +57,7 @@ const home = {
 const about = {
   label: "About",
   title: "About Me",
-  description: `Hello from ${person.name}, ${person.role} at ${person.location}`,
+  description: `All about ${person.name}, ${person.role} at ${person.location}`,
   tableOfContent: {
     display: true,
     subItems: true,
@@ -74,8 +74,14 @@ const about = {
     title: "Introduction",
     description: (
       <>
-        Preston is a game developer at MahiGaming, where he... // FIXME: Add
-        detail
+        Innovative, passionate, and versatile developer with over 10 years of
+        experience in game development across various platforms, focusing on
+        iGaming content. Proficient in leading development teams, bringing
+        compelling game mechanics to life, and implementing full-stack web and
+        mobile solutions to support products. Adept in audio production and
+        integration that enhances user experiences in gaming. Adaptive to
+        diverse software development contexts by leveraging broad technical
+        skills and strong problem-solving abilities.
       </>
     ),
   },
@@ -129,7 +135,6 @@ const about = {
         description: (
           <>Building next gen apps with Next.js + Once UI + Supabase.</>
         ),
-        // optional: leave the array empty if you don't want to display images
         images: [
           {
             src: "/images/projects/project-01/cover-04.jpg",
