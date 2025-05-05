@@ -88,7 +88,6 @@ const about = {
   work: {
     display: true, // set to false to hide this section
     title: "Work Experience",
-    // FIXME: ADD MORE XP!
     experiences: [
       {
         company: "MahiGaming",
@@ -114,6 +113,7 @@ const about = {
           </>,
           <>Daily work is done with HTML5 and TypeScript</>,
         ],
+        // FIXME: Add images for MahiGaming games
         images: [],
       },
       {
@@ -143,23 +143,62 @@ const about = {
             music
           </>,
         ],
-        images: [],
+        images: [
+          {
+            src: "/images/projects/av/logo.png",
+            alt: "A.V. Logo",
+            width: 16,
+            height: 9,
+          },
+          {
+            src: "/images/projects/av/enemy-far.png",
+            alt: "A.V. enemy far away",
+            width: 16,
+            height: 9,
+          },
+          {
+            src: "/images/projects/av/freezer.png",
+            alt: "A.V. freezer instrument in the tutorial",
+            width: 16,
+            height: 9,
+          },
+          {
+            src: "/images/projects/av/pretty.png",
+            alt: "A.V. pretty scene",
+            width: 16,
+            height: 9,
+          },
+        ],
       },
       {
         company: "EMS eSchedule",
         timeframe: "2009 - 2015",
         role: "Senior Applications Engineer",
-        achievements: [<>TEST CONTENT</>],
+        achievements: [
+          <>
+            Designed, developed, and maintained server and client code in
+            vbscript, php, and other languages
+          </>,
+          <>
+            Developed and maintained custom workforce management web modules and
+            reports in collaboration with company leadership and clients
+          </>,
+          <>
+            Worked directly with new prospects to develop custom pages needed
+            before the customer would use our product and provided the needed
+            updates to keep these pages current
+          </>,
+        ],
         images: [
           {
             src: "/images/projects/ems-eschedule/timecard-sample.png",
-            alt: "Once UI Project",
+            alt: "Timecard Sample",
             width: 23,
             height: 9,
           },
           {
             src: "/images/projects/ems-eschedule/schedule-sample.png",
-            alt: "Once UI Project",
+            alt: "Schedule Sample",
             width: 22.962,
             height: 14.5,
           },
@@ -173,7 +212,19 @@ const about = {
     institutions: [
       {
         name: "Rochester Institute of Technology",
-        description: <>FIXME: Add RIT detail</>,
+        // It would be nice to space without the br's... look into later.
+        description: (
+          <>
+            <br />
+            <>
+              Bachelor of Science in Game Design and Development with a minor in
+              Web Development - 2007 - 2011
+            </>
+            <br />
+            <br />
+            <>Master of Science in Game Design and Development - 2012 - 2014</>
+          </>
+        ),
       },
     ],
   },
@@ -188,20 +239,6 @@ const about = {
         ),
         // optional: leave the array empty if you don't want to display images
         images: [],
-      },
-      {
-        title: "Next.js",
-        description: (
-          <>Building next gen apps with Next.js + Once UI + Supabase.</>
-        ),
-        images: [
-          {
-            src: "/images/projects/project-01/cover-04.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
-          },
-        ],
       },
     ],
   },
