@@ -122,9 +122,7 @@ export default function Home() {
         </Column>
       </Column>
       <RevealFx translateY="16" delay={0.6}>
-        <Projects
-          byTitle={["MahiGaming", "Keywords - Skills and Experience"]}
-        />
+        <Projects byTitle={["MahiGaming"]} />
       </RevealFx>
       {routes["/blog"] && (
         <Flex fillWidth gap="24" mobileDirection="column">
