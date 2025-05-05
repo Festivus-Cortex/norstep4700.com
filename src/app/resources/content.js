@@ -152,13 +152,6 @@ const about = {
         achievements: [<>TEST CONTENT</>],
         images: [
           {
-            src: "/images/projects/ems-eschedule/eschedule-logo.png",
-            alt: "Once UI Project",
-            width: 18.95,
-            height: 5.5,
-          },
-
-          {
             src: "/images/projects/ems-eschedule/timecard-sample.png",
             alt: "Once UI Project",
             width: 23,
