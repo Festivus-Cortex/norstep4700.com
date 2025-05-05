@@ -122,6 +122,18 @@ export default function Home() {
         </Column>
       </Column>
       <RevealFx translateY="16" delay={0.6}>
+        FIXME: Make this section look better, should be stronger
+        <>
+          Explore the site to learn more about my professional and personal
+          experience! The about page gives an overview or download the resume
+          for details on the go. The work page will dive deeper into the
+          professional background while the gallery gives a personal touch.
+        </>
+        <>
+          An audio visual journey will be added to the page soon, so stay tuned!
+        </>
+      </RevealFx>
+      <RevealFx translateY="16" delay={1.2}>
         <Projects byTitle={["MahiGaming"]} />
       </RevealFx>
       {routes["/blog"] && (
