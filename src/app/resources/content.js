@@ -233,11 +233,79 @@ const about = {
     title: "Technical skills",
     skills: [
       {
-        title: "FIXME",
+        title: "Game Development",
         description: (
-          <>Able to prototype in Figma with Once UI with unnatural speed.</>
+          <>
+            Game engine architecture, Real money gaming systems, Unity, Unreal
+          </>
         ),
-        // optional: leave the array empty if you don't want to display images
+        images: [],
+      },
+      {
+        title: "Web Development",
+        description: (
+          <>
+            JavaScript, TypeScript, HTML/CSS, REST, ASP.NET, VBScript, PHP
+            <>test</>
+          </>
+        ),
+        images: [],
+      },
+      {
+        title: "Programming",
+        description: <> C#, C++, Java, Python</>,
+        images: [],
+      },
+      {
+        title: "Project Management",
+        description: (
+          <>
+            Agile, Scrum, Risk mitigation, Resource management, and Product
+            lifecycle management
+          </>
+        ),
+        images: [],
+      },
+      {
+        title: "Audio Production",
+        description: <>Web Audio API, Howler.js, FMOD</>,
+        images: [],
+      },
+      {
+        title: "Frameworks",
+        description: <>.NET, React, Node.js, Next.js</>,
+        images: [],
+      },
+      {
+        title: "Databases",
+        description: <>MySQL, MSSQL, MongoDB</>,
+        images: [],
+      },
+      {
+        title: "Version Control",
+        description: <>Git, GitLab, SVN</>,
+        images: [],
+      },
+      {
+        title: "Operating Systems/Containers",
+        description: <> Windows, Linux, Mac OS, Android, Docker</>,
+        images: [],
+      },
+      {
+        title: "Tool Development",
+        description: (
+          <>
+            Crafter of custom tool solutions to enhance game productivity and
+            team creativity
+          </>
+        ),
+        images: [],
+      },
+      {
+        title: "AI",
+        description: (
+          <>Professional at integrating AI tools to optimize workflow</>
+        ),
         images: [],
       },
     ],
