@@ -48,7 +48,7 @@ export async function generateMetadata() {
 
 export default function Home() {
   return (
-    <Column maxWidth="m" gap="xl" horizontal="center">
+    <Column maxWidth="m" gap="l" horizontal="center">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -121,19 +121,21 @@ export default function Home() {
           </RevealFx>
         </Column>
       </Column>
-      <RevealFx translateY="16" delay={0.6}>
-        FIXME: Make this section look better, should be stronger
+      <RevealFx delay={0.6} textVariant="body-default-l">
         <>
           Explore the site to learn more about my professional and personal
-          experience! The about page gives an overview or download the resume
-          for details on the go. The work page will dive deeper into the
-          professional background while the gallery gives a personal touch.
+          experience! The about page gives a detailed overview or feel free to
+          download the resume for details on the go. The work page will dive
+          deeper into the professional background while the gallery gives a
+          personal touch.
         </>
+        <br />
+        <br />
         <>
           An audio visual journey will be added to the page soon, so stay tuned!
         </>
       </RevealFx>
-      <RevealFx translateY="16" delay={1.2}>
+      <RevealFx delay={1.2}>
         <Projects byTitle={["MahiGaming"]} />
       </RevealFx>
       {routes["/blog"] && (
