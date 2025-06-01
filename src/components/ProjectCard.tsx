@@ -13,7 +13,7 @@ import {
 interface ProjectCardProps {
   href: string;
   priority?: boolean;
-  images: string[];
+  images: { src: string; alt: string; width?: number; height?: number }[];
   title: string;
   content: string;
   description: string;
@@ -35,8 +35,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       <Carousel
         sizes="(max-width: 960px) 100vw, 960px"
         images={images.map((image) => ({
-          src: image,
-          alt: title,
+          src: image.src,
+          alt: image.alt,
+          width: image.width,
+          height: image.height,
         }))}
       />
       <Flex
