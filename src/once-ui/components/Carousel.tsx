@@ -6,6 +6,11 @@ import { useEffect, useState, useRef } from "react";
 interface Image {
   src: string;
   alt: string;
+
+  // Allow optional width and height per image. This will be passed to the
+  // internal SmartImage reference.
+  width?: number;
+  height?: number;
 }
 
 interface CarouselProps extends React.ComponentProps<typeof Flex> {
@@ -95,6 +100,8 @@ const Carousel: React.FC<CarouselProps> = ({
           alt={images[activeIndex]?.alt}
           aspectRatio={aspectRatio}
           src={images[activeIndex]?.src}
+          width={images[activeIndex]?.width}
+          height={images[activeIndex]?.height}
           style={{
             ...(images.length > 1 && {
               cursor: "pointer",
@@ -129,7 +136,10 @@ const Carousel: React.FC<CarouselProps> = ({
                 <Flex
                   key={index}
                   style={{
-                    border: activeIndex === index ? "2px solid var(--brand-solid-strong)" : "none",
+                    border:
+                      activeIndex === index
+                        ? "2px solid var(--brand-solid-strong)"
+                        : "none",
                     borderRadius: "var(--radius-m-nest-4)",
                     transition: "border 0.3s ease",
                   }}

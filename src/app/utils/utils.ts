@@ -14,7 +14,7 @@ export type MdxMetadata = {
   publishedAt: string;
   summary: string;
   image?: string;
-  images: string[];
+  images: { src: string; alt: string; width?: number; height?: number }[];
   tag?: string;
   team: Team[];
   link?: string;

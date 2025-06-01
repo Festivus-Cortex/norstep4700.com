@@ -127,13 +127,14 @@ export default function Project({ params }: WorkParams) {
         <Heading variant="display-strong-s">{post.metadata.title}</Heading>
       </Column>
       {post.metadata.images.length > 0 && (
-        // TODO PRESTON: Consider allowing more images options from the post
-        // here. This was converted from a single image to allow a Carousel.
+        // Display the carousel of image content if there are images to show for the post.
         <Carousel
           sizes="(max-width: 960px) 100vw, 960px"
-          images={post.metadata.images.map((image) => ({
-            src: image,
-            alt: post.metadata.title + " - project image",
+          images={post.metadata.images.map((imageInfo) => ({
+            src: imageInfo.src,
+            alt: imageInfo.alt,
+            width: imageInfo.width,
+            height: imageInfo.height,
           }))}
         />
       )}
