@@ -14,13 +14,17 @@ This project uses `yarn` as a package manager but swapping in `npm` should work 
 
 ## Deploying from a Release
 
-FIXME: Add proper detail
+Releases are published on GitHub via CI whenever a pull request to the `main` branch is approved. This is built in standalone mode with `next.js` so all dependencies are rolled into the release except `node.js`. On a machine with `node.js` installed, running `node {PATH_TO_RELEASE}/server.js` will start the server on port 3000.
+
+For production use, using a proxy like `nginx` to host the incoming traffic of `https` is recommended. Using `pm2` to help manage the node process is helpful also.
 
 ## Future Considerations
 
 - Audio Visual WOW Factor
-- CI, auto versioning, & Automated Deployment
-- Linting?
+- CI Improvements
+  - Pulling version number for releases
+  - Automated Deployment
+  - Linting?
 - General commenting and clean up
 
 ## Template

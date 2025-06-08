@@ -1,0 +1,65 @@
+name: Release Build
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  build-and-release:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Build Project
+        run: yarn build
+
+      - name: Increment Package Version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          yarn version --patch --no-git-tag-version
+          git add package.json
+          git commit -m "chore: bump version [skip ci]"
+          git push origin main
+
+      - name: Prepare and Compress Release
+        run: |
+          mkdir -p release/.next/static
+          mkdir -p release/public
+          cp -r .next/standalone/* release/
+          cp -r public/* release/public/
+          cp -r .next/static/* release/.next/static/
+          cd release
+          zip -r ../norstep4700-portfolio.zip ./*
+        shell: bash
+
+      # TODO: Pull the version number from the package and use it here.
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./norstep4700-portfolio.zip
+          asset_name: norstep4700-portfolio.zip
+          asset_content_type: application/zip
