@@ -111,7 +111,10 @@ const about = {
             Handle and distribute workload of multiple simultaneous projects on
             a regular basis
           </>,
-          <>Daily work is done with HTML5 and TypeScript</>,
+          <>
+            Daily work is done with HTML5 and TypeScript and frequent work with
+            Node.js and React.js
+          </>,
         ],
         images: [],
       },
@@ -244,8 +247,8 @@ const about = {
         title: "Web Development",
         description: (
           <>
-            JavaScript, TypeScript, HTML/CSS, REST, ASP.NET, VBScript, PHP
-            <>test</>
+            JavaScript, TypeScript, React.js, Node.js, Next.js, HTML/CSS, REST,
+            ASP.NET, VBScript, PHP
           </>
         ),
         images: [],
