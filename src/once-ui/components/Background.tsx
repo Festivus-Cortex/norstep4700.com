@@ -107,7 +107,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     const [getMask, setMask] = useState({} as Partial<MaskProps>);
 
     // FIXME: don't hardcode this :p
-    const tmpAudioEffectAnimatorConfig = {
+    /*const tmpAudioEffectAnimatorConfig = {
       props: {
         strength: AudioEffectAnimatorStrength.AVERAGE,
       },
@@ -124,7 +124,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     // Set up animation effects based on audio if requested.
     if (tmpAudioEffectAnimatorConfig) {
       useAudioEffectAnimator(tmpAudioEffectAnimatorConfig);
-    }
+    }*/
 
     // FIXME: Consider inverting flow of control with this. I.E. ask animator for updates versus it pushing updates.
     useEffect(() => {

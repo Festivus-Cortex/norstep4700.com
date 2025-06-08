@@ -113,15 +113,7 @@ const about = {
           </>,
           <>Daily work is done with HTML5 and TypeScript</>,
         ],
-        // FIXME: Add more images for MahiGaming games
-        images: [
-          {
-            src: "/images/projects/mahigaming/12-masks-of-fire-drums.webp",
-            alt: "Screenshot of game 12 Masks of Fire Drums",
-            width: 16,
-            height: 9,
-          },
-        ],
+        images: [],
       },
       {
         company: "A.V.",
