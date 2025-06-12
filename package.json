@@ -4,7 +4,6 @@
   "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "next dev",
-    "export": "next export",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -38,8 +37,8 @@
     "@next/eslint-plugin-next": "^15.2.3",
     "@types/cookie": "^0.6.0",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.27.0",
     "@typescript-eslint/parser": "^8.27.0",
     "cpx": "^1.5.0",
