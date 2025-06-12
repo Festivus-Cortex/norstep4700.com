@@ -29,7 +29,10 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   }));
 }
 
-export function generateMetadata({ params: { slug } }: WorkParams) {
+export async function generateMetadata(workParams: WorkParams) {
+  const loadedParams = await workParams.params;
+  const slug = loadedParams.slug;
+
   let post = getPosts(["src", "app", "work", "projects"]).find(
     (post) => post.slug === slug
   );
@@ -76,7 +79,8 @@ export function generateMetadata({ params: { slug } }: WorkParams) {
   };
 }
 
-export default function Project({ params }: WorkParams) {
+export default async function Project(workParams: WorkParams) {
+  const params = await workParams.params;
   let post = getPosts(["src", "app", "work", "projects"]).find(
     (post) => post.slug === params.slug
   );
