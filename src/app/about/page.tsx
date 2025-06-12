@@ -191,7 +191,7 @@ export default function About() {
                 {social.map(
                   (item) =>
                     item.link && (
-                      <>
+                      <Flex key={`${item.name}-container`} gap="0">
                         <Button
                           className="s-flex-hide"
                           key={item.name}
@@ -209,7 +209,7 @@ export default function About() {
                           icon={item.icon}
                           variant="secondary"
                         />
-                      </>
+                      </Flex>
                     )
                 )}
               </Flex>
