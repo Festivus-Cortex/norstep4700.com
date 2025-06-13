@@ -12,14 +12,14 @@ import {
 import styles from "./Posts.module.scss";
 import { formatDate } from "@/app/utils/formatDate";
 
-interface PostProps {
+type PostProps = Promise<{
   post: any;
   thumbnail: boolean;
-}
+}>;
 
 export default async function Post(postProps: PostProps) {
-  const loadedParams = await postProps;
-  const { post, thumbnail } = loadedParams;
+  // For next 15 params must be async awaited.
+  const { post, thumbnail } = await postProps;
 
   const tags = post.metadata.tag.split(",").map((tag: string) => tag.trim());
 
