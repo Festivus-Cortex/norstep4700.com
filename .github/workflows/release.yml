@@ -1,9 +1,15 @@
 name: Release Build
 
+env:
+  # checkout action checks out to path /tmp/runner/work/norstep4700.com/norstep4700.com by default
+  basepath: /tmp/runner/work/norstep4700.com/norstep4700.com
+
 on:
   pull_request:
     types: [closed]
     branches: [main]
+
+# TODO DEBUG: Make an option for testing where the pipeline can be triggered manually
 
 jobs:
   build-and-release:
@@ -19,6 +25,7 @@ jobs:
 
       - name: Install dependencies
         run: yarn --frozen-lockfile
+      # Failing because the runner has node 10 on it somehow?!
 
       - name: Build Project
         run: yarn build
@@ -32,6 +39,7 @@ jobs:
           git commit -m "chore: bump version [skip ci]"
           git push origin main
 
+      # FIXME: Use proper base path with this step.
       - name: Prepare and Compress Release
         run: |
           mkdir -p release/.next/static
@@ -43,7 +51,7 @@ jobs:
           zip -r ../norstep4700-portfolio.zip ./*
         shell: bash
 
-      # TODO: Pull the version number from the package and use it here.
+      # FIXME: Pull the version number from the package and use it here.
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
