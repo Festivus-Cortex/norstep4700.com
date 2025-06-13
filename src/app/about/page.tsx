@@ -14,6 +14,7 @@ import { baseURL } from "@/app/resources";
 import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
 import { person, about, social } from "@/app/resources/content";
+import { JSX } from "react";
 
 export async function generateMetadata() {
   const title = about.title;
@@ -191,7 +192,7 @@ export default function About() {
                 {social.map(
                   (item) =>
                     item.link && (
-                      <>
+                      <Flex key={`${item.name}-container`} gap="0">
                         <Button
                           className="s-flex-hide"
                           key={item.name}
@@ -209,7 +210,7 @@ export default function About() {
                           icon={item.icon}
                           variant="secondary"
                         />
-                      </>
+                      </Flex>
                     )
                 )}
               </Flex>
