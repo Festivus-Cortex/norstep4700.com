@@ -1,11 +1,20 @@
 name: Release Build
 
+env:
+  # The checkout action checks out to path /tmp/runner/work/norstep4700.com/norstep4700.com by default
+  basepath: /tmp/runner/work/norstep4700.com/norstep4700.com
+
+permissions:
+  contents: write
+
 on:
+  # Only run when a pull request is merged into the main branch
   pull_request:
     types: [closed]
     branches: [main]
 
 jobs:
+  # Build the latest master, version it, and create a release
   build-and-release:
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: self-hosted
@@ -25,6 +34,7 @@ jobs:
 
       - name: Increment Package Version
         run: |
+          cd ${{env.basepath}}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           yarn version --patch --no-git-tag-version
@@ -34,24 +44,27 @@ jobs:
 
       - name: Prepare and Compress Release
         run: |
-          mkdir -p release/.next/static
-          mkdir -p release/public
-          cp -r .next/standalone/* release/
-          cp -r public/* release/public/
-          cp -r .next/static/* release/.next/static/
-          cd release
+          mkdir -p /release/.next/static
+          mkdir -p /release/public
+          cp -r ${{env.basepath}}/.next/standalone/* /release/
+          cp -r ${{env.basepath}}/public/* /release/public/
+          cp -r ${{env.basepath}}/.next/static/* /release/.next/static/
+          cd /release
           zip -r ../norstep4700-portfolio.zip ./*
         shell: bash
 
-      # TODO: Pull the version number from the package and use it here.
+      - name: Get Package Version
+        id: get_version
+        run: echo "version=$(node -p \"require('${{env.basepath}}/package.json').version\")" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
+          tag_name: v${{ steps.get_version.outputs.version }}
+          release_name: Release v${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: false
 
