@@ -9,16 +9,14 @@ permissions:
 
 on:
   # Only run when a pull request is merged into the main branch
-  #pull_request:
-  #  types: [closed]
-  #  branches: [main]
-  # FIXME DEBUG: Allow manual trigger for testing, remove before merging to main
-  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches: [main]
 
 jobs:
   # Build the latest master, version it, and create a release
   build-and-release:
-    # if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: self-hosted
 
     steps:
