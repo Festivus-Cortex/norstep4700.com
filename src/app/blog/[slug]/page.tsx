@@ -14,13 +14,13 @@ import { person } from "@/app/resources/content";
 import { formatDate } from "@/app/utils/formatDate";
 import ScrollToHash from "@/components/ScrollToHash";
 
-type BlogParams = Promise<{
+interface BlogParams {
   params: Promise<{
     slug: string;
   }>;
-}>;
+}
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
+export function generateStaticParams(): { slug: string }[] {
   const posts = getPosts(["src", "app", "blog", "posts"]);
   return posts.map((post) => ({
     slug: post.slug,
@@ -29,7 +29,7 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 
 export async function generateMetadata(blogParams: BlogParams) {
   // For next 15 params must be async awaited.
-  const { slug } = await (await blogParams).params;
+  const { slug } = await blogParams.params;
 
   let post = getPosts(["src", "app", "blog", "posts"]).find(
     (post) => post.slug === slug

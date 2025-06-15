@@ -11,15 +11,15 @@ import {
 } from "@/once-ui/components";
 import styles from "./Posts.module.scss";
 import { formatDate } from "@/app/utils/formatDate";
+import React from "react";
 
-type PostProps = Promise<{
+interface PostProps {
   post: any;
   thumbnail: boolean;
-}>;
+}
 
-export default async function Post(postProps: PostProps) {
-  // For next 15 params must be async awaited.
-  const { post, thumbnail } = await postProps;
+export default function Post(postProps: PostProps) {
+  const { post, thumbnail } = postProps;
 
   const tags = post.metadata.tag.split(",").map((tag: string) => tag.trim());
 

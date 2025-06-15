@@ -8,7 +8,6 @@ import {
   Column,
   Flex,
   Heading,
-  SmartImage,
   Text,
 } from "@/once-ui/components";
 import { baseURL } from "@/app/resources";
@@ -16,11 +15,11 @@ import { person } from "@/app/resources/content";
 import { formatDate } from "@/app/utils/formatDate";
 import ScrollToHash from "@/components/ScrollToHash";
 
-type WorkParams = Promise<{
+interface WorkParams {
   params: Promise<{
     slug: string;
   }>;
-}>;
+}
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const posts = getPosts(["src", "app", "work", "projects"]);
@@ -31,7 +30,7 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 
 export async function generateMetadata(workParams: WorkParams) {
   // For next 15 params must be async awaited.
-  const { slug } = await (await workParams).params;
+  const { slug } = await workParams.params;
 
   let post = getPosts(["src", "app", "work", "projects"]).find(
     (post) => post.slug === slug
@@ -81,7 +80,7 @@ export async function generateMetadata(workParams: WorkParams) {
 
 export default async function Project(workParams: WorkParams) {
   // For next 15 params must be async awaited.
-  const { slug } = await (await workParams).params;
+  const { slug } = await workParams.params;
 
   let post = getPosts(["src", "app", "work", "projects"]).find(
     (post) => post.slug === slug
