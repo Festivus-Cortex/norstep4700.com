@@ -56,7 +56,7 @@ jobs:
           cp -r ${{env.basepath}}/public/. /release/public/
           cp -r ${{env.basepath}}/.next/static/. /release/.next/static/
           cd /release
-          zip -r ../norstep4700-portfolio.zip ./*
+          zip -r ../norstep4700-portfolio.zip .
         shell: bash
 
       - name: Get Package Version
