@@ -20,15 +20,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Set up SSH for CI Bot
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.CI_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-        shell: bash
-
-      - name: Configure git to use SSH
+      - name: Configure git
         run: |
           git config --global user.name "Norstep-CI"
           git config --global user.email "admin@norstep4700.com"
@@ -40,6 +32,7 @@ jobs:
         with:
           ref: main
           lfs: "true"
+          ssh-key: ${{ secrets.CI_SSH_KEY }}
 
       - name: Install dependencies
         run: yarn --frozen-lockfile
