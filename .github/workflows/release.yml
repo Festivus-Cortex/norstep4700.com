@@ -61,7 +61,9 @@ jobs:
 
       - name: Get Package Version
         id: get_version
-        run: echo "version=$(node -p \"require(process.env.basepath + '/package.json').version\")" >> $GITHUB_OUTPUT
+        run: |
+          version=$(node -p "require(process.env.basepath + '/package.json').version")
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         id: create_release
