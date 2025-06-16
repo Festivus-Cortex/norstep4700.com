@@ -52,9 +52,9 @@ jobs:
         run: |
           mkdir -p /release/.next/static
           mkdir -p /release/public
-          cp -r ${{env.basepath}}/.next/standalone/* /release/
-          cp -r ${{env.basepath}}/public/* /release/public/
-          cp -r ${{env.basepath}}/.next/static/* /release/.next/static/
+          cp -r ${{env.basepath}}/.next/standalone/. /release/
+          cp -r ${{env.basepath}}/public/. /release/public/
+          cp -r ${{env.basepath}}/.next/static/. /release/.next/static/
           cd /release
           zip -r ../norstep4700-portfolio.zip ./*
         shell: bash
