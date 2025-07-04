@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "cpx node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/scripts/"
+    "postinstall": "fse copy node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/scripts/pdf.worker.min.mjs"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.1",
@@ -33,6 +33,7 @@
     "sharp": "^0.34.2"
   },
   "devDependencies": {
+    "@atao60/fse-cli": "^0.1.9",
     "@csstools/postcss-global-data": "^2.1.1",
     "@next/eslint-plugin-next": "^15.2.3",
     "@types/cookie": "^0.6.0",
@@ -41,7 +42,6 @@
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.27.0",
     "@typescript-eslint/parser": "^8.27.0",
-    "cpx": "^1.5.0",
     "eslint": "^8",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",

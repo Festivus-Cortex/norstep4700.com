@@ -129,17 +129,15 @@ const about = {
             provides an overwhelming glowing musical world to explore
           </>,
           <>
-            Managed a diverse team of sixteen in developing while developing
-            this unique stealth game using Unity 3D and internally created.
-            assets This turned a capstone project into a commercial release on{" "}
+            Managed a diverse team of sixteen in developing this unique stealth
+            game using Unity 3D and internally created assets. This started as a
+            capstone project and transformed into a commercial release on{" "}
             <SmartLink href="https://store.steampowered.com/app/341750/AV/">
               Steam
             </SmartLink>
           </>,
           <>
-            Uses internally created assets and worked alongside composers to
-            create the soundtrack while a majority of the sound effects were
-            self-created. The Musical tracks in each level are layered. The
+            Uses audio and visual assets to layer a musical journey. The
             player’s powers represent each of the tracks of the song. General
             progression through a level creates a sensory explosion of color and
             music
@@ -336,11 +334,6 @@ const gallery = {
   title: "Pictures of Preston Johnson",
   description: `Pictures of ${person.name} and his adventures`,
   images: [
-    {
-      src: "/images/gallery/preston-suit.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
     {
       src: "/images/avatar.webp",
       alt: "image",
