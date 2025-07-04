@@ -335,11 +335,6 @@ const gallery = {
   description: `Pictures of ${person.name} and his adventures`,
   images: [
     {
-      src: "/images/gallery/preston-suit.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-    {
       src: "/images/avatar.webp",
       alt: "image",
       orientation: "horizontal",
