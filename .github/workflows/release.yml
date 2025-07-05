@@ -24,7 +24,6 @@ jobs:
         run: |
           git config --global user.name "Norstep-CI"
           git config --global user.email "admin@norstep4700.com"
-          git remote set-url origin git@github.com:Festivus-Cortex/norstep4700.com.git
         shell: bash
 
       - name: Checkout main branch
