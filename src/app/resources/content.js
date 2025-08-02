@@ -273,17 +273,17 @@ const about = {
       },
       {
         title: "Frameworks",
-        description: <>.NET, React, Node.js, Next.js</>,
+        description: <>.NET, React, Node.js, Next.js, n8n</>,
         images: [],
       },
       {
         title: "Databases",
-        description: <>MySQL, MSSQL, MongoDB</>,
+        description: <>MySQL, MSSQL, MongoDB, PostgreSQL</>,
         images: [],
       },
       {
         title: "Version Control",
-        description: <>Git, GitLab, SVN</>,
+        description: <>Git - GitLab/GitHub, SVN</>,
         images: [],
       },
       {
