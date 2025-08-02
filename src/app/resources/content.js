@@ -337,6 +337,11 @@ const gallery = {
     {
       src: "/images/avatar.webp",
       alt: "image",
+      orientation: "vertical",
+    },
+    {
+      src: "/images/old-avatar.webp",
+      alt: "image",
       orientation: "horizontal",
     },
     {
