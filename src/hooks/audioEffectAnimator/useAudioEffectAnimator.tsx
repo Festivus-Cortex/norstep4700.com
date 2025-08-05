@@ -19,6 +19,8 @@ function useAudioEffectAnimator(config: AudioEffectAnimatorConfig) {
       /*const mask = { radius: Math.random() * 100 };
       config.targets[0].obj(mask);
       requestAnimationFrame(updateAnimation);*/
+
+      // FIXME: this should use callback functions versus handling logic in
     },
     [animatorEnabled]
   );

@@ -2,70 +2,16 @@
 
 import { useCallback, useEffect, useState, useRef } from "react";
 import { AudioEffectAnimatorConfig } from "./audioEffectAnimatorConfig";
-import { audioAnalyzer } from "@/app/audio/audio";
+import {
+  calculateRMS,
+  calculateSpectralCentroid,
+  getFrequencyBand,
+  getFrequencyData,
+  getTimeDomainData,
+} from "@/util/audioUtils";
 
 // FIXME: Generated content updates from ai agent. some of this is potentially
 // useful but needs migrated. Storing as a copy for now.
-
-// Audio analysis utilities
-const getFrequencyData = () => {
-  const dataArray = new Uint8Array(audioAnalyzer.frequencyBinCount);
-  audioAnalyzer.getByteFrequencyData(dataArray);
-  return dataArray;
-};
-
-const getTimeDomainData = () => {
-  const dataArray = new Uint8Array(audioAnalyzer.frequencyBinCount);
-  audioAnalyzer.getByteTimeDomainData(dataArray);
-  return dataArray;
-};
-
-// Calculate RMS (Root Mean Square) for overall volume
-const calculateRMS = (timeDomainData: Uint8Array): number => {
-  let sum = 0;
-  for (let i = 0; i < timeDomainData.length; i++) {
-    const sample = (timeDomainData[i] - 128) / 128; // Convert to -1 to 1 range
-    sum += sample * sample;
-  }
-  return Math.sqrt(sum / timeDomainData.length);
-};
-
-// Get average magnitude for a frequency band
-const getFrequencyBand = (
-  frequencyData: Uint8Array,
-  startBin: number,
-  endBin: number
-): number => {
-  let sum = 0;
-  for (let i = startBin; i <= endBin && i < frequencyData.length; i++) {
-    sum += frequencyData[i];
-  }
-  return sum / (endBin - startBin + 1);
-};
-
-// Map a value from one range to another
-const mapRange = (
-  value: number,
-  inMin: number,
-  inMax: number,
-  outMin: number,
-  outMax: number
-): number => {
-  return ((value - inMin) / (inMax - inMin)) * (outMax - outMin) + outMin;
-};
-
-// Calculate spectral centroid (brightness)
-const calculateSpectralCentroid = (frequencyData: Uint8Array): number => {
-  let weightedSum = 0;
-  let sum = 0;
-
-  for (let i = 0; i < frequencyData.length; i++) {
-    weightedSum += frequencyData[i] * i;
-    sum += frequencyData[i];
-  }
-
-  return sum > 0 ? weightedSum / sum : 0;
-};
 
 function useAudioEffectAnimatorTestGenerated(
   config: AudioEffectAnimatorConfig
@@ -83,7 +29,9 @@ function useAudioEffectAnimatorTestGenerated(
       const frequencyData = getFrequencyData();
       const timeDomainData = getTimeDomainData();
 
-      // Calculate audio properties
+      // Calculate audio properties FIXME: Verify functionality and comment
+      // better. Ensure volume mapping is correct and bin math is right.
+
       const volume = calculateRMS(timeDomainData);
       const bassLevel = getFrequencyBand(frequencyData, 0, 5); // 20-250 Hz
       const midLevel = getFrequencyBand(frequencyData, 11, 40); // 500-2000 Hz
@@ -152,13 +100,6 @@ function useAudioEffectAnimatorTestGenerated(
   return {
     animatorEnabled,
     setAnimatorEnabled,
-    // Export utility functions for external use
-    getFrequencyData,
-    getTimeDomainData,
-    calculateRMS,
-    getFrequencyBand,
-    mapRange,
-    calculateSpectralCentroid,
   };
 }
 
