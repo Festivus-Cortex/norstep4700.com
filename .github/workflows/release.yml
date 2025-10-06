@@ -37,9 +37,6 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
-      - name: Build Project
-        run: yarn build
-
       - name: Increment Package Version
         run: |
           cd ${{env.basepath}}
@@ -48,6 +45,9 @@ jobs:
           git commit -m "chore: bump version [skip ci]"
           git push origin main
           git pull origin main
+
+      - name: Build Project
+        run: yarn build
 
       - name: Prepare and Compress Release
         run: |
