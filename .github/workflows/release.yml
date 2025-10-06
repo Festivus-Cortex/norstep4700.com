@@ -47,6 +47,7 @@ jobs:
           git add package.json
           git commit -m "chore: bump version [skip ci]"
           git push origin main
+          git pull origin main
 
       - name: Prepare and Compress Release
         run: |
