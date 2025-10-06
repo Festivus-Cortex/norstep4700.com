@@ -1,8 +1,8 @@
 name: Release Build
 
 env:
-  # The checkout action checks out to path /tmp/runner/work/norstep4700.com/norstep4700.com by default
-  basepath: /tmp/runner/work/norstep4700.com/norstep4700.com
+  # The runner checks out to path /opt/actions-runner/_work/norstep4700.com/norstep4700.com by default
+  basepath: /opt/actions-runner/_work/norstep4700.com/norstep4700.com
 
 permissions:
   contents: write
