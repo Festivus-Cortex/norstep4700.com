@@ -3,6 +3,7 @@ name: Release Build
 env:
   # The runner checks out to path /opt/actions-runner/_work/norstep4700.com/norstep4700.com by default
   basepath: /opt/actions-runner/_work/norstep4700.com/norstep4700.com
+  releasePath: /opt/actions-runner/release/norstep4700.com
 
 permissions:
   contents: write
@@ -49,13 +50,14 @@ jobs:
 
       - name: Prepare and Compress Release
         run: |
-          mkdir -p /release/.next/static
-          mkdir -p /release/public
-          cp -r ${{env.basepath}}/.next/standalone/. /release/
-          cp -r ${{env.basepath}}/public/. /release/public/
-          cp -r ${{env.basepath}}/.next/static/. /release/.next/static/
-          cd /release
-          zip -r ../norstep4700-portfolio.zip .
+          mkdir -p ${{env.releasePath}}
+          mkdir -p ${{env.releasePath}}/.next/static
+          mkdir -p ${{env.releasePath}}/public
+          cp -r ${{env.basepath}}/.next/standalone/. ${{env.releasePath}}/
+          cp -r ${{env.basepath}}/public/. ${{env.releasePath}}/public/
+          cp -r ${{env.basepath}}/.next/static/. ${{env.releasePath}}/.next/static/
+          cd ${{env.releasePath}}
+          zip -r ${{env.releasePath}}/norstep4700-portfolio.zip .
         shell: bash
 
       - name: Get Package Version
@@ -81,6 +83,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /norstep4700-portfolio.zip
+          asset_path: ${{env.releasePath}}/norstep4700-portfolio.zip
           asset_name: norstep4700-portfolio.zip
           asset_content_type: application/zip
+
+      - name: Clean Release Artifacts
+        run: |
+          rm -rf ${{env.releasePath}}
+        shell: bash
