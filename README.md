@@ -12,6 +12,10 @@ This project uses `yarn` as a package manager but swapping in `npm` should work 
 `yarn build` will output the production site content.
 `yarn start` will run the build generated from `yarn build`.
 
+CI is done using github actions. See `.github\workflows\release.yml`.
+
+Automated deployments are being handled separately with [`n8n`](https://github.com/n8n-io/n8n).
+
 ## Deploying from a Release
 
 [![Release Build](https://github.com/Festivus-Cortex/norstep4700.com/actions/workflows/release.yml/badge.svg)](https://github.com/Festivus-Cortex/norstep4700.com/actions/workflows/release.yml)
@@ -27,9 +31,7 @@ For production use, using a proxy like `nginx` to host the incoming traffic of `
   - Audio Visual WOW Factor
 
 - Nice To Have
-  - CI/CD Improvements
-    - Automated Deployment
-    - Docker Images
+  - Containerize the project
   - More commenting including some templated areas
 
 ## Template
