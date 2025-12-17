@@ -1,6 +1,6 @@
 {
   "name": "norstep-portfolio",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "next dev",
