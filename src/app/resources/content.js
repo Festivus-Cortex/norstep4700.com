@@ -46,10 +46,10 @@ const home = {
   headline: <>Game Developer and Audio Explorer</>,
   subline: (
     <>
-      Hello World! I am {person.firstName}, a game developer at{" "}
-      <InlineCode>MahiGaming</InlineCode>, where I lead product teams to rapidly
-      deliver premium online slot machine games to the global market on a real
-      money casino platform.
+      Hello World! I am <InlineCode>{person.firstName}</InlineCode>, a seasoned
+      game developer specializing in iGaming and full-stack development. I
+      transform creative concepts into polished, player-ready experiences that
+      scale to millions of users worldwide.
     </>
   ),
 };
