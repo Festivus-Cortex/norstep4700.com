@@ -1,15 +1,24 @@
 // FIXME: Verify functionality and comment better.
 
 import { audioAnalyzer } from "@/app/audio/audio";
+import { Assert } from "./assert";
 
 // Audio analysis utilities
 export const getFrequencyData = () => {
+  Assert.exists(
+    audioAnalyzer,
+    "getFrequencyData - No audio analyzer node found. Is audio set up and supported?"
+  );
   const dataArray = new Uint8Array(audioAnalyzer.frequencyBinCount);
   audioAnalyzer.getByteFrequencyData(dataArray);
   return dataArray;
 };
 
 export const getTimeDomainData = () => {
+  Assert.exists(
+    audioAnalyzer,
+    "getTimeDomainData - No audio analyzer node found. Is audio set up and supported?"
+  );
   const dataArray = new Uint8Array(audioAnalyzer.frequencyBinCount);
   audioAnalyzer.getByteTimeDomainData(dataArray);
   return dataArray;

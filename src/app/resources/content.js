@@ -407,24 +407,6 @@ const license = {
     "Shows applicable attribution for external content used in this portfolio site.",
 };
 
-// FIXME: Finish using audio in the project after main content is done.
-const audio = {
-  bufferSources: [
-    {
-      name: "A.V. Zone 1",
-      sources: [
-        "/audio/zone1/deactivator.mp3",
-        "/audio/zone1/elasticity.mp3",
-        "/audio/zone1/freezer.mp3",
-        "/audio/zone1/initiator.mp3",
-        "/audio/zone1/scrambler.mp3",
-        "/audio/zone1/velocity.mp3",
-      ],
-      isDefault: true,
-    },
-  ],
-};
-
 export {
   person,
   social,

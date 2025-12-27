@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Fade, Flex, Line, ToggleButton } from "@/once-ui/components";
 import styles from "@/components/Header.module.scss";
+import { AudioControlPanel } from "@/components/audio/AudioControlPanel";
 
 import { routes, display } from "@/app/resources";
 import {
@@ -87,6 +88,7 @@ export const Header = () => {
         </Flex>
         <Flex fillWidth horizontal="center">
           <Flex
+            id="nav-controls"
             background="surface"
             border="neutral-medium"
             radius="m-4"
@@ -222,6 +224,7 @@ export const Header = () => {
           </Flex>
         </Flex>
       </Flex>
+      <AudioControlPanel />
     </>
   );
 };

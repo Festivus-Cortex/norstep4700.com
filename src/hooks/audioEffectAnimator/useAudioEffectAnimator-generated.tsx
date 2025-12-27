@@ -8,7 +8,7 @@ import {
   getFrequencyBand,
   getFrequencyData,
   getTimeDomainData,
-} from "@/util/audioUtils";
+} from "@/utils/audioUtils";
 
 // FIXME: Generated content updates from ai agent. some of this is potentially
 // useful but needs migrated. Storing as a copy for now.
@@ -38,6 +38,7 @@ function useAudioEffectAnimatorTestGenerated(
       const trebleLevel = getFrequencyBand(frequencyData, 81, 200); // 4-10 kHz
       const spectralCentroid = calculateSpectralCentroid(frequencyData);
 
+      // FIXME: Clean up generated mapping if used
       // Map audio properties to visual effects based on config
       config.targets.forEach((target) => {
         const updates: any = {};

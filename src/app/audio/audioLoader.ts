@@ -1,5 +1,6 @@
 "use client";
 
+import { Assert } from "@/utils/assert";
 import { audioCtx } from "./audio";
 
 // FIXME: Verify this function right - Load audio based on content sources
@@ -10,6 +11,10 @@ const loadAudioBuffer = (url: string): Promise<AudioBuffer> => {
     request.responseType = "arraybuffer";
 
     request.onload = () => {
+      Assert.exists(
+        audioCtx,
+        "loadAudioBuffer - cannot complete loading audio buffer. No audio context exists to decode."
+      );
       audioCtx.decodeAudioData(
         request.response,
         (buffer) => resolve(buffer),
@@ -20,7 +25,7 @@ const loadAudioBuffer = (url: string): Promise<AudioBuffer> => {
     request.onerror = () => {
       reject(
         new Error(
-          `Audio file loading failed. The url of ${url} could not be loaded.`
+          `loadAudioBuffer - Audio file loading failed. The url of ${url} could not be loaded.`
         )
       );
     };

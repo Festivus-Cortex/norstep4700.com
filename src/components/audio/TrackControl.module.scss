@@ -1,0 +1,30 @@
+/**
+ * Track Control Component Styles
+ *
+ * Individual track UI showing mute, solo, volume, and pan controls.
+ * Displayed in a responsive grid (3 columns desktop, 2 tablet, 1 mobile).
+ */
+
+/**
+ * Container for a single track's controls.
+ * Subtle hover effect to indicate interactivity.
+ */
+.trackControl {
+  transition: all var(--transition-micro-medium);
+
+  /* Highlight on hover to indicate this track can be controlled */
+  &:hover {
+    background: var(--surface-hovered);
+    border-color: var(--neutral-border-medium);
+  }
+}
+
+/**
+ * Mobile adjustments
+ * Reduce padding to maximize screen real estate
+ */
+@media (--s) {
+  .trackControl {
+    padding: var(--static-space-8); /* Tighter spacing on mobile */
+  }
+}

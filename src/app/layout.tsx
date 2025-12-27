@@ -11,6 +11,7 @@ import { Source_Code_Pro } from "next/font/google";
 
 import { person, home } from "@/app/resources/content";
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
+import { AudioContextProvider } from "@/context/AudioContext";
 
 export async function generateMetadata() {
   return {
@@ -98,13 +99,14 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       )}
     >
       <ToastProvider>
-        <Column
-          style={{ minHeight: "100vh" }}
-          as="body"
-          fillWidth
-          margin="0"
-          padding="0"
-        >
+        <AudioContextProvider>
+          <Column
+            style={{ minHeight: "100vh" }}
+            as="body"
+            fillWidth
+            margin="0"
+            padding="0"
+          >
           <Background
             // FIXME: Config for this will need adjusted. some will be handled internally
             /* audioEffectAnimatorConfig={{
@@ -160,7 +162,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               opacity: effects.lines.opacity as any,
             }}
           />
-          <Flex fillWidth minHeight="16"></Flex>
           <Header />
           <Flex
             position="relative"
@@ -170,13 +171,15 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             paddingX="l"
             horizontal="center"
             flex={1}
+            style={{ paddingTop: 'calc(var(--static-space-32) + var(--static-space-16))' }}
           >
             <Flex horizontal="center" fillWidth minHeight="0">
               <RouteGuard>{children}</RouteGuard>
             </Flex>
           </Flex>
           <Footer />
-        </Column>
+          </Column>
+        </AudioContextProvider>
       </ToastProvider>
     </Flex>
   );

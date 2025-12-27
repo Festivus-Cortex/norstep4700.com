@@ -1,6 +1,6 @@
 .position {
     position: sticky;
-    top: 0;
+    top: var(--static-space-16);
 }
 
 .mask {
