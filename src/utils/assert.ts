@@ -57,22 +57,6 @@ export class Assert {
   }
 
   /**
-   * Asserts that a value is not null or undefined and passes a condition
-   * @param value - The value to check for existence and condition
-   * @param condition - Function that returns true if value passes the condition
-   * @param message - Error message to throw if assertion fails
-   * @throws {AssertionError} if value doesn't exist or condition fails
-   */
-  static existsAndPasses<T>(
-    value: T | null | undefined,
-    condition: (val: T) => boolean,
-    message: string
-  ): asserts value is T {
-    this.exists(value, message);
-    this.passes(value, condition, message);
-  }
-
-  /**
    * Asserts that a value is of a specific type
    * @param value - The value to check
    * @param typeGuard - Type guard function that returns true if value is of type T

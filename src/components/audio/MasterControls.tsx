@@ -1,10 +1,16 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
-import { Flex, IconButton, SegmentedControl, Spinner, Text } from "@/once-ui/components";
+import {
+  Flex,
+  IconButton,
+  SegmentedControl,
+  Spinner,
+  Text,
+} from "@/once-ui/components";
 import { Slider } from "./Slider";
 import { useAudioManager } from "@/hooks/audio/useAudioManager";
-import { useAudioZone } from "@/hooks/audio/useAudioZone";
+import { useAudioMusicSet } from "@/hooks/audio/useAudioMusicSet";
 import styles from "./MasterControls.module.scss";
 
 export const MasterControls: React.FC = () => {
@@ -17,7 +23,8 @@ export const MasterControls: React.FC = () => {
     isInitialized,
   } = useAudioManager();
 
-  const { currentZone, loadingZone, switchZone, availableZones } = useAudioZone();
+  const { currentZone, loadingZone, switchZone, availableZones } =
+    useAudioMusicSet();
 
   const [hasInteracted, setHasInteracted] = useState(false);
 
@@ -27,7 +34,7 @@ export const MasterControls: React.FC = () => {
     value: zone.id.toString(),
   }));
 
-  const handleZoneChange = useCallback(
+  const handleMusicSetChange = useCallback(
     async (value: string) => {
       if (!isInitialized) {
         initializeAudio();
@@ -81,16 +88,16 @@ export const MasterControls: React.FC = () => {
       background="surface"
       className={styles.masterControls}
     >
-      {/* Zone Selector */}
+      {/* Music Set Selector */}
       <Flex direction="column" gap="8">
         <Text variant="label-default-m" onBackground="neutral-strong">
-          Zone Selection
+          Music Selection
         </Text>
         <Flex gap="8" vertical="center">
           <SegmentedControl
             buttons={zoneOptions}
             selected={currentZone?.toString() || ""}
-            onToggle={handleZoneChange}
+            onToggle={handleMusicSetChange}
             fillWidth
           />
           {loadingZone !== null && (
@@ -104,7 +111,7 @@ export const MasterControls: React.FC = () => {
         <IconButton
           icon={isMasterMuted ? "volumeOff" : "volumeHigh"}
           size="m"
-          variant={isMasterMuted ? "danger" : "accent"}
+          // variant={isMasterMuted ? "danger" : "tertiary"}
           tooltip={isMasterMuted ? "Unmute All" : "Mute All"}
           onClick={handleMuteToggle}
           aria-label={isMasterMuted ? "Unmute all tracks" : "Mute all tracks"}
@@ -115,7 +122,7 @@ export const MasterControls: React.FC = () => {
           min={0}
           max={1}
           step={0.01}
-          label="Master Volume"
+          label="Set Volume"
           mode="volume"
           disabled={isMasterMuted}
         />

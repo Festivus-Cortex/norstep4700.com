@@ -1,8 +1,7 @@
 "use client";
 
 import { useAudioContext } from "@/context/AudioContext";
-import { setMasterVolume as setMasterVolumeNode } from "@/app/audio/audioNodes";
-import { audioRoot } from "@/app/audio/audio";
+import { setMasterVolume } from "@/app/audio/audio";
 import { useEffect } from "react";
 
 /**
@@ -14,11 +13,11 @@ export function useAudioManager() {
 
   // Sync master volume with audio node when it changes
   useEffect(() => {
+    let volume = context.masterVolume;
     if (context.isMasterMuted) {
-      audioRoot.gain.value = 0;
-    } else {
-      setMasterVolumeNode(context.masterVolume);
+      volume = 0;
     }
+    setMasterVolume(volume);
   }, [context.masterVolume, context.isMasterMuted]);
 
   const toggleMasterMute = () => {
@@ -34,8 +33,8 @@ export function useAudioManager() {
     isInitialized: context.isInitialized,
     isMasterMuted: context.isMasterMuted,
     masterVolume: context.masterVolume,
-    currentZone: context.currentZone,
-    loadingZone: context.loadingZone,
+    currentZone: context.currentSet,
+    loadingZone: context.loadingSet,
     isPlaying: context.isPlaying,
     config: context.config,
 

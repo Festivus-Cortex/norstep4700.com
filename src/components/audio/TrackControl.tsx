@@ -71,7 +71,7 @@ export const TrackControl = React.memo<TrackControlProps>(
             <IconButton
               icon="star"
               size="s"
-              variant={track.isSolo ? "accent" : "ghost"}
+              // variant={track.isSolo ? "tertiary" : "ghost"}
               tooltip={track.isSolo ? "Unsolo" : "Solo"}
               onClick={handleSoloToggle}
               aria-label={`${track.isSolo ? "Unsolo" : "Solo"} ${trackName}`}

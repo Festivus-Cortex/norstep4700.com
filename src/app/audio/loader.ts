@@ -3,7 +3,12 @@
 import { Assert } from "@/utils/assert";
 import { audioCtx } from "./audio";
 
-// FIXME: Verify this function right - Load audio based on content sources
+/**
+ * Loads an audio buffer from URL.
+ *
+ * @param url URL pointing to audio files to load
+ * @returns Promise that resolves to an AudioBuffer object
+ */
 const loadAudioBuffer = (url: string): Promise<AudioBuffer> => {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
@@ -34,7 +39,12 @@ const loadAudioBuffer = (url: string): Promise<AudioBuffer> => {
   });
 };
 
-// FIXME: Verify this function works right
+/**
+ * Loads multiple audio buffers from an array of URLs.
+ *
+ * @param urls - Array of URLs pointing to audio files to load
+ * @returns Promise that resolves to an array of AudioBuffer objects
+ */
 const loadMultipleAudioBuffers = (urls: string[]): Promise<AudioBuffer[]> => {
   const bufferPromises = urls.map((url) => loadAudioBuffer(url));
   return Promise.all(bufferPromises);

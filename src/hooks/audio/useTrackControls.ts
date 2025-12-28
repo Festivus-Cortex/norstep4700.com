@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useAudioContext } from "@/context/AudioContext";
-import { setTrackVolume, setTrackPan } from "@/app/audio/audioNodes";
+import { setTrackVolume, setTrackPan } from "@/app/audio/tracks";
 
 /**
  * Hook for managing individual track controls (mute, solo, volume, pan).
@@ -15,9 +15,9 @@ export function useTrackControls() {
    */
   const getTrackNodes = useCallback(
     (trackId: string) => {
-      if (!context.currentZone) return null;
+      if (!context.currentSet) return null;
 
-      const zoneData = context.loadedZones.get(context.currentZone);
+      const zoneData = context.loadedZones.get(context.currentSet);
       if (!zoneData) return null;
 
       const trackIndex = context.tracks.findIndex((t) => t.id === trackId);
@@ -25,7 +25,7 @@ export function useTrackControls() {
 
       return zoneData.nodes[trackIndex];
     },
-    [context.currentZone, context.loadedZones, context.tracks]
+    [context.currentSet, context.loadedZones, context.tracks]
   );
 
   /**

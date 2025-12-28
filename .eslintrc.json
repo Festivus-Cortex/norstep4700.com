@@ -36,8 +36,6 @@
     "build/",
     ".turbo/",
     // ignore the once ui folders
-    "src/once-ui/",
-    // FIXME: disable linting for now...
-    "*"
+    "src/once-ui/"
   ]
 }

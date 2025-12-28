@@ -13,8 +13,8 @@ import {
   AudioConfig,
   MusicTrackState,
   MusicSetData,
-} from "@/app/audio/audioTypes";
-import { getAudioConfig, getAudioConfigSync } from "@/app/audio/audioScanner";
+} from "@/app/audio/types";
+import { getAudioConfig, getAudioConfigSync } from "@/app/audio/getAudioConfig";
 
 interface AudioContextType extends AudioState {
   config: AudioConfig;
@@ -48,9 +48,9 @@ export function AudioContextProvider({ children }: { children: ReactNode }) {
     isInitialized: false,
     isMasterMuted: true, // Default to muted
     masterVolume: config.defaultSettings.masterVolume,
-    currentZone: null,
-    loadingZone: null,
-    loadedZones: new Map<number, MusicSetData>(),
+    currentSet: null,
+    loadingSet: null,
+    loadedSets: new Map<number, MusicSetData>(),
     tracks: [],
     isPlaying: false,
   });
@@ -68,17 +68,17 @@ export function AudioContextProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setCurrentZone = useCallback((zoneId: number | null) => {
-    setState((prev) => ({ ...prev, currentZone: zoneId }));
+    setState((prev) => ({ ...prev, currentSet: zoneId }));
   }, []);
 
   const setLoadingZone = useCallback((zoneId: number | null) => {
-    setState((prev) => ({ ...prev, loadingZone: zoneId }));
+    setState((prev) => ({ ...prev, loadingSet: zoneId }));
   }, []);
 
   const setLoadedZone = useCallback(
     (zoneId: number, zoneData: MusicSetData) => {
       setState((prev) => {
-        const newLoadedZones = new Map(prev.loadedZones);
+        const newLoadedZones = new Map(prev.loadedSets);
         newLoadedZones.set(zoneId, zoneData);
         return { ...prev, loadedZones: newLoadedZones };
       });
@@ -88,7 +88,7 @@ export function AudioContextProvider({ children }: { children: ReactNode }) {
 
   const unloadZone = useCallback((zoneId: number) => {
     setState((prev) => {
-      const newLoadedZones = new Map(prev.loadedZones);
+      const newLoadedZones = new Map(prev.loadedSets);
       newLoadedZones.delete(zoneId);
       return { ...prev, loadedZones: newLoadedZones };
     });

@@ -83,9 +83,9 @@ export interface AudioState {
   /** Master volume level (0-1) applied to all audio output */
   masterVolume: number;
   /** ID of the currently loaded and playing music set, null if none */
-  currentZone: number | null;
+  currentSet: number | null;
   /** ID of the music set currently being loaded, null if none (used for loading UI) */
-  loadingZone: number | null;
+  loadingSet: number | null;
   /** Map of music set IDs to their loaded data (typically only contains current music set) */
   loadedSets: Map<number, MusicSetData>;
   /** Array of track states for the current music set */

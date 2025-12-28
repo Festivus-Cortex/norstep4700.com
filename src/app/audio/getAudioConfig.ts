@@ -1,4 +1,4 @@
-import { AudioConfig } from "./audioTypes";
+import { AudioConfig } from "./types";
 
 /**
  * Fallback configuration with hardcoded zone structure.

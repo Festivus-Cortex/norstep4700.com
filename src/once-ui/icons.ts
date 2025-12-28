@@ -23,6 +23,8 @@ import {
   HiArrowRight,
   HiOutlineEye,
   HiOutlineEyeSlash,
+  HiSpeakerWave,
+  HiSpeakerXMark,
 } from "react-icons/hi2";
 
 import {
@@ -67,4 +69,6 @@ export const iconLibrary: Record<string, IconType> = {
   x: FaXTwitter,
   clipboard: HiClipboard,
   arrowUpRightFromSquare: HiArrowTopRightOnSquare,
+  volumeHigh: HiSpeakerWave,
+  volumeOff: HiSpeakerXMark,
 };

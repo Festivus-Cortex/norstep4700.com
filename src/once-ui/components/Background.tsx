@@ -151,7 +151,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
 
       document.addEventListener("mousemove", handleMouseMove);
 
-      // FIXME: testing stuffz - remove
+      // FIXME: testing stuff - remove
       /*const swapRadius = () => {
         if (!mask.radius) {
           return;

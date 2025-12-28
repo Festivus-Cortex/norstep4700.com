@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import * as fs from "fs";
 import * as path from "path";
-import { AudioConfig, MusicSets, MusicTrack } from "@/app/audio/audioTypes";
+import { AudioConfig, MusicSets, MusicTrack } from "@/app/audio/types";
 
 /**
  * GET /api/audio-config
@@ -69,7 +69,8 @@ export async function GET() {
     return NextResponse.json(
       {
         error: "Failed to scan audio directory",
-        message: error instanceof Error ? error.message : "Unknown error occurred",
+        message:
+          error instanceof Error ? error.message : "Unknown error occurred",
         musicSets: [], // Return empty array as fallback
         defaultSettings: {
           masterVolume: 0.7,
