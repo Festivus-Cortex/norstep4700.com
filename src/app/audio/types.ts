@@ -102,12 +102,17 @@ export interface AudioConfig {
   /** Array of all available music sets discovered from the file system */
   musicSets: MusicSets[];
   /** Default settings applied when loading new music sets or tracks */
-  defaultSettings: {
-    /** Default master volume level (0-1) */
-    masterVolume: number;
-    /** Default volume for individual tracks (0-1) */
-    trackVolume: number;
-    /** Default pan position for tracks (0 = center) */
-    trackPan: number;
-  };
+  defaultSettings: AudioConfigDefaultSettings;
+}
+
+/**
+ * Configuration of default settings for handling audio in the app.
+ */
+export interface AudioConfigDefaultSettings {
+  /** Default master volume level (0-1) */
+  masterVolume: number;
+  /** Default volume for individual tracks (0-1) */
+  trackVolume: number;
+  /** Default pan position for tracks (0 = center) */
+  trackPan: number;
 }

@@ -10,7 +10,7 @@ import {
   Text,
 } from "@/once-ui/components";
 import styles from "./Posts.module.scss";
-import { formatDate } from "@/app/utils/formatDate";
+import { formatDate } from "@/utils/formatDate";
 import React from "react";
 
 interface PostProps {

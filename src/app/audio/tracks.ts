@@ -2,7 +2,7 @@
 
 import { Assert } from "@/utils/assert";
 
-import { audioCtx, audioRoot, audioAnalyzer } from "./audio";
+import { audioCtx, audioRoot, audioAnalyzer, linearToGain } from "./audio";
 import { MusicTrackNodes } from "./types";
 
 /**
@@ -21,7 +21,7 @@ import { MusicTrackNodes } from "./types";
 export function createTrackNodes(
   buffer: AudioBuffer,
   parent: AudioNode,
-  initialVolume: number = 0.6,
+  initialVolume: number,
   initialPan: number = 0,
   loop: boolean = true
 ): MusicTrackNodes {
@@ -37,7 +37,7 @@ export function createTrackNodes(
 
   // Create gain node for volume control and mute
   const gain = audioCtx.createGain();
-  gain.gain.value = initialVolume;
+  gain.gain.value = linearToGain(initialVolume);
 
   // Create stereo panner for left/right positioning
   const pan = audioCtx.createStereoPanner();
@@ -72,13 +72,14 @@ export function disconnectTrackNodes(nodes: MusicTrackNodes): void {
  * Sets the volume for a specific track.
  *
  * @param trackNodes - TrackNodes for the track
- * @param volume - Volume level (0-1)
+ * @param volume - Linear volume level (0-1)
  */
 export function setTrackVolume(
   trackNodes: MusicTrackNodes,
   volume: number
 ): void {
-  trackNodes.gain.gain.value = Math.max(0, Math.min(1, volume));
+  const gain = linearToGain(Math.max(0, Math.min(1, volume)));
+  trackNodes.gain.gain.value = gain;
 }
 
 /**

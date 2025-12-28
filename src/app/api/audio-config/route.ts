@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import * as fs from "fs";
 import * as path from "path";
 import { AudioConfig, MusicSets, MusicTrack } from "@/app/audio/types";
+import { getAudioConfigDefaultSettings } from "@/app/audio/getAudioConfig";
 
 /**
  * GET /api/audio-config
@@ -54,11 +55,7 @@ export async function GET() {
 
     const config: AudioConfig = {
       musicSets: musicSets,
-      defaultSettings: {
-        masterVolume: 0.7,
-        trackVolume: 0.8,
-        trackPan: 0, // Center
-      },
+      defaultSettings: getAudioConfigDefaultSettings(),
     };
 
     return NextResponse.json(config);
@@ -71,12 +68,6 @@ export async function GET() {
         error: "Failed to scan audio directory",
         message:
           error instanceof Error ? error.message : "Unknown error occurred",
-        musicSets: [], // Return empty array as fallback
-        defaultSettings: {
-          masterVolume: 0.7,
-          trackVolume: 0.8,
-          trackPan: 0,
-        },
       },
       { status: 500 }
     );

@@ -25,6 +25,8 @@ import {
   HiOutlineEyeSlash,
   HiSpeakerWave,
   HiSpeakerXMark,
+  HiOutlineSpeakerWave,
+  HiStar,
 } from "react-icons/hi2";
 
 import {
@@ -71,4 +73,6 @@ export const iconLibrary: Record<string, IconType> = {
   arrowUpRightFromSquare: HiArrowTopRightOnSquare,
   volumeHigh: HiSpeakerWave,
   volumeOff: HiSpeakerXMark,
+  volume2: HiOutlineSpeakerWave,
+  star: HiStar,
 };

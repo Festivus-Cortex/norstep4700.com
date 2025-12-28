@@ -1,6 +1,6 @@
 import { Assert } from "@/utils/assert";
 import { MusicTrackNodes } from "./types";
-import { disconnectTrackNodes } from "./tracks";
+import { disconnectTrackNodes, stopTrack } from "./tracks";
 import { audioAnalyzer, audioCtx } from "./audio";
 
 /**
@@ -13,6 +13,9 @@ export function disconnectMusicSetNodes(
   musicSetGainNode: GainNode,
   trackNodes: MusicTrackNodes[]
 ): void {
+  // Stop all tracks first
+  trackNodes.forEach((nodes) => stopTrack(nodes));
+
   // Cleanup all track nodes
   trackNodes.forEach((nodes) => disconnectTrackNodes(nodes));
 
@@ -41,4 +44,33 @@ export function createMusicSetNode(): GainNode {
   musicSetGainNode.connect(audioAnalyzer);
 
   return musicSetGainNode;
+}
+
+/**
+ * Fades in all tracks in a music set from 0 to their target volume.
+ *
+ * @param trackNodes - Array of track nodes to fade in
+ * @param duration - Duration of fade in seconds (default: 2)
+ */
+export function fadeInMusicSet(
+  trackNodes: MusicTrackNodes[],
+  duration: number = 2
+): void {
+  Assert.exists(
+    audioCtx,
+    "fadeInMusicSet - unable to fade in. No audio context exists."
+  );
+
+  const now = audioCtx.currentTime;
+
+  trackNodes.forEach((nodes) => {
+    // Store the target volume
+    const targetVolume = nodes.gain.gain.value;
+
+    // Start from 0
+    nodes.gain.gain.setValueAtTime(0, now);
+
+    // Fade to target volume over the duration
+    nodes.gain.gain.linearRampToValueAtTime(targetVolume, now + duration);
+  });
 }

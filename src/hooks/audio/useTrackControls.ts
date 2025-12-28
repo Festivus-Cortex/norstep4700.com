@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useAudioContext } from "@/context/AudioContext";
 import { setTrackVolume, setTrackPan } from "@/app/audio/tracks";
+import { linearToGain } from "@/app/audio/audio";
 
 /**
  * Hook for managing individual track controls (mute, solo, volume, pan).
@@ -17,7 +18,7 @@ export function useTrackControls() {
     (trackId: string) => {
       if (!context.currentSet) return null;
 
-      const zoneData = context.loadedZones.get(context.currentSet);
+      const zoneData = context.loadedSets.get(context.currentSet);
       if (!zoneData) return null;
 
       const trackIndex = context.tracks.findIndex((t) => t.id === trackId);
@@ -25,7 +26,7 @@ export function useTrackControls() {
 
       return zoneData.nodes[trackIndex];
     },
-    [context.currentSet, context.loadedZones, context.tracks]
+    [context.currentSet, context.loadedSets, context.tracks]
   );
 
   /**
@@ -40,7 +41,7 @@ export function useTrackControls() {
       if (!nodes) return;
 
       const newMuted = !track.isMuted;
-      nodes.gain.gain.value = newMuted ? 0 : track.volume;
+      nodes.gain.gain.value = newMuted ? 0 : linearToGain(track.volume);
 
       context.updateTrack(trackId, { isMuted: newMuted });
     },
@@ -68,7 +69,7 @@ export function useTrackControls() {
           context.updateTrack(t.id, { isSolo: newSolo });
           // Unmute when solo is enabled
           if (newSolo) {
-            nodes.gain.gain.value = t.volume;
+            nodes.gain.gain.value = linearToGain(t.volume);
             context.updateTrack(t.id, { isMuted: false });
           }
         } else {
@@ -79,7 +80,7 @@ export function useTrackControls() {
             context.updateTrack(t.id, { isMuted: true });
           } else {
             // Restore other tracks when solo is disabled
-            nodes.gain.gain.value = t.isMuted ? 0 : t.volume;
+            nodes.gain.gain.value = t.isMuted ? 0 : linearToGain(t.volume);
           }
           // Clear solo state on other tracks
           context.updateTrack(t.id, { isSolo: false });

@@ -7,6 +7,18 @@ import { useTrackControls } from "@/hooks/audio/useTrackControls";
 import styles from "./TrackControl.module.scss";
 import classNames from "classnames";
 
+/**
+ * Converts a stored volume value to a slider display value.
+ * Since gain is squared when applied, we take the square root for display.
+ */
+const volumeToSlider = (volume: number): number => Math.sqrt(volume);
+
+/**
+ * Converts a slider value back to a stored volume value.
+ * The slider shows square root values, so we square them for storage.
+ */
+const sliderToVolume = (slider: number): number => slider * slider;
+
 interface TrackControlProps {
   trackId: string;
   trackName: string;
@@ -29,8 +41,9 @@ export const TrackControl = React.memo<TrackControlProps>(
     }, [trackId, toggleSolo]);
 
     const handleVolumeChange = useCallback(
-      (volume: number) => {
-        updateVolume(trackId, volume);
+      (sliderValue: number) => {
+        // Convert slider value (square root) back to actual volume (squared)
+        updateVolume(trackId, sliderToVolume(sliderValue));
       },
       [trackId, updateVolume]
     );
@@ -81,7 +94,7 @@ export const TrackControl = React.memo<TrackControlProps>(
 
         {/* Volume slider */}
         <Slider
-          value={track.volume}
+          value={volumeToSlider(track.volume)}
           onChange={handleVolumeChange}
           min={0}
           max={1}

@@ -3,11 +3,12 @@
 import { useCallback } from "react";
 import { useAudioContext } from "@/context/AudioContext";
 import { loadMultipleAudioBuffers } from "@/app/audio/loader";
-import { createTrackNodes, startTrack } from "@/app/audio/tracks";
+import { createTrackNodes, startTrack, stopTrack } from "@/app/audio/tracks";
 import { MusicTrackState, MusicSetData } from "@/app/audio/types";
 import {
   createMusicSetNode,
   disconnectMusicSetNodes,
+  fadeInMusicSet,
 } from "@/app/audio/musicSet";
 
 /**
@@ -73,6 +74,10 @@ export function useAudioMusicSet() {
 
         // Start playback of all tracks
         trackNodes.forEach((nodes) => startTrack(nodes));
+
+        // Fade in the music set from 0 to target volume
+        fadeInMusicSet(trackNodes, 2);
+
         context.setPlaying(true);
 
         context.setCurrentZone(musicSetId);
@@ -93,6 +98,9 @@ export function useAudioMusicSet() {
 
     const zoneData = context.loadedSets.get(context.currentSet);
     if (!zoneData) return;
+
+    // Stop all tracks immediately
+    zoneData.nodes.forEach((nodes) => stopTrack(nodes));
 
     // Find the music set node (it's the parent of the first track node)
     const firstTrackNode = zoneData.nodes[0];

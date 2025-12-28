@@ -13,6 +13,18 @@ import { useAudioManager } from "@/hooks/audio/useAudioManager";
 import { useAudioMusicSet } from "@/hooks/audio/useAudioMusicSet";
 import styles from "./MasterControls.module.scss";
 
+/**
+ * Converts a stored volume value to a slider display value.
+ * Since gain is squared when applied, we take the square root for display.
+ */
+const volumeToSlider = (volume: number): number => Math.sqrt(volume);
+
+/**
+ * Converts a slider value back to a stored volume value.
+ * The slider shows square root values, so we square them for storage.
+ */
+const sliderToVolume = (slider: number): number => slider * slider;
+
 export const MasterControls: React.FC = () => {
   const {
     isMasterMuted,
@@ -63,7 +75,7 @@ export const MasterControls: React.FC = () => {
   }, [toggleMasterMute, isInitialized, initializeAudio, hasInteracted]);
 
   const handleVolumeChange = useCallback(
-    (volume: number) => {
+    (sliderValue: number) => {
       if (!isInitialized) {
         initializeAudio();
       }
@@ -72,7 +84,8 @@ export const MasterControls: React.FC = () => {
         setHasInteracted(true);
       }
 
-      updateMasterVolume(volume);
+      // Convert slider value (square root) back to actual volume (squared)
+      updateMasterVolume(sliderToVolume(sliderValue));
     },
     [updateMasterVolume, isInitialized, initializeAudio, hasInteracted]
   );
@@ -117,7 +130,7 @@ export const MasterControls: React.FC = () => {
           aria-label={isMasterMuted ? "Unmute all tracks" : "Mute all tracks"}
         />
         <Slider
-          value={masterVolume}
+          value={volumeToSlider(masterVolume)}
           onChange={handleVolumeChange}
           min={0}
           max={1}

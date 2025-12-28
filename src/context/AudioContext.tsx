@@ -46,7 +46,7 @@ export function AudioContextProvider({ children }: { children: ReactNode }) {
   // Initialize state
   const [state, setState] = useState<AudioState>({
     isInitialized: false,
-    isMasterMuted: true, // Default to muted
+    isMasterMuted: false, // Default to unmuted
     masterVolume: config.defaultSettings.masterVolume,
     currentSet: null,
     loadingSet: null,

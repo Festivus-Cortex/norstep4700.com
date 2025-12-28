@@ -8,7 +8,7 @@ import {
   getFrequencyBand,
   getFrequencyData,
   getTimeDomainData,
-} from "@/utils/audioUtils";
+} from "@/app/audio/utils";
 
 // FIXME: Generated content updates from ai agent. some of this is potentially
 // useful but needs migrated. Storing as a copy for now.

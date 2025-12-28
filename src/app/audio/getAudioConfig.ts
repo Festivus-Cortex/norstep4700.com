@@ -1,4 +1,4 @@
-import { AudioConfig } from "./types";
+import { AudioConfig, AudioConfigDefaultSettings } from "./types";
 
 /**
  * Fallback configuration with hardcoded zone structure.
@@ -6,12 +6,26 @@ import { AudioConfig } from "./types";
  */
 function getFallbackConfig(): AudioConfig {
   return {
+    // FIXME: The fallback audio config currently includes no music sets. Just
+    // in case the front end ever sees a config without sets then it needs to be
+    // handled gracefully. It could happen if the API call fails
     musicSets: [],
-    defaultSettings: {
-      masterVolume: 0.7,
-      trackVolume: 0.8,
-      trackPan: 0,
-    },
+    defaultSettings: getAudioConfigDefaultSettings(),
+  };
+}
+
+/**
+ * Get an object with default settings for the audio in the app. Controls
+ * starting volume and panning.
+ *
+ * @returns An object with default settings for the audio in the app. Controls
+ * starting volume and panning.
+ */
+export function getAudioConfigDefaultSettings(): AudioConfigDefaultSettings {
+  return {
+    masterVolume: 0.5625, // 0.5625 is .75 applied linearly
+    trackVolume: 0.25, // 0.25 is 0.5 applied linearly
+    trackPan: 0,
   };
 }
 

@@ -1,7 +1,7 @@
 // FIXME: Verify functionality and comment better.
 
 import { audioAnalyzer } from "@/app/audio/audio";
-import { Assert } from "./assert";
+import { Assert } from "../../utils/assert";
 
 // Audio analysis utilities
 export const getFrequencyData = () => {
