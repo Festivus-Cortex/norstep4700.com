@@ -71,19 +71,19 @@
 
 /**
  * Visual fill bar showing current value.
- * For volume: fills from left (0%) to right (100%).
- * For pan: fills from center outward (left for negative, right for positive).
+ * For unidirectional: fills from left (min) to current value.
+ * For bidirectional: fills from center point outward (left or right based on value).
  */
 .sliderFill {
   position: absolute;
   height: 100%;
   background: var(--accent-solid-medium); /* Accent color for active state */
-  transition: width var(--transition-micro-fast); /* Smooth width changes */
+  transition: width var(--transition-micro-fast), left var(--transition-micro-fast); /* Smooth changes */
   pointer-events: none; /* Let clicks pass through to input */
   border-radius: var(--radius-m) 0 0 var(--radius-m); /* Rounded left edge */
 
-  /* Pan mode uses center-based fill, no rounded edges */
-  &.panMode {
+  /* Bidirectional mode uses center-based fill, no rounded edges */
+  &.bidirectional {
     border-radius: 0;
   }
 
@@ -94,12 +94,11 @@
 }
 
 /**
- * Center marker for pan mode.
- * Shows the neutral center position (0 = no panning).
+ * Center marker for bidirectional sliders.
+ * Shows the neutral center/zero position.
  */
-.panCenter {
+.centerMarker {
   position: absolute;
-  left: 50%;
   width: 2px;
   height: 100%;
   background: var(--neutral-border-strong);

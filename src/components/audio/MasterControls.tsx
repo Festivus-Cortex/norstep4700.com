@@ -15,16 +15,37 @@ import styles from "./MasterControls.module.scss";
 
 /**
  * Converts a stored volume value to a slider display value.
- * Since gain is squared when applied, we take the square root for display.
+ *
+ * Audio gain is applied squared (for perceptual loudness), so we display
+ * the square root to give users a linear-feeling control.
+ *
+ * @param volume - Stored volume value (0-1, will be squared when applied to audio)
+ * @returns Display value for slider (0-1, square root of volume)
  */
 const volumeToSlider = (volume: number): number => Math.sqrt(volume);
 
 /**
  * Converts a slider value back to a stored volume value.
- * The slider shows square root values, so we square them for storage.
+ *
+ * Since the slider displays square root values, we square the input
+ * to get the actual volume value to store and apply.
+ *
+ * @param slider - Slider display value (0-1)
+ * @returns Stored volume value (0-1, squared)
  */
 const sliderToVolume = (slider: number): number => slider * slider;
 
+/**
+ * Master audio controls component.
+ *
+ * Provides global controls for the audio system:
+ * - Music set/zone selector (segmented control)
+ * - Master mute/unmute button
+ * - Master volume slider affecting all tracks
+ *
+ * This component handles audio initialization on first user interaction,
+ * as browsers require user gestures before playing audio.
+ */
 export const MasterControls: React.FC = () => {
   const {
     isMasterMuted,
@@ -38,20 +59,37 @@ export const MasterControls: React.FC = () => {
   const { currentZone, loadingZone, switchZone, availableZones } =
     useAudioMusicSet();
 
+  /**
+   * Tracks whether the user has interacted with any audio control.
+   * Used to ensure audio context is initialized before playback.
+   */
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Create zone options for SegmentedControl
+  /**
+   * Convert available zones to options for the SegmentedControl.
+   * Maps zone objects to { label, value } format.
+   */
   const zoneOptions = availableZones.map((zone) => ({
     label: zone.displayName,
     value: zone.id.toString(),
   }));
 
+  /**
+   * Handle music set/zone selection change.
+   *
+   * Initializes audio context on first interaction, then switches to
+   * the selected zone/music set.
+   *
+   * @param value - Zone ID as string
+   */
   const handleMusicSetChange = useCallback(
     async (value: string) => {
+      // Initialize audio context if not already done
       if (!isInitialized) {
         initializeAudio();
       }
 
+      // Track first user interaction
       if (!hasInteracted) {
         setHasInteracted(true);
       }
@@ -62,11 +100,19 @@ export const MasterControls: React.FC = () => {
     [switchZone, isInitialized, initializeAudio, hasInteracted]
   );
 
+  /**
+   * Handle master mute toggle.
+   *
+   * Initializes audio context on first interaction, then toggles
+   * the master mute state affecting all tracks.
+   */
   const handleMuteToggle = useCallback(() => {
+    // Initialize audio context if not already done
     if (!isInitialized) {
       initializeAudio();
     }
 
+    // Track first user interaction
     if (!hasInteracted) {
       setHasInteracted(true);
     }
@@ -74,12 +120,22 @@ export const MasterControls: React.FC = () => {
     toggleMasterMute();
   }, [toggleMasterMute, isInitialized, initializeAudio, hasInteracted]);
 
+  /**
+   * Handle master volume slider changes.
+   *
+   * Initializes audio context on first interaction, converts the linear
+   * slider value to squared volume, and updates the master volume.
+   *
+   * @param sliderValue - Linear slider value (0-1)
+   */
   const handleVolumeChange = useCallback(
     (sliderValue: number) => {
+      // Initialize audio context if not already done
       if (!isInitialized) {
         initializeAudio();
       }
 
+      // Track first user interaction
       if (!hasInteracted) {
         setHasInteracted(true);
       }
@@ -136,7 +192,6 @@ export const MasterControls: React.FC = () => {
           max={1}
           step={0.01}
           label="Set Volume"
-          mode="volume"
           disabled={isMasterMuted}
         />
       </Flex>

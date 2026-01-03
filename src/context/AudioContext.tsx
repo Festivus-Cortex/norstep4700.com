@@ -78,9 +78,9 @@ export function AudioContextProvider({ children }: { children: ReactNode }) {
   const setLoadedZone = useCallback(
     (zoneId: number, zoneData: MusicSetData) => {
       setState((prev) => {
-        const newLoadedZones = new Map(prev.loadedSets);
-        newLoadedZones.set(zoneId, zoneData);
-        return { ...prev, loadedZones: newLoadedZones };
+        const newLoadedSets = new Map(prev.loadedSets);
+        newLoadedSets.set(zoneId, zoneData);
+        return { ...prev, loadedSets: newLoadedSets };
       });
     },
     []
@@ -88,9 +88,9 @@ export function AudioContextProvider({ children }: { children: ReactNode }) {
 
   const unloadZone = useCallback((zoneId: number) => {
     setState((prev) => {
-      const newLoadedZones = new Map(prev.loadedSets);
-      newLoadedZones.delete(zoneId);
-      return { ...prev, loadedZones: newLoadedZones };
+      const newLoadedSets = new Map(prev.loadedSets);
+      newLoadedSets.delete(zoneId);
+      return { ...prev, loadedSets: newLoadedSets };
     });
   }, []);
 

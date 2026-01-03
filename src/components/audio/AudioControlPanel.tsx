@@ -9,12 +9,37 @@ import { audioCtx, audioError } from "@/app/audio/audio";
 import styles from "./AudioControlPanel.module.scss";
 import classNames from "classnames";
 
+/**
+ * Main audio control panel component.
+ *
+ * Provides a collapsible/expandable interface for controlling audio playback:
+ * - **Collapsed state**: Shows a compact toggle button
+ * - **Expanded state**: Shows full audio controls (master controls + track grid)
+ *
+ * Responsive positioning:
+ * - Desktop: Fixed below the header, centered horizontally
+ * - Mobile: Fixed above the bottom navbar
+ *
+ * The panel adapts its width to match the navigation controls and includes
+ * a fade-in animation on page load.
+ */
 export const AudioControlPanel: React.FC = () => {
+  /** Whether the panel is expanded to show full controls */
   const [isExpanded, setIsExpanded] = useState(false);
+
+  /** Width of the navbar controls, used to size the panel */
   const [navbarWidth, setNavbarWidth] = useState(0);
+
+  /** Whether the panel has faded in (for smooth appearance on load) */
   const [isVisible, setIsVisible] = useState(false);
 
-  // Measure navbar controls width on mount and resize
+  /**
+   * Measure the navbar controls width on mount and window resize.
+   *
+   * The panel width is based on the navbar width to maintain visual alignment:
+   * - Collapsed: 85% of navbar width
+   * - Expanded: 100% of navbar width
+   */
   useEffect(() => {
     const measureNavbar = () => {
       const navControls = document.getElementById("nav-controls");
@@ -31,7 +56,12 @@ export const AudioControlPanel: React.FC = () => {
     };
   }, []);
 
-  // Fade in after page load
+  /**
+   * Fade in the panel after page load.
+   *
+   * Waits for the document to be fully loaded, then adds a 500ms delay
+   * before triggering the fade-in animation (via CSS transition).
+   */
   useEffect(() => {
     // Wait for page to be fully loaded
     if (document.readyState === "complete") {
@@ -53,15 +83,27 @@ export const AudioControlPanel: React.FC = () => {
     }
   }, []);
 
-  // Calculate widths: collapsed is 85% of navbar, expanded is 100%
+  /**
+   * Calculate panel widths based on navbar width.
+   *
+   * - Collapsed: 85% of navbar (slightly narrower for visual distinction)
+   * - Expanded: 100% of navbar (full width for all controls)
+   */
   const collapsedWidth = navbarWidth > 0 ? navbarWidth * 0.85 : undefined;
   const expandedWidth = navbarWidth > 0 ? navbarWidth : undefined;
 
+  /**
+   * Toggle between collapsed and expanded states.
+   */
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // Check if audio is supported
+  /**
+   * Check if the browser/device supports Web Audio API.
+   *
+   * If not supported, show an error message instead of audio controls.
+   */
   const hasAudioSupport = !audioError && audioCtx !== undefined;
 
   return (
