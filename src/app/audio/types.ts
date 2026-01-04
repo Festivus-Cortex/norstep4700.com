@@ -35,10 +35,13 @@ export interface MusicTrackState {
   id: string;
   /** Track name for display */
   name: string;
-  /** Whether the track is currently muted */
+  /** Whether the track is manually muted by the user (persistent across solo operations) */
   isMuted: boolean;
-  /** Whether the track is soloed (mutes all other tracks) */
+  /** Whether the track is soloed (when true, non-soloed tracks are temporarily muted) */
   isSolo: boolean;
+  /** Computed: true if muted OR solo-muted (isMuted || (anySoloActive &&
+   * !isSolo)) - left as value instead of function for react*/
+  isEffectivelyMuted: boolean;
   /** Volume level from 0 (silent) to 1 (full volume) */
   volume: number; // 0-1
   /** Stereo pan position from -1 (full left) to 1 (full right), 0 is center */

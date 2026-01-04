@@ -31,6 +31,7 @@ export function useTrackControls() {
 
   /**
    * Toggles mute for a track.
+   * Updates both isMuted (user preference) and isEffectivelyMuted (actual audio state).
    */
   const toggleMute = useCallback(
     (trackId: string) => {
@@ -41,16 +42,30 @@ export function useTrackControls() {
       if (!nodes) return;
 
       const newMuted = !track.isMuted;
-      nodes.gain.gain.value = newMuted ? 0 : linearToGain(track.volume);
 
-      context.updateTrack(trackId, { isMuted: newMuted });
+      // Check if any track is soloed
+      const anySoloActive = context.tracks.some((t) => t.isSolo);
+
+      // Compute effective mute: user muted OR (solo active AND not soloed)
+      const effectivelyMuted = newMuted || (anySoloActive && !track.isSolo);
+
+      // Update audio nodes
+      nodes.gain.gain.value = effectivelyMuted ? 0 : linearToGain(track.volume);
+
+      // Update state
+      context.updateTrack(trackId, {
+        isMuted: newMuted,
+        isEffectivelyMuted: effectivelyMuted,
+      });
     },
     [context, getTrackNodes]
   );
 
   /**
    * Toggles solo for a track.
-   * When solo is enabled, all other tracks are muted.
+   *
+   * Preserves user mute states (isMuted) while computing effective mute (isEffectivelyMuted).
+   * Supports multiple tracks being soloed simultaneously.
    */
   const toggleSolo = useCallback(
     (trackId: string) => {
@@ -59,31 +74,35 @@ export function useTrackControls() {
 
       const newSolo = !track.isSolo;
 
-      // Update all tracks
+      // Update solo state for the toggled track first
+      context.updateTrack(trackId, { isSolo: newSolo });
+
+      // Check if ANY track is now soloed (including the one we just toggled)
+      const anySoloActive = context.tracks.some((t) =>
+        t.id === trackId ? newSolo : t.isSolo
+      );
+
+      // Update effective mute state for ALL tracks
       context.tracks.forEach((t) => {
         const nodes = getTrackNodes(t.id);
         if (!nodes) return;
 
-        if (t.id === trackId) {
-          // Toggle solo on this track
-          context.updateTrack(t.id, { isSolo: newSolo });
-          // Unmute when solo is enabled
-          if (newSolo) {
-            nodes.gain.gain.value = linearToGain(t.volume);
-            context.updateTrack(t.id, { isMuted: false });
-          }
+        // For the current track being processed, use updated solo state
+        const trackIsSolo = t.id === trackId ? newSolo : t.isSolo;
+
+        // Compute effective mute state:
+        // - If user muted: always muted
+        // - If solo is active and this track is NOT soloed: muted
+        const effectivelyMuted = t.isMuted || (anySoloActive && !trackIsSolo);
+
+        // Update the computed state
+        context.updateTrack(t.id, { isEffectivelyMuted: effectivelyMuted });
+
+        // Apply to audio nodes
+        if (effectivelyMuted) {
+          nodes.gain.gain.value = 0;
         } else {
-          // Mute/unmute other tracks based on solo state
-          if (newSolo) {
-            // Mute other tracks when solo is enabled
-            nodes.gain.gain.value = 0;
-            context.updateTrack(t.id, { isMuted: true });
-          } else {
-            // Restore other tracks when solo is disabled
-            nodes.gain.gain.value = t.isMuted ? 0 : linearToGain(t.volume);
-          }
-          // Clear solo state on other tracks
-          context.updateTrack(t.id, { isSolo: false });
+          nodes.gain.gain.value = linearToGain(t.volume);
         }
       });
     },
@@ -92,6 +111,7 @@ export function useTrackControls() {
 
   /**
    * Updates the volume for a track.
+   * Only applies to audio nodes if the track is not effectively muted.
    */
   const updateVolume = useCallback(
     (trackId: string, volume: number) => {
@@ -101,8 +121,8 @@ export function useTrackControls() {
       const nodes = getTrackNodes(trackId);
       if (!nodes) return;
 
-      // Update volume node (unless muted)
-      if (!track.isMuted) {
+      // Update volume node (unless effectively muted)
+      if (!track.isEffectivelyMuted) {
         setTrackVolume(nodes, volume);
       }
 

@@ -128,17 +128,29 @@ export const TrackControl = React.memo<TrackControlProps>(
           </Text>
           <Flex gap="4">
             <IconButton
-              icon={track.isMuted ? "volumeOff" : "volume2"}
+              icon={track.isEffectivelyMuted ? "volumeOff" : "volume2"}
               size="s"
-              variant={track.isMuted ? "danger" : "ghost"}
-              tooltip={track.isMuted ? "Unmute" : "Mute"}
+              variant={
+                track.isMuted
+                  ? "danger" // User muted: red
+                  : track.isEffectivelyMuted
+                    ? "secondary" // Solo-muted: gray/dimmed
+                    : "ghost" // Normal: default
+              }
+              tooltip={
+                track.isMuted
+                  ? "Unmute"
+                  : track.isEffectivelyMuted
+                    ? "Muted by solo"
+                    : "Mute"
+              }
               onClick={handleMuteToggle}
               aria-label={`${track.isMuted ? "Unmute" : "Mute"} ${trackName}`}
             />
             <IconButton
               icon="star"
               size="s"
-              // variant={track.isSolo ? "tertiary" : "ghost"}
+              variant={track.isSolo ? "tertiary" : "ghost"}
               tooltip={track.isSolo ? "Unsolo" : "Solo"}
               onClick={handleSoloToggle}
               aria-label={`${track.isSolo ? "Unsolo" : "Solo"} ${trackName}`}
@@ -154,7 +166,7 @@ export const TrackControl = React.memo<TrackControlProps>(
           max={1}
           step={0.01}
           label="Volume"
-          disabled={track.isMuted}
+          disabled={track.isEffectivelyMuted}
         />
 
         {/* Pan slider */}

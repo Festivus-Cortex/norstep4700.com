@@ -66,6 +66,7 @@ export function useAudioMusicSet() {
             name: track.name,
             isMuted: false,
             isSolo: false,
+            isEffectivelyMuted: false,
             volume: context.config.defaultSettings.trackVolume,
             pan: context.config.defaultSettings.trackPan,
           })
