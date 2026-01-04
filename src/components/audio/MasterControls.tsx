@@ -51,9 +51,11 @@ export const MasterControls: React.FC = () => {
     isMasterMuted,
     masterVolume,
     toggleMasterMute,
+    togglePlayPause,
     updateMasterVolume,
     initializeAudio,
     isInitialized,
+    isPlaying,
   } = useAudioManager();
 
   const { currentZone, loadingZone, switchZone, availableZones } =
@@ -146,6 +148,26 @@ export const MasterControls: React.FC = () => {
     [updateMasterVolume, isInitialized, initializeAudio, hasInteracted]
   );
 
+  /**
+   * Handle play/pause toggle.
+   *
+   * Initializes audio context on first interaction, then toggles
+   * the play/pause state of the audio context.
+   */
+  const handlePlayPauseToggle = useCallback(() => {
+    // Initialize audio context if not already done
+    if (!isInitialized) {
+      initializeAudio();
+    }
+
+    // Track first user interaction
+    if (!hasInteracted) {
+      setHasInteracted(true);
+    }
+
+    togglePlayPause();
+  }, [togglePlayPause, isInitialized, initializeAudio, hasInteracted]);
+
   return (
     <Flex
       direction="column"
@@ -160,7 +182,9 @@ export const MasterControls: React.FC = () => {
       {/* Music Set Selector */}
       <Flex direction="column" gap="8">
         <Text variant="label-default-m" onBackground="neutral-strong">
-          Music Selection
+          {currentZone === null
+            ? "Please select to continue - Music Selection"
+            : "Music Selection"}
         </Text>
         <Flex gap="8" vertical="center">
           <SegmentedControl
@@ -175,8 +199,17 @@ export const MasterControls: React.FC = () => {
         </Flex>
       </Flex>
 
-      {/* Master Controls */}
+      {/* Music Set Controls */}
       <Flex gap="12" vertical="center">
+        {currentZone !== null && (
+          <IconButton
+            icon={isPlaying ? "pause" : "play"}
+            size="m"
+            tooltip={isPlaying ? "Pause" : "Play"}
+            onClick={handlePlayPauseToggle}
+            aria-label={isPlaying ? "Pause playback" : "Play playback"}
+          />
+        )}
         <IconButton
           icon={isMasterMuted ? "volumeOff" : "volumeHigh"}
           size="m"
@@ -191,8 +224,8 @@ export const MasterControls: React.FC = () => {
           min={0}
           max={1}
           step={0.01}
-          label="Set Volume"
           disabled={isMasterMuted}
+          style={{ width: "200px" }}
         />
       </Flex>
     </Flex>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useAudioContext } from "@/context/AudioContext";
-import { setMasterVolume } from "@/app/audio/audio";
+import { setMasterVolume, pauseAudio, resumeAudio } from "@/app/audio/audio";
 import { useEffect } from "react";
 
 /**
@@ -28,6 +28,16 @@ export function useAudioManager() {
     context.setMasterVolume(volume);
   };
 
+  const togglePlayPause = async () => {
+    if (context.isPlaying) {
+      await pauseAudio();
+      context.setPlaying(false);
+    } else {
+      await resumeAudio();
+      context.setPlaying(true);
+    }
+  };
+
   return {
     // State
     isInitialized: context.isInitialized,
@@ -41,6 +51,7 @@ export function useAudioManager() {
     // Actions
     initializeAudio: context.initializeAudio,
     toggleMasterMute,
+    togglePlayPause,
     updateMasterVolume,
     setMasterMuted: context.setMasterMuted,
     setPlaying: context.setPlaying,

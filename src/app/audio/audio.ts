@@ -55,4 +55,30 @@ export function setMasterVolume(volume: number): void {
   audioRoot.gain.value = gain;
 }
 
+/**
+ * Pauses audio playback by suspending the audio context.
+ */
+export async function pauseAudio(): Promise<void> {
+  Assert.exists(
+    audioCtx,
+    "pauseAudio - Unable to pause audio without an audio context"
+  );
+  if (audioCtx.state === "running") {
+    await audioCtx.suspend();
+  }
+}
+
+/**
+ * Resumes audio playback by resuming the audio context.
+ */
+export async function resumeAudio(): Promise<void> {
+  Assert.exists(
+    audioCtx,
+    "resumeAudio - Unable to resume audio without an audio context"
+  );
+  if (audioCtx.state === "suspended") {
+    await audioCtx.resume();
+  }
+}
+
 export { audioCtx, audioRoot, audioAnalyzer, audioError };
