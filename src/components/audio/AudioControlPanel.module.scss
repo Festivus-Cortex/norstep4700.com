@@ -58,12 +58,19 @@
 
 /**
  * Panel content container (shown when expanded).
- * Scrollable if content exceeds viewport height.
+ * Scrollable with hidden scrollbar for cleaner appearance.
  */
 .panel {
   box-shadow: var(--shadow-l); /* Large elevation for prominence */
   max-height: 80vh; /* Limit height to 80% of viewport */
   overflow-y: auto; /* Scroll if content is too tall */
+
+  /* Hide scrollbar while maintaining scroll functionality */
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* WebKit browsers (Chrome, Safari, Edge) */
+  }
 
   /* Desktop spacing */
   padding: 16px;
@@ -80,6 +87,51 @@
     padding: 12px;
     gap: 12px;
     max-height: 70vh; /* Reduced from 80vh */
+  }
+}
+
+/**
+ * Scroll indicator with gradient scrim and chevron button.
+ * Positioned absolutely at top or bottom of panel.
+ */
+.scrollIndicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+
+  /* Allow button to receive clicks */
+  button {
+    pointer-events: auto;
+  }
+
+  /* Top position with gradient fading down */
+  &[data-position="top"] {
+    top: 0;
+    background: linear-gradient(
+      to bottom,
+      var(--page) 0%,
+      var(--page) 30%,
+      transparent 100%
+    );
+    border-radius: var(--radius-m) var(--radius-m) 0 0;
+  }
+
+  /* Bottom position with gradient fading up */
+  &[data-position="bottom"] {
+    bottom: 0;
+    background: linear-gradient(
+      to top,
+      var(--page) 0%,
+      var(--page) 30%,
+      transparent 100%
+    );
+    border-radius: 0 0 var(--radius-m) var(--radius-m);
   }
 }
 

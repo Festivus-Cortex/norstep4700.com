@@ -33,6 +33,13 @@ export const AudioControlPanel: React.FC = () => {
   /** Whether the panel has faded in (for smooth appearance on load) */
   const [isVisible, setIsVisible] = useState(false);
 
+  /** Scroll indicators state */
+  const [canScrollUp, setCanScrollUp] = useState(false);
+  const [canScrollDown, setCanScrollDown] = useState(false);
+
+  /** Reference to the scrollable panel element */
+  const panelRef = useRef<HTMLDivElement>(null);
+
   /**
    * Measure the navbar controls width on mount and window resize.
    *
@@ -84,6 +91,47 @@ export const AudioControlPanel: React.FC = () => {
   }, []);
 
   /**
+   * Check scroll position and update indicator visibility.
+   */
+  const checkScrollPosition = () => {
+    if (!panelRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = panelRef.current;
+    const threshold = 10; // Small threshold to account for rounding
+
+    setCanScrollUp(scrollTop > threshold);
+    setCanScrollDown(scrollTop + clientHeight < scrollHeight - threshold);
+  };
+
+  /**
+   * Set up scroll detection when panel is expanded.
+   */
+  useEffect(() => {
+    if (!isExpanded || !panelRef.current) return;
+
+    const panel = panelRef.current;
+
+    // Check initial scroll state
+    checkScrollPosition();
+
+    // Listen for scroll events
+    panel.addEventListener("scroll", checkScrollPosition);
+
+    // Re-check on resize (viewport changes can affect scrollability)
+    window.addEventListener("resize", checkScrollPosition);
+
+    // Re-check when content changes (use ResizeObserver for content size changes)
+    const resizeObserver = new ResizeObserver(checkScrollPosition);
+    resizeObserver.observe(panel);
+
+    return () => {
+      panel.removeEventListener("scroll", checkScrollPosition);
+      window.removeEventListener("resize", checkScrollPosition);
+      resizeObserver.disconnect();
+    };
+  }, [isExpanded]);
+
+  /**
    * Calculate panel widths based on navbar width.
    *
    * - Collapsed: 85% of navbar (slightly narrower for visual distinction)
@@ -129,63 +177,98 @@ export const AudioControlPanel: React.FC = () => {
         {!isExpanded ? (
           <AudioPanelToggle onClick={toggleExpanded} />
         ) : (
-          <Flex
-            direction="column"
-            radius="m"
-            background="page"
-            border="neutral-medium"
-            className={classNames(styles.panel, styles.expanded)}
-          >
-            {/* Close button */}
-            <Flex horizontal="space-between" vertical="center">
-              <Text variant="heading-strong-s" onBackground="neutral-strong">
-                Audio Controls
-              </Text>
-              <IconButton
-                icon="close"
-                size="s"
-                variant="ghost"
-                tooltip="Close"
-                onClick={toggleExpanded}
-                aria-label="Close audio controls"
-              />
+          <div style={{ position: "relative" }}>
+            {/* Scroll indicator - Top */}
+            {canScrollUp && (
+              <div className={styles.scrollIndicator} data-position="top">
+                <IconButton
+                  icon="chevronUp"
+                  size="s"
+                  variant="ghost"
+                  tooltip="Scroll up"
+                  onClick={() =>
+                    panelRef.current?.scrollBy({ top: -200, behavior: "smooth" })
+                  }
+                  aria-label="Scroll up"
+                />
+              </div>
+            )}
+
+            <Flex
+              direction="column"
+              radius="m"
+              background="page"
+              border="neutral-medium"
+              className={classNames(styles.panel, styles.expanded)}
+              ref={panelRef}
+            >
+              {/* Close button */}
+              <Flex horizontal="space-between" vertical="center">
+                <Text variant="heading-strong-s" onBackground="neutral-strong">
+                  Audio Controls
+                </Text>
+                <IconButton
+                  icon="close"
+                  size="s"
+                  variant="ghost"
+                  tooltip="Close"
+                  onClick={toggleExpanded}
+                  aria-label="Close audio controls"
+                />
+              </Flex>
+
+              {/* Show error message if audio is not supported */}
+              {!hasAudioSupport ? (
+                <Flex
+                  direction="column"
+                  radius="m"
+                  background="neutral-weak"
+                  border="neutral-medium"
+                  className={styles.errorMessage}
+                >
+                  <Text variant="body-default-m" onBackground="neutral-strong">
+                    This option requires web audio support from your browser and
+                    device. Ensure you have an audio output available and your
+                    browser is allowing audio.
+                  </Text>
+                </Flex>
+              ) : (
+                <>
+                  {/* Master controls */}
+                  <Flex>
+                    <SmartLink href="/work/av-the-game">
+                      Music comes from my game, <i>A.V.</i>
+                    </SmartLink>
+                  </Flex>
+                  <Flex>
+                    <SmartLink href="/work/customizing-portfolio-template-instance">
+                      Learn more about this feature here.
+                    </SmartLink>
+                  </Flex>
+                  <AudioControls />
+
+                  {/* Track controls */}
+                  <TrackControlsGrid />
+                </>
+              )}
             </Flex>
 
-            {/* Show error message if audio is not supported */}
-            {!hasAudioSupport ? (
-              <Flex
-                direction="column"
-                radius="m"
-                background="neutral-weak"
-                border="neutral-medium"
-                className={styles.errorMessage}
-              >
-                <Text variant="body-default-m" onBackground="neutral-strong">
-                  This option requires web audio support from your browser and
-                  device. Ensure you have an audio output available and your
-                  browser is allowing audio.
-                </Text>
-              </Flex>
-            ) : (
-              <>
-                {/* Master controls */}
-                <Flex>
-                  <SmartLink href="/work/av-the-game">
-                    Music from<i>A.V.</i>
-                  </SmartLink>
-                </Flex>
-                <Flex>
-                  <SmartLink href="/work/customizing-portfolio-template-instance">
-                    Learn more about this feature.
-                  </SmartLink>
-                </Flex>
-                <AudioControls />
-
-                {/* Track controls */}
-                <TrackControlsGrid />
-              </>
+            {/* Scroll indicator - Bottom */}
+            {canScrollDown && (
+              <div className={styles.scrollIndicator} data-position="bottom">
+                <IconButton
+                  icon="chevronDown"
+                  size="s"
+                  variant="ghost"
+                  tooltip="Scroll down"
+                  onClick={() =>
+                    panelRef.current?.scrollBy({ top: 200, behavior: "smooth" })
+                  }
+                  aria-label="Scroll down"
+                />
+              </div>
             )}
-          </Flex>
+          </div>
         )}
       </Flex>
     </div>
