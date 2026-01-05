@@ -49,7 +49,7 @@ if (typeof window !== "undefined") {
 export function setMasterVolume(volume: number): void {
   Assert.exists(
     audioRoot,
-    "setMasterVolume - Unable to set master volume without a "
+    "setMasterVolume - Unable to set master volume without a valid root audio gain node."
   );
   const gain = linearToGain(Math.max(0, Math.min(1, volume)));
   audioRoot.gain.value = gain;

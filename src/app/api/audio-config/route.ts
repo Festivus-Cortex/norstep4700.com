@@ -24,7 +24,7 @@ export async function GET() {
     const musicSets: MusicSets[] = musicDirs.map((setName, index) => {
       const setPath = path.join(audioDir, setName);
 
-      // Read all .mp3 files in the zone directory
+      // Read all .mp3 files in the music set directory
       const trackFiles = fs
         .readdirSync(setPath)
         .filter((file) => file.endsWith(".mp3"))

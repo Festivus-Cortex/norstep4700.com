@@ -14,8 +14,10 @@ export function useAudioAnalyzer() {
   /**
    * Gets the current frequency data from the analyzer.
    * Returns Uint8Array with frequency magnitude values (0-255).
+   * Returns empty array if analyzer is not available.
    */
   const getFrequencyData = useCallback(() => {
+    if (!audioAnalyzer) return new Uint8Array(0);
     const dataArray = new Uint8Array(audioAnalyzer.frequencyBinCount);
     audioAnalyzer.getByteFrequencyData(dataArray);
     return dataArray;
@@ -24,8 +26,10 @@ export function useAudioAnalyzer() {
   /**
    * Gets the current time-domain data from the analyzer.
    * Returns Uint8Array with waveform values (0-255).
+   * Returns empty array if analyzer is not available.
    */
   const getTimeDomainData = useCallback(() => {
+    if (!audioAnalyzer) return new Uint8Array(0);
     const dataArray = new Uint8Array(audioAnalyzer.fftSize);
     audioAnalyzer.getByteTimeDomainData(dataArray);
     return dataArray;

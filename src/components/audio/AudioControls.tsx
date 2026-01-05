@@ -39,7 +39,7 @@ const sliderToVolume = (slider: number): number => slider * slider;
  * Audio controls component.
  *
  * Provides global controls for the audio system:
- * - Music set/zone selector (segmented control)
+ * - Music set selector (segmented control)
  * - Master mute/unmute button
  * - Master volume slider affecting all tracks
  *
@@ -58,7 +58,7 @@ export const AudioControls: React.FC = () => {
     isPlaying,
   } = useAudioManager();
 
-  const { currentZone, loadingZone, switchZone, availableZones } =
+  const { currentMusicSet, loadingMusicSet, switchMusicSet, availableMusicSets } =
     useAudioMusicSet();
 
   /**
@@ -68,21 +68,21 @@ export const AudioControls: React.FC = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
 
   /**
-   * Convert available zones to options for the SegmentedControl.
-   * Maps zone objects to { label, value } format.
+   * Convert available music sets to options for the SegmentedControl.
+   * Maps music set objects to { label, value } format.
    */
-  const zoneOptions = availableZones.map((zone) => ({
-    label: zone.displayName,
-    value: zone.id.toString(),
+  const musicSetOptions = availableMusicSets.map((musicSet) => ({
+    label: musicSet.displayName,
+    value: musicSet.id.toString(),
   }));
 
   /**
-   * Handle music set/zone selection change.
+   * Handle music set selection change.
    *
    * Initializes audio context on first interaction, then switches to
-   * the selected zone/music set.
+   * the selected music set.
    *
-   * @param value - Zone ID as string
+   * @param value - Music set ID as string
    */
   const handleMusicSetChange = useCallback(
     async (value: string) => {
@@ -96,10 +96,10 @@ export const AudioControls: React.FC = () => {
         setHasInteracted(true);
       }
 
-      const zoneId = parseInt(value, 10);
-      await switchZone(zoneId);
+      const musicSetId = parseInt(value, 10);
+      await switchMusicSet(musicSetId);
     },
-    [switchZone, isInitialized, initializeAudio, hasInteracted]
+    [switchMusicSet, isInitialized, initializeAudio, hasInteracted]
   );
 
   /**
@@ -182,26 +182,26 @@ export const AudioControls: React.FC = () => {
       {/* Music Set Selector */}
       <Flex direction="column" gap="8">
         <Text variant="label-default-m" onBackground="neutral-strong">
-          {currentZone === null
+          {currentMusicSet === null
             ? "Please select to continue - Music Selection"
             : "Music Selection"}
         </Text>
         <Flex gap="8" vertical="center">
           <SegmentedControl
-            buttons={zoneOptions}
-            selected={currentZone?.toString() || ""}
+            buttons={musicSetOptions}
+            selected={currentMusicSet?.toString() || ""}
             onToggle={handleMusicSetChange}
             fillWidth
           />
-          {loadingZone !== null && (
-            <Spinner size="s" ariaLabel="Loading zone..." />
+          {loadingMusicSet !== null && (
+            <Spinner size="s" ariaLabel="Loading music set..." />
           )}
         </Flex>
       </Flex>
 
       {/* Music Set Controls */}
       <Flex gap="12" vertical="center">
-        {currentZone !== null && (
+        {currentMusicSet !== null && (
           <IconButton
             icon={isPlaying ? "pause" : "play"}
             size="m"

@@ -1,7 +1,7 @@
 import { AudioConfig, AudioConfigDefaultSettings } from "./types";
 
 /**
- * Fallback configuration with hardcoded zone structure.
+ * Fallback configuration with hardcoded music set structure.
  * Used if the API call fails or during SSR before client hydration.
  */
 function getFallbackConfig(): AudioConfig {
@@ -31,7 +31,7 @@ export function getAudioConfigDefaultSettings(): AudioConfigDefaultSettings {
 
 /**
  * Fetches audio configuration from the server API.
- * The API dynamically scans the public/audio directory to discover zones and tracks.
+ * The API dynamically scans the public/audio directory to discover music sets and tracks.
  *
  * Falls back to hardcoded config if the fetch fails.
  */

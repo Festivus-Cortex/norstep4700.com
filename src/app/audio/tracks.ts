@@ -12,7 +12,7 @@ import { MusicTrackNodes } from "./types";
  * AudioBufferSourceNode → GainNode (volume/mute) → StereoPannerNode (pan) → parent
  *
  * @param buffer - The AudioBuffer containing the track's audio data
- * @param parent - The parent node to connect to (typically the zone gain node)
+ * @param parent - The parent node to connect to (typically the music set gain node)
  * @param initialVolume - Initial volume level (0-1)
  * @param initialPan - Initial pan position (-1 to 1)
  * @param loop - Whether the track should loop

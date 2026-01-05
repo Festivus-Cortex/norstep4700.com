@@ -72,6 +72,8 @@ export interface MusicSetData {
   buffers: AudioBuffer[];
   /** Web Audio node chains for all tracks in the music set */
   nodes: MusicTrackNodes[];
+  /** The master gain node for this music set (parent node for all tracks) */
+  musicSetNode: GainNode;
 }
 
 /**

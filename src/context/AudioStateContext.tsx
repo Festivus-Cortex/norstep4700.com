@@ -21,10 +21,10 @@ interface AudioStateContextType extends AudioState {
   initializeAudio: () => void;
   setMasterMuted: (muted: boolean) => void;
   setMasterVolume: (volume: number) => void;
-  setCurrentZone: (zoneId: number | null) => void;
-  setLoadingZone: (zoneId: number | null) => void;
-  setLoadedZone: (zoneId: number, zoneData: MusicSetData) => void;
-  unloadZone: (zoneId: number) => void;
+  setCurrentMusicSet: (musicSetId: number | null) => void;
+  setLoadingMusicSet: (musicSetId: number | null) => void;
+  setLoadedMusicSet: (musicSetId: number, musicSetData: MusicSetData) => void;
+  unloadMusicSet: (musicSetId: number) => void;
   setTracks: (tracks: MusicTrackState[]) => void;
   updateTrack: (trackId: string, updates: Partial<MusicTrackState>) => void;
   setPlaying: (playing: boolean) => void;
@@ -67,29 +67,29 @@ export function AudioStateProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, masterVolume: volume }));
   }, []);
 
-  const setCurrentZone = useCallback((zoneId: number | null) => {
-    setState((prev) => ({ ...prev, currentSet: zoneId }));
+  const setCurrentMusicSet = useCallback((musicSetId: number | null) => {
+    setState((prev) => ({ ...prev, currentSet: musicSetId }));
   }, []);
 
-  const setLoadingZone = useCallback((zoneId: number | null) => {
-    setState((prev) => ({ ...prev, loadingSet: zoneId }));
+  const setLoadingMusicSet = useCallback((musicSetId: number | null) => {
+    setState((prev) => ({ ...prev, loadingSet: musicSetId }));
   }, []);
 
-  const setLoadedZone = useCallback(
-    (zoneId: number, zoneData: MusicSetData) => {
+  const setLoadedMusicSet = useCallback(
+    (musicSetId: number, musicSetData: MusicSetData) => {
       setState((prev) => {
         const newLoadedSets = new Map(prev.loadedSets);
-        newLoadedSets.set(zoneId, zoneData);
+        newLoadedSets.set(musicSetId, musicSetData);
         return { ...prev, loadedSets: newLoadedSets };
       });
     },
     []
   );
 
-  const unloadZone = useCallback((zoneId: number) => {
+  const unloadMusicSet = useCallback((musicSetId: number) => {
     setState((prev) => {
       const newLoadedSets = new Map(prev.loadedSets);
-      newLoadedSets.delete(zoneId);
+      newLoadedSets.delete(musicSetId);
       return { ...prev, loadedSets: newLoadedSets };
     });
   }, []);
@@ -120,10 +120,10 @@ export function AudioStateProvider({ children }: { children: ReactNode }) {
     initializeAudio,
     setMasterMuted,
     setMasterVolume,
-    setCurrentZone,
-    setLoadingZone,
-    setLoadedZone,
-    unloadZone,
+    setCurrentMusicSet,
+    setLoadingMusicSet,
+    setLoadedMusicSet,
+    unloadMusicSet,
     setTracks,
     updateTrack,
     setPlaying,

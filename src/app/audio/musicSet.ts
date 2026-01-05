@@ -19,7 +19,7 @@ export function disconnectMusicSetNodes(
   // Cleanup all track nodes
   trackNodes.forEach((nodes) => disconnectTrackNodes(nodes));
 
-  // Disconnect zone node
+  // Disconnect music set node
   musicSetGainNode.disconnect();
 }
 

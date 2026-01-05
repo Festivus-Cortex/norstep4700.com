@@ -20,17 +20,17 @@ export function useAudioMusicSet() {
   /**
    * Loads a music set's audio buffers and creates Web Audio nodes.
    */
-  const loadZone = useCallback(
+  const loadMusicSet = useCallback(
     async (musicSetId: number) => {
       const musicSet = context.config.musicSets.find(
-        (z) => z.id === musicSetId
+        (ms) => ms.id === musicSetId
       );
       if (!musicSet) {
         console.error(`Music set ${musicSetId} not found`);
         return;
       }
 
-      context.setLoadingZone(musicSetId);
+      context.setLoadingMusicSet(musicSetId);
 
       try {
         // Load all track buffers for this music set
@@ -38,13 +38,13 @@ export function useAudioMusicSet() {
         const buffers = await loadMultipleAudioBuffers(trackPaths);
 
         // Create music set node
-        const zoneNode = createMusicSetNode();
+        const musicSetNode = createMusicSetNode();
 
         // Create nodes for each track
         const trackNodes = buffers.map((buffer, index) => {
           return createTrackNodes(
             buffer,
-            zoneNode,
+            musicSetNode,
             context.config.defaultSettings.trackVolume,
             context.config.defaultSettings.trackPan,
             true // loop
@@ -52,12 +52,13 @@ export function useAudioMusicSet() {
         });
 
         // Store music set data
-        const zoneData: MusicSetData = {
+        const musicSetData: MusicSetData = {
           setId: musicSetId,
           buffers,
           nodes: trackNodes,
+          musicSetNode: musicSetNode,
         };
-        context.setLoadedZone(musicSetId, zoneData);
+        context.setLoadedMusicSet(musicSetId, musicSetData);
 
         // Initialize track state
         const trackStates: MusicTrackState[] = musicSet.tracks.map(
@@ -81,11 +82,11 @@ export function useAudioMusicSet() {
 
         context.setPlaying(true);
 
-        context.setCurrentZone(musicSetId);
-        context.setLoadingZone(null);
+        context.setCurrentMusicSet(musicSetId);
+        context.setLoadingMusicSet(null);
       } catch (error) {
         console.error(`Error loading music set ${musicSetId}:`, error);
-        context.setLoadingZone(null);
+        context.setLoadingMusicSet(null);
       }
     },
     [context]
@@ -97,26 +98,18 @@ export function useAudioMusicSet() {
   const unloadCurrentMusicSet = useCallback(() => {
     if (context.currentSet === null) return;
 
-    const zoneData = context.loadedSets.get(context.currentSet);
-    if (!zoneData) return;
+    const musicSetData = context.loadedSets.get(context.currentSet);
+    if (!musicSetData) return;
 
     // Stop all tracks immediately
-    zoneData.nodes.forEach((nodes) => stopTrack(nodes));
+    musicSetData.nodes.forEach((nodes) => stopTrack(nodes));
 
-    // Find the music set node (it's the parent of the first track node)
-    const firstTrackNode = zoneData.nodes[0];
-    if (firstTrackNode) {
-      // Get the music set node by traversing the graph
-      // The music set node is connected to the first track's pan node
-      const zoneNode = firstTrackNode.pan.context.createGain();
+    // Disconnect all track nodes and the music set node
+    disconnectMusicSetNodes(musicSetData.musicSetNode, musicSetData.nodes);
 
-      // Disconnect all track nodes and the music set node
-      disconnectMusicSetNodes(zoneNode, zoneData.nodes);
-    }
-
-    // Remove from loaded zones
-    context.unloadZone(context.currentSet);
-    context.setCurrentZone(null);
+    // Remove from loaded music sets
+    context.unloadMusicSet(context.currentSet);
+    context.setCurrentMusicSet(null);
     context.setTracks([]);
     context.setPlaying(false);
   }, [context]);
@@ -126,25 +119,25 @@ export function useAudioMusicSet() {
    * Unloads the current music set and loads the new one.
    */
   const switchMusicSet = useCallback(
-    async (zoneId: number) => {
+    async (musicSetId: number) => {
       // Don't switch if already on this music set
-      if (context.currentSet === zoneId) return;
+      if (context.currentSet === musicSetId) return;
 
       // Unload current music set
       unloadCurrentMusicSet();
 
       // Load new music set
-      await loadZone(zoneId);
+      await loadMusicSet(musicSetId);
     },
-    [context.currentSet, unloadCurrentMusicSet, loadZone]
+    [context.currentSet, unloadCurrentMusicSet, loadMusicSet]
   );
 
   return {
-    currentZone: context.currentSet,
-    loadingZone: context.loadingSet,
-    loadZone,
-    unloadCurrentZone: unloadCurrentMusicSet,
-    switchZone: switchMusicSet,
-    availableZones: context.config.musicSets,
+    currentMusicSet: context.currentSet,
+    loadingMusicSet: context.loadingSet,
+    loadMusicSet,
+    unloadCurrentMusicSet: unloadCurrentMusicSet,
+    switchMusicSet: switchMusicSet,
+    availableMusicSets: context.config.musicSets,
   };
 }
