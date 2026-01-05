@@ -1,6 +1,6 @@
 "use client";
 
-import { useAudioContext } from "@/context/AudioContext";
+import { useAudioState } from "@/context/AudioStateContext";
 import { setMasterVolume, pauseAudio, resumeAudio } from "@/app/audio/audio";
 import { useEffect } from "react";
 
@@ -9,7 +9,7 @@ import { useEffect } from "react";
  * Provides access to audio state and master controls.
  */
 export function useAudioManager() {
-  const context = useAudioContext();
+  const context = useAudioState();
 
   // Sync master volume with audio node when it changes
   useEffect(() => {

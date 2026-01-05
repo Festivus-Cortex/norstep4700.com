@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAudioContext } from "@/context/AudioContext";
+import { useAudioState } from "@/context/AudioStateContext";
 import { setTrackVolume, setTrackPan } from "@/app/audio/tracks";
 import { linearToGain } from "@/app/audio/audio";
 
@@ -9,7 +9,7 @@ import { linearToGain } from "@/app/audio/audio";
  * Hook for managing individual track controls (mute, solo, volume, pan).
  */
 export function useTrackControls() {
-  const context = useAudioContext();
+  const context = useAudioState();
 
   /**
    * Gets the track nodes for a specific track.

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAudioContext } from "@/context/AudioContext";
+import { useAudioState } from "@/context/AudioStateContext";
 import { loadMultipleAudioBuffers } from "@/app/audio/loader";
 import { createTrackNodes, startTrack, stopTrack } from "@/app/audio/tracks";
 import { MusicTrackState, MusicSetData } from "@/app/audio/types";
@@ -15,7 +15,7 @@ import {
  * Hook for managing music set loading, switching, and cleanup.
  */
 export function useAudioMusicSet() {
-  const context = useAudioContext();
+  const context = useAudioState();
 
   /**
    * Loads a music set's audio buffers and creates Web Audio nodes.

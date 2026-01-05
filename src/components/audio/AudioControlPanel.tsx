@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Flex, IconButton, Text } from "@/once-ui/components";
+import { Flex, IconButton, SmartLink, Text } from "@/once-ui/components";
 import { AudioPanelToggle } from "./AudioPanelToggle";
-import { MasterControls } from "./MasterControls";
+import { AudioControls } from "./AudioControls";
 import { TrackControlsGrid } from "./TrackControlsGrid";
 import { audioCtx, audioError } from "@/app/audio/audio";
 import styles from "./AudioControlPanel.module.scss";
@@ -107,153 +107,87 @@ export const AudioControlPanel: React.FC = () => {
   const hasAudioSupport = !audioError && audioCtx !== undefined;
 
   return (
-    <>
-      {/* Desktop version - below navbar */}
-      <div
-        className={classNames(styles.desktopContainer, {
-          [styles.visible]: isVisible,
-        })}
-      >
-        <Flex
-          direction="column"
-          gap="12"
-          style={{
-            width: isExpanded
-              ? (expandedWidth ? `${expandedWidth}px` : "100%")
-              : (collapsedWidth ? `${collapsedWidth}px` : "85%"),
-            margin: "0 auto",
-          }}
-        >
-          {!isExpanded ? (
-            <AudioPanelToggle onClick={toggleExpanded} />
-          ) : (
-            <Flex
-              direction="column"
-              gap="16"
-              padding="16"
-              radius="m"
-              background="page"
-              border="neutral-medium"
-              className={classNames(styles.panel, styles.expanded)}
-            >
-              {/* Close button */}
-              <Flex horizontal="space-between" vertical="center">
-                <Text variant="heading-strong-s" onBackground="neutral-strong">
-                  Audio Controls
-                </Text>
-                <IconButton
-                  icon="close"
-                  size="s"
-                  variant="ghost"
-                  tooltip="Close"
-                  onClick={toggleExpanded}
-                  aria-label="Close audio controls"
-                />
-              </Flex>
-
-              {/* Show error message if audio is not supported */}
-              {!hasAudioSupport ? (
-                <Flex
-                  direction="column"
-                  gap="8"
-                  padding="16"
-                  radius="m"
-                  background="neutral-weak"
-                  border="neutral-medium"
-                >
-                  <Text variant="body-default-m" onBackground="neutral-strong">
-                    This option requires web audio support from your browser and device. Ensure you have an audio output available and your browser is allowing audio.
-                  </Text>
-                </Flex>
-              ) : (
-                <>
-                  {/* Master controls */}
-                  <MasterControls />
-
-                  {/* Track controls */}
-                  <TrackControlsGrid />
-                </>
-              )}
-            </Flex>
-          )}
-        </Flex>
-      </div>
-
-      {/* Mobile version - above navbar */}
+    <div
+      className={classNames(styles.container, {
+        [styles.visible]: isVisible,
+      })}
+    >
       <Flex
-        show="s"
-        fillWidth
-        horizontal="center"
-        position="fixed"
-        bottom="0"
-        zIndex={8}
-        className={classNames(styles.mobileContainer, {
-          [styles.visible]: isVisible,
-        })}
+        direction="column"
+        gap="12"
+        style={{
+          width: isExpanded
+            ? expandedWidth
+              ? `${expandedWidth}px`
+              : "100%"
+            : collapsedWidth
+            ? `${collapsedWidth}px`
+            : "85%",
+          margin: "0 auto",
+        }}
       >
-        <Flex
-          direction="column"
-          gap="12"
-          style={{
-            width: isExpanded
-              ? (expandedWidth ? `${expandedWidth}px` : "100%")
-              : (collapsedWidth ? `${collapsedWidth}px` : "85%")
-          }}
-        >
-          {!isExpanded ? (
-            <AudioPanelToggle onClick={toggleExpanded} />
-          ) : (
-            <Flex
-              direction="column"
-              gap="12"
-              padding="12"
-              radius="m"
-              background="page"
-              border="neutral-medium"
-              className={classNames(styles.panel, styles.expanded)}
-            >
-              {/* Close button */}
-              <Flex horizontal="space-between" vertical="center">
-                <Text variant="heading-strong-s" onBackground="neutral-strong">
-                  Audio Controls
-                </Text>
-                <IconButton
-                  icon="close"
-                  size="s"
-                  variant="ghost"
-                  tooltip="Close"
-                  onClick={toggleExpanded}
-                  aria-label="Close audio controls"
-                />
-              </Flex>
-
-              {/* Show error message if audio is not supported */}
-              {!hasAudioSupport ? (
-                <Flex
-                  direction="column"
-                  gap="8"
-                  padding="12"
-                  radius="m"
-                  background="neutral-weak"
-                  border="neutral-medium"
-                >
-                  <Text variant="body-default-s" onBackground="neutral-strong">
-                    This option requires web audio support from your browser and device. Ensure you have an audio output available and your browser is allowing audio.
-                  </Text>
-                </Flex>
-              ) : (
-                <>
-                  {/* Master controls */}
-                  <MasterControls />
-
-                  {/* Track controls */}
-                  <TrackControlsGrid />
-                </>
-              )}
+        {!isExpanded ? (
+          <AudioPanelToggle onClick={toggleExpanded} />
+        ) : (
+          <Flex
+            direction="column"
+            radius="m"
+            background="page"
+            border="neutral-medium"
+            className={classNames(styles.panel, styles.expanded)}
+          >
+            {/* Close button */}
+            <Flex horizontal="space-between" vertical="center">
+              <Text variant="heading-strong-s" onBackground="neutral-strong">
+                Audio Controls
+              </Text>
+              <IconButton
+                icon="close"
+                size="s"
+                variant="ghost"
+                tooltip="Close"
+                onClick={toggleExpanded}
+                aria-label="Close audio controls"
+              />
             </Flex>
-          )}
-        </Flex>
+
+            {/* Show error message if audio is not supported */}
+            {!hasAudioSupport ? (
+              <Flex
+                direction="column"
+                radius="m"
+                background="neutral-weak"
+                border="neutral-medium"
+                className={styles.errorMessage}
+              >
+                <Text variant="body-default-m" onBackground="neutral-strong">
+                  This option requires web audio support from your browser and
+                  device. Ensure you have an audio output available and your
+                  browser is allowing audio.
+                </Text>
+              </Flex>
+            ) : (
+              <>
+                {/* Master controls */}
+                <Flex>
+                  <SmartLink href="/work/av-the-game">
+                    Music from<i>A.V.</i>
+                  </SmartLink>
+                </Flex>
+                <Flex>
+                  <SmartLink href="/work/customizing-portfolio-template-instance">
+                    Learn more about this feature.
+                  </SmartLink>
+                </Flex>
+                <AudioControls />
+
+                {/* Track controls */}
+                <TrackControlsGrid />
+              </>
+            )}
+          </Flex>
+        )}
       </Flex>
-    </>
+    </div>
   );
 };

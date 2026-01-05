@@ -1,0 +1,14 @@
+/**
+ * Main content wrapper styles
+ * Provides proper spacing for the AudioControlPanel
+ */
+
+.contentWrapper {
+  /* Desktop: Extra top padding to clear the AudioControlPanel */
+  padding-top: calc(var(--static-space-64) + var(--static-space-16)) !important;
+
+  /* Mobile: Small breathing room (navigation is at bottom) */
+  @media (--s) {
+    padding-top: var(--static-space-24) !important;
+  }
+}

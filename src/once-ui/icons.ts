@@ -73,6 +73,9 @@ export const iconLibrary: Record<string, IconType> = {
   x: FaXTwitter,
   clipboard: HiClipboard,
   arrowUpRightFromSquare: HiArrowTopRightOnSquare,
+
+  // NOTE: THe below icons were added as part of the portfolio site. Consider
+  // moving this elsewhere.
   volumeHigh: HiSpeakerWave,
   volumeOff: HiSpeakerXMark,
   volume2: HiOutlineSpeakerWave,

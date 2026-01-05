@@ -1,6 +1,6 @@
 "use client";
 
-import { useAudioContext } from "@/context/AudioContext";
+import { useAudioState } from "@/context/AudioStateContext";
 import { audioAnalyzer } from "@/app/audio/audio";
 import { useCallback } from "react";
 
@@ -9,7 +9,7 @@ import { useCallback } from "react";
  * Provides frequency and time-domain data from the AnalyserNode.
  */
 export function useAudioAnalyzer() {
-  const context = useAudioContext();
+  const context = useAudioState();
 
   /**
    * Gets the current frequency data from the analyzer.

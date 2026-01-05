@@ -11,7 +11,7 @@ import {
 import { Slider } from "./Slider";
 import { useAudioManager } from "@/hooks/audio/useAudioManager";
 import { useAudioMusicSet } from "@/hooks/audio/useAudioMusicSet";
-import styles from "./MasterControls.module.scss";
+import styles from "./AudioControls.module.scss";
 
 /**
  * Converts a stored volume value to a slider display value.
@@ -36,7 +36,7 @@ const volumeToSlider = (volume: number): number => Math.sqrt(volume);
 const sliderToVolume = (slider: number): number => slider * slider;
 
 /**
- * Master audio controls component.
+ * Audio controls component.
  *
  * Provides global controls for the audio system:
  * - Music set/zone selector (segmented control)
@@ -46,7 +46,7 @@ const sliderToVolume = (slider: number): number => slider * slider;
  * This component handles audio initialization on first user interaction,
  * as browsers require user gestures before playing audio.
  */
-export const MasterControls: React.FC = () => {
+export const AudioControls: React.FC = () => {
   const {
     isMasterMuted,
     masterVolume,

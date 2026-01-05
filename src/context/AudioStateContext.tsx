@@ -16,7 +16,7 @@ import {
 } from "@/app/audio/types";
 import { getAudioConfig, getAudioConfigSync } from "@/app/audio/getAudioConfig";
 
-interface AudioContextType extends AudioState {
+interface AudioStateContextType extends AudioState {
   config: AudioConfig;
   initializeAudio: () => void;
   setMasterMuted: (muted: boolean) => void;
@@ -30,9 +30,9 @@ interface AudioContextType extends AudioState {
   setPlaying: (playing: boolean) => void;
 }
 
-const AudioContext = createContext<AudioContextType | undefined>(undefined);
+const AudioStateContext = createContext<AudioStateContextType | undefined>(undefined);
 
-export function AudioContextProvider({ children }: { children: ReactNode }) {
+export function AudioStateProvider({ children }: { children: ReactNode }) {
   // Start with sync fallback config, will be updated with API data
   const [config, setConfig] = useState<AudioConfig>(getAudioConfigSync());
 
@@ -114,7 +114,7 @@ export function AudioContextProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, isPlaying: playing }));
   }, []);
 
-  const value: AudioContextType = {
+  const value: AudioStateContextType = {
     ...state,
     config,
     initializeAudio,
@@ -130,14 +130,14 @@ export function AudioContextProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AudioContext.Provider value={value}>{children}</AudioContext.Provider>
+    <AudioStateContext.Provider value={value}>{children}</AudioStateContext.Provider>
   );
 }
 
-export function useAudioContext(): AudioContextType {
-  const context = useContext(AudioContext);
+export function useAudioState(): AudioStateContextType {
+  const context = useContext(AudioStateContext);
   if (!context) {
-    throw new Error("useAudioContext must be used within AudioContextProvider");
+    throw new Error("useAudioState must be used within AudioStateProvider");
   }
   return context;
 }

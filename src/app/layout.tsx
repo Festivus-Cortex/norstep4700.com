@@ -5,13 +5,14 @@ import classNames from "classnames";
 
 import { Footer, Header, RouteGuard } from "@/components";
 import { baseURL, effects, style } from "@/app/resources";
+import styles from "./layout.module.scss";
 
 import { Inter } from "next/font/google";
 import { Source_Code_Pro } from "next/font/google";
 
 import { person, home } from "@/app/resources/content";
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
-import { AudioContextProvider } from "@/context/AudioContext";
+import { AudioStateProvider } from "@/context/AudioStateContext";
 
 export async function generateMetadata() {
   return {
@@ -99,7 +100,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       )}
     >
       <ToastProvider>
-        <AudioContextProvider>
+        <AudioStateProvider>
           <Column
             style={{ minHeight: "100vh" }}
             as="body"
@@ -171,7 +172,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             paddingX="l"
             horizontal="center"
             flex={1}
-            style={{ paddingTop: 'calc(var(--static-space-64) + var(--static-space-16))' }}
+            className={styles.contentWrapper}
           >
             <Flex horizontal="center" fillWidth minHeight="0">
               <RouteGuard>{children}</RouteGuard>
@@ -179,7 +180,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           </Flex>
           <Footer />
           </Column>
-        </AudioContextProvider>
+        </AudioStateProvider>
       </ToastProvider>
     </Flex>
   );
