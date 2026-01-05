@@ -171,7 +171,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             paddingX="l"
             horizontal="center"
             flex={1}
-            style={{ paddingTop: 'calc(var(--static-space-32) + var(--static-space-16))' }}
+            style={{ paddingTop: 'calc(var(--static-space-64) + var(--static-space-16))' }}
           >
             <Flex horizontal="center" fillWidth minHeight="0">
               <RouteGuard>{children}</RouteGuard>
