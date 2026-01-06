@@ -13,6 +13,7 @@ import { Source_Code_Pro } from "next/font/google";
 import { person, home } from "@/app/resources/content";
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
 import { AudioStateProvider } from "@/context/AudioStateContext";
+import { EffectIntensity } from "@/effect/core/types";
 
 export async function generateMetadata() {
   return {
@@ -108,77 +109,73 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             margin="0"
             padding="0"
           >
-          <Background
-            // FIXME: Config for this will need adjusted. some will be handled internally
-            /* audioEffectAnimatorConfig={{
-              props: {
-                strength: AudioEffectAnimatorStrength.AVERAGE,
-              },
-              targets: [
-                {
-                  // FIXME: Will this mask ref work form here? object may get copied...
-                  obj: mask,
-                  propNames: ["radius"],
-                },
-              ],
-            }}*/
-            mask={mask}
-            gradient={{
-              display: effects.gradient.display,
-              x: effects.gradient.x,
-              y: effects.gradient.y,
-              width: effects.gradient.width,
-              height: effects.gradient.height,
-              tilt: effects.gradient.tilt,
-              colorStart: effects.gradient.colorStart,
-              colorEnd: effects.gradient.colorEnd,
-              opacity: effects.gradient.opacity as
-                | 0
-                | 10
-                | 20
-                | 30
-                | 40
-                | 50
-                | 60
-                | 70
-                | 80
-                | 90
-                | 100,
-            }}
-            dots={{
-              display: effects.dots.display,
-              color: effects.dots.color,
-              size: effects.dots.size as any,
-              opacity: effects.dots.opacity as any,
-            }}
-            grid={{
-              display: effects.grid.display,
-              color: effects.grid.color,
-              width: effects.grid.width as any,
-              height: effects.grid.height as any,
-              opacity: effects.grid.opacity as any,
-            }}
-            lines={{
-              display: effects.lines.display,
-              opacity: effects.lines.opacity as any,
-            }}
-          />
-          <Header />
-          <Flex
-            position="relative"
-            zIndex={0}
-            fillWidth
-            paddingY="l"
-            paddingX="l"
-            horizontal="center"
-            flex={1}
-            className={styles.contentWrapper}
-          >
-            <Flex horizontal="center" fillWidth minHeight="0">
-              <RouteGuard>{children}</RouteGuard>
+            <Background
+              mask={mask}
+              audioReactiveMask={{
+                enabled: true,
+                intensity: EffectIntensity.MODERATE,
+                audioSource: "rms",
+                baseRadius: mask.radius ?? 50,
+                minRadius: 20,
+                maxRadius: 80,
+                smoothing: 0.7,
+              }}
+              gradient={{
+                display: effects.gradient.display,
+                x: effects.gradient.x,
+                y: effects.gradient.y,
+                width: effects.gradient.width,
+                height: effects.gradient.height,
+                tilt: effects.gradient.tilt,
+                colorStart: effects.gradient.colorStart,
+                colorEnd: effects.gradient.colorEnd,
+                opacity: effects.gradient.opacity as
+                  | 0
+                  | 10
+                  | 20
+                  | 30
+                  | 40
+                  | 50
+                  | 60
+                  | 70
+                  | 80
+                  | 90
+                  | 100,
+              }}
+              dots={{
+                display: effects.dots.display,
+                color: effects.dots.color,
+                size: effects.dots.size as any,
+                opacity: effects.dots.opacity as any,
+              }}
+              grid={{
+                display: effects.grid.display,
+                color: effects.grid.color,
+                width: effects.grid.width as any,
+                height: effects.grid.height as any,
+                opacity: effects.grid.opacity as any,
+              }}
+              lines={{
+                display: effects.lines.display,
+                opacity: effects.lines.opacity as any,
+              }}
+            />
+            <Header />
+            <Flex
+              position="relative"
+              zIndex={0}
+              fillWidth
+              paddingY="l"
+              paddingX="l"
+              horizontal="center"
+              flex={1}
+              className={styles.contentWrapper}
+            >
+              <Flex horizontal="center" fillWidth minHeight="0">
+                <RouteGuard>{children}</RouteGuard>
+              </Flex>
             </Flex>
-          </Flex>
-          <Footer />
+            <Footer />
           </Column>
         </AudioStateProvider>
       </ToastProvider>

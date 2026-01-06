@@ -35,5 +35,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Claude (AI)
+.claude
+
 # The PDF worker script is copied from node_modules to public folder
 public/scripts/pdf.worker.min.mjs

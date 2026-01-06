@@ -12,11 +12,15 @@ import { Flex } from "./Flex";
 import { DisplayProps } from "../interfaces";
 import styles from "./Background.module.scss";
 import classNames from "classnames";
-import { useAudioEffectAnimator } from "@/hooks/audioEffectAnimator/useAudioEffectAnimator";
+import { AudioSource, EffectIntensity } from "@/effect/core/types";
 import {
-  AudioEffectAnimatorConfig,
-  AudioEffectAnimatorStrength,
-} from "@/hooks/audioEffectAnimator/audioEffectAnimatorConfig";
+  MaskRadiusAnimatorOutput,
+  MaskRadiusAnimatorParams,
+} from "@/effect/animators";
+import { useEffectRef, useEffectSubscription } from "@/hooks/effect";
+
+// NOTE: Be cautious about what is imported. Ensure no imports come from
+// /src/app or /src/component
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
@@ -66,6 +70,26 @@ interface LinesProps {
   size?: SpacingToken;
 }
 
+/**
+ * Configuration for audio-reactive mask effects.
+ */
+interface AudioReactiveMaskProps {
+  /** Enable audio-reactive mask radius */
+  enabled: boolean;
+  /** Effect intensity level */
+  intensity?: EffectIntensity;
+  /** Which audio metric drives the effect */
+  audioSource?: AudioSource;
+  /** Base radius in vh (center of effect range) */
+  baseRadius?: number;
+  /** Minimum radius in vh */
+  minRadius?: number;
+  /** Maximum radius in vh */
+  maxRadius?: number;
+  /** Smoothing factor (0-0.99, higher = smoother) */
+  smoothing?: number;
+}
+
 interface BackgroundProps extends React.ComponentProps<typeof Flex> {
   position?: CSSProperties["position"];
   gradient?: GradientProps;
@@ -76,7 +100,8 @@ interface BackgroundProps extends React.ComponentProps<typeof Flex> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  audioEffectAnimatorConfig?: AudioEffectAnimatorConfig;
+  /** Enable audio-reactive mask effects */
+  audioReactiveMask?: AudioReactiveMaskProps;
 }
 
 const Background = forwardRef<HTMLDivElement, BackgroundProps>(
@@ -91,7 +116,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
       children,
       className,
       style,
-      audioEffectAnimatorConfig,
+      audioReactiveMask,
       ...rest
     },
     forwardedRef
@@ -103,36 +128,49 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
     const backgroundRef = useRef<HTMLDivElement>(null);
 
-    // expose mask to allow for effect interfacing.
-    const [getMask, setMask] = useState({} as Partial<MaskProps>);
+    // FIXME PRESTON: MOVE CONFIG OUT FROM HERE!
+    // Set up audio-reactive mask effect if enabled
+    const effectId = "background-mask-effect";
+    const effectParams: Partial<MaskRadiusAnimatorParams> | undefined =
+      audioReactiveMask?.enabled
+        ? {
+            intensity: audioReactiveMask.intensity ?? EffectIntensity.MODERATE,
+            audioSource: audioReactiveMask.audioSource ?? "rms",
+            baseRadius: audioReactiveMask.baseRadius ?? mask.radius ?? 50,
+            minRadius: audioReactiveMask.minRadius ?? 20,
+            maxRadius: audioReactiveMask.maxRadius ?? 80,
+            smoothing: audioReactiveMask.smoothing ?? 0.7,
+          }
+        : undefined;
 
-    // FIXME: don't hardcode this :p
-    /*const tmpAudioEffectAnimatorConfig = {
-      props: {
-        strength: AudioEffectAnimatorStrength.AVERAGE,
-      },
-      targets: [
-        {
-          // FIXME: Will this mask ref work form here? object may get copied...
-          // NO IT DOEST WORK WHEN PROP IS PASSED!! NEEDS FANCY REACT STUFF
-          obj: setMask,
-          propNames: ["radius"],
-        },
-      ],
+    // Create effect subscription when audio reactive mask is enabled
+    useEffectSubscription<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>({
+      type: "maskRadiusAnimator",
+      id: effectId,
+      params: effectParams,
+      autoStart: audioReactiveMask?.enabled ?? false,
+    });
+
+    // Use direct DOM manipulation for performance (no React re-renders)
+    const audioMaskRef = useEffectRef<MaskRadiusAnimatorOutput>(
+      effectId,
+      (element, values) => {
+        element.style.setProperty("--mask-radius", values.cssRadius);
+      }
+    );
+
+    // Combine refs: backgroundRef for internal use, forwardedRef for external, audioMaskRef for effects
+    const combinedRefCallback = (element: HTMLDivElement | null) => {
+      // Update internal ref
+      (backgroundRef as React.MutableRefObject<HTMLDivElement | null>).current =
+        element;
+      // Forward to external ref
+      setRef(forwardedRef, element);
+      // Apply audio effect ref if enabled
+      if (audioReactiveMask?.enabled && element) {
+        audioMaskRef(element);
+      }
     };
-
-    // Set up animation effects based on audio if requested.
-    if (tmpAudioEffectAnimatorConfig) {
-      useAudioEffectAnimator(tmpAudioEffectAnimatorConfig);
-    }*/
-
-    // FIXME: Consider inverting flow of control with this. I.E. ask animator for updates versus it pushing updates.
-    useEffect(() => {
-      const keys = Object.keys(getMask);
-      keys.forEach((key) => {
-        mask[key] = getMask[key];
-      });
-    }, [setMask, getMask]);
 
     useEffect(() => {
       setRef(forwardedRef, backgroundRef.current);
@@ -234,7 +272,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
 
     return (
       <Flex
-        ref={backgroundRef}
+        ref={combinedRefCallback}
         fill
         position={position}
         className={classNames(mask && styles.mask, className)}
