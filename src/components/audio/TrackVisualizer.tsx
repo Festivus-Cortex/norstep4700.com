@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useEffectSubscription, useEffectRef } from "@/hooks/effect";
 import {
   MaskRadiusAnimatorParams,
   MaskRadiusAnimatorOutput,
 } from "@/effect/animators";
 import { EffectIntensity } from "@/effect/core/types";
-import { AudioDataProvider } from "@/effect/core/AudioDataProvider";
 
 // Import animators to trigger factory registration
 import "@/effect/animators";
@@ -23,17 +22,13 @@ interface TrackVisualizerProps {
  * Creates a visual indicator that reacts to the audio levels of a specific track.
  * Uses the MaskRadiusAnimator effect with per-track audio analysis.
  *
- * Returns null if audio system is not available or track analyzer is not registered.
+ * The visualizer will show empty/static state if audio data is not available,
+ * and will animate when the track's audio analyzer is registered.
  */
 export const TrackVisualizer: React.FC<TrackVisualizerProps> = ({
   trackId,
   trackName,
 }) => {
-  // Don't render if audio system isn't available
-  if (!AudioDataProvider.isAvailable()) {
-    return null;
-  }
-
   const effectId = `track-viz-${trackId}`;
 
   // Create effect bound to this specific track
@@ -65,15 +60,6 @@ export const TrackVisualizer: React.FC<TrackVisualizerProps> = ({
       element.style.opacity = `${opacity}`;
     }
   );
-
-  // Cleanup: Unregister track analyzer on unmount to prevent memory leaks
-  // Note: This is a safety measure. The music set hook also unregisters analyzers,
-  // but this ensures cleanup even if the visualizer unmounts independently.
-  useEffect(() => {
-    return () => {
-      AudioDataProvider.unregisterTrackAnalyzer(trackId);
-    };
-  }, [trackId]);
 
   return (
     <div
