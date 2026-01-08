@@ -5,43 +5,15 @@
  * based on audio levels. Supports different audio sources and smoothing.
  */
 
-import { EffectFactory } from "../core/EffectFactory";
-import { EffectRegistry } from "../core/EffectRegistry";
+import { EffectFactory } from "../../core/EffectFactory";
+import { EffectRegistry } from "../../core/EffectRegistry";
 import {
   AudioFrameData,
-  AudioAnalysisSource,
-  BaseEffectParams,
   EffectInstance,
   EffectIntensity,
-  EffectOutput,
-} from "../core/types";
+} from "../../core/types";
 import { smoothDamp, clamp } from "@/utils/math";
-
-/**
- * Parameters for the MaskRadiusAnimator effect.
- */
-export interface MaskRadiusAnimatorParams extends BaseEffectParams {
-  /** Which audio metric drives the effect */
-  audioSource: AudioAnalysisSource;
-  /** Base radius value (center of effect range) in vh */
-  baseRadius: number;
-  /** Minimum radius in vh */
-  minRadius: number;
-  /** Maximum radius in vh */
-  maxRadius: number;
-  /** Smoothing factor (0 = instant, higher = smoother, 0-0.99) */
-  smoothing: number;
-}
-
-/**
- * Output from the MaskRadiusAnimator effect.
- */
-export interface MaskRadiusAnimatorOutput extends EffectOutput {
-  /** Current radius value (numeric) */
-  radius: number;
-  /** CSS-formatted radius string (e.g., "50vh") */
-  cssRadius: string;
-}
+import { MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput } from "./types";
 
 /**
  * Internal effect instance for MaskRadiusAnimator.
@@ -79,7 +51,7 @@ class MaskRadiusAnimatorEffectInstance
     deltaTime: number
   ): MaskRadiusAnimatorOutput {
     const {
-      audioSource,
+      audioAnalysisSource: audioSource,
       baseRadius,
       minRadius,
       maxRadius,
@@ -175,7 +147,7 @@ export class MaskRadiusAnimatorFactory extends EffectFactory<
     return {
       intensity: EffectIntensity.MODERATE,
       enabled: true,
-      audioSource: "rms",
+      audioAnalysisSource: "rms",
       baseRadius: 50,
       minRadius: 20,
       maxRadius: 80,

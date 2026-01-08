@@ -114,7 +114,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               audioReactiveMask={{
                 enabled: true,
                 intensity: EffectIntensity.MODERATE,
-                audioSource: "rms",
+                audioAnalysisSource: "rms",
                 baseRadius: mask.radius ?? 50,
                 minRadius: 20,
                 maxRadius: 80,

@@ -31,6 +31,7 @@ export const TrackControlsGrid: React.FC = () => {
       mobileColumns={1}
       gap="12"
       fillWidth
+      style={{ boxSizing: "border-box" }}
     >
       {tracks.map((track) => (
         <TrackControl

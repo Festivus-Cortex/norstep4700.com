@@ -77,17 +77,17 @@ interface AudioReactiveMaskProps {
   /** Enable audio-reactive mask radius */
   enabled: boolean;
   /** Effect intensity level */
-  intensity?: EffectIntensity;
+  intensity: EffectIntensity;
   /** Which audio metric drives the effect */
-  audioSource?: AudioAnalysisSource;
+  audioAnalysisSource: AudioAnalysisSource;
   /** Base radius in vh (center of effect range) */
-  baseRadius?: number;
+  baseRadius: number;
   /** Minimum radius in vh */
-  minRadius?: number;
+  minRadius: number;
   /** Maximum radius in vh */
-  maxRadius?: number;
+  maxRadius: number;
   /** Smoothing factor (0-0.99, higher = smoother) */
-  smoothing?: number;
+  smoothing: number;
 }
 
 interface BackgroundProps extends React.ComponentProps<typeof Flex> {
@@ -130,23 +130,14 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
 
     // Set up audio-reactive mask effect if enabled
     const effectId = "background-mask-effect";
-    const effectParams: Partial<MaskRadiusAnimatorParams> | undefined =
-      audioReactiveMask?.enabled
-        ? {
-            intensity: audioReactiveMask.intensity ?? EffectIntensity.MODERATE,
-            audioSource: audioReactiveMask.audioSource ?? "rms",
-            baseRadius: audioReactiveMask.baseRadius ?? mask.radius ?? 50,
-            minRadius: audioReactiveMask.minRadius ?? 20,
-            maxRadius: audioReactiveMask.maxRadius ?? 80,
-            smoothing: audioReactiveMask.smoothing ?? 0.7,
-          }
-        : undefined;
+    const effectFinalParams: MaskRadiusAnimatorParams | undefined =
+      audioReactiveMask?.enabled === true ? audioReactiveMask : undefined;
 
     // Create effect subscription when audio reactive mask is enabled
     useEffectSubscription<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>({
       type: "maskRadiusAnimator",
       id: effectId,
-      params: effectParams,
+      params: effectFinalParams,
       autoStart: audioReactiveMask?.enabled ?? false,
     });
 

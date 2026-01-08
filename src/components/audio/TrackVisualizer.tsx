@@ -38,7 +38,7 @@ export const TrackVisualizer: React.FC<TrackVisualizerProps> = ({
     params: {
       trackId, // BIND TO SPECIFIC TRACK
       intensity: EffectIntensity.STRONG,
-      audioSource: "bass", // Bass is usually more prominent
+      audioAnalysisSource: "bass", // Bass is usually more prominent
       baseRadius: 50,
       minRadius: 10,
       maxRadius: 90,

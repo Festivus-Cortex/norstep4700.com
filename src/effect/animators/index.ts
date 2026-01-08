@@ -6,10 +6,11 @@
  */
 
 // Import animators to trigger self-registration
-import "./MaskRadiusAnimator";
+import "./maskRadiusAnimator/MaskRadiusAnimator";
+import "./maskRadiusAnimator/types";
 
 // Re-export factory types and params for consumer convenience
 export {
   type MaskRadiusAnimatorParams,
   type MaskRadiusAnimatorOutput,
-} from "./MaskRadiusAnimator";
+} from "./maskRadiusAnimator/types";

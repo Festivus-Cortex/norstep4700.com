@@ -11,6 +11,7 @@
  */
 .trackControl {
   transition: all var(--transition-micro-medium);
+  min-width: 0; /* Allow grid item to shrink below content size */
 
   /* Highlight on hover to indicate this track can be controlled */
   &:hover {
