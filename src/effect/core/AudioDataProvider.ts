@@ -175,12 +175,13 @@ class AudioDataProviderImpl {
     analyzer.getByteFrequencyData(this.frequencyBuffer);
     analyzer.getByteTimeDomainData(this.timeDomainBuffer);
 
+    // FIXME: make values configurable
     // Compute metrics
     const rms = this.computeRMS();
     const bass = this.getBandAverage(0, 10);
     const midLow = this.getBandAverage(11, 40);
     const midHigh = this.getBandAverage(41, 80);
-    const treble = this.getBandAverage(81, 200);
+    const treble = this.getBandAverage(81, 511);
 
     return {
       frequencyData: this.frequencyBuffer,
@@ -204,7 +205,10 @@ export const AudioDataProvider = {
   getTrackFrameData: (trackId: string) =>
     AudioDataProviderImpl.getInstance().getTrackFrameData(trackId),
   registerTrackAnalyzer: (trackId: string, analyzer: AnalyserNode) =>
-    AudioDataProviderImpl.getInstance().registerTrackAnalyzer(trackId, analyzer),
+    AudioDataProviderImpl.getInstance().registerTrackAnalyzer(
+      trackId,
+      analyzer
+    ),
   unregisterTrackAnalyzer: (trackId: string) =>
     AudioDataProviderImpl.getInstance().unregisterTrackAnalyzer(trackId),
   isAvailable: () => AudioDataProviderImpl.getInstance().isAvailable(),

@@ -20,10 +20,10 @@ let audioRoot: GainNode | undefined;
 let audioAnalyzer: AnalyserNode | undefined;
 let audioError: Error | undefined;
 
-// Only initialize audio context in the browser (not during SSR)
+// Only initialize audio context in the browser (not during SSR).
 if (typeof window !== "undefined") {
   try {
-    // Establish a new audio context and analyzer if possible/
+    // Establish a new audio context and analyzer if possible.
     audioCtx = new AudioContext();
     audioRoot = audioCtx.createGain();
     audioRoot.connect(audioCtx.destination);
