@@ -72,6 +72,8 @@ export interface BaseEffectParams {
   enabled?: boolean;
   /** Optional custom intensity multipliers */
   intensityMultipliers?: Partial<Record<EffectIntensity, number>>;
+  /** Optional track ID for per-track audio analysis */
+  trackId?: string;
 }
 
 /**
@@ -177,10 +179,10 @@ export interface EngineState {
 }
 
 /**
- * Audio source options for effects.
- * Determines which audio metric drives the effect.
+ * Audio analysis source options for effects.
+ * Determines which audio analysis metric drives the effect.
  */
-export type AudioSource = "rms" | "bass" | "midLow" | "midHigh" | "treble";
+export type AudioAnalysisSource = "rms" | "bass" | "midLow" | "midHigh" | "treble";
 
 /**
  * Helper type for CSS value outputs.

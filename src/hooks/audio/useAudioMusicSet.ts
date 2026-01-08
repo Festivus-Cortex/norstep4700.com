@@ -10,6 +10,7 @@ import {
   disconnectMusicSetNodes,
   fadeInMusicSet,
 } from "@/app/audio/musicSet";
+import { AudioDataProvider } from "@/effect/core/AudioDataProvider";
 
 /**
  * Hook for managing music set loading, switching, and cleanup.
@@ -51,12 +52,21 @@ export function useAudioMusicSet() {
           );
         });
 
+        // Build track analyzers map and register with AudioDataProvider
+        const trackAnalyzers = new Map<string, AnalyserNode>();
+        trackNodes.forEach((nodes, index) => {
+          const trackId = musicSet.tracks[index].id;
+          trackAnalyzers.set(trackId, nodes.analyzer);
+          AudioDataProvider.registerTrackAnalyzer(trackId, nodes.analyzer);
+        });
+
         // Store music set data
         const musicSetData: MusicSetData = {
           setId: musicSetId,
           buffers,
           nodes: trackNodes,
           musicSetNode: musicSetNode,
+          trackAnalyzers,
         };
         context.setLoadedMusicSet(musicSetId, musicSetData);
 
@@ -100,6 +110,11 @@ export function useAudioMusicSet() {
 
     const musicSetData = context.loadedSets.get(context.currentSet);
     if (!musicSetData) return;
+
+    // Unregister track analyzers from AudioDataProvider
+    musicSetData.trackAnalyzers.forEach((_, trackId) => {
+      AudioDataProvider.unregisterTrackAnalyzer(trackId);
+    });
 
     // Stop all tracks immediately
     musicSetData.nodes.forEach((nodes) => stopTrack(nodes));

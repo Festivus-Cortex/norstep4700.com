@@ -9,7 +9,7 @@ import { MusicTrackNodes } from "./types";
  * Creates a complete set of Web Audio nodes for a single track.
  *
  * Node graph for each track:
- * AudioBufferSourceNode → GainNode (volume/mute) → StereoPannerNode (pan) → parent
+ * AudioBufferSourceNode → GainNode (volume/mute) → StereoPannerNode (pan) → AnalyserNode → parent
  *
  * @param buffer - The AudioBuffer containing the track's audio data
  * @param parent - The parent node to connect to (typically the music set gain node)
@@ -43,12 +43,17 @@ export function createTrackNodes(
   const pan = audioCtx.createStereoPanner();
   pan.pan.value = initialPan;
 
-  // Connect the chain: source → gain → pan → parent
+  // Create analyzer node for per-track frequency analysis
+  const analyzer = audioCtx.createAnalyser();
+  analyzer.fftSize = 1024;
+
+  // Connect the chain: source → gain → pan → analyzer → parent
   source.connect(gain);
   gain.connect(pan);
-  pan.connect(parent);
+  pan.connect(analyzer);
+  analyzer.connect(parent);
 
-  return { source, gain, pan };
+  return { source, gain, pan, analyzer };
 }
 
 /**
@@ -66,6 +71,7 @@ export function disconnectTrackNodes(nodes: MusicTrackNodes): void {
   nodes.source.disconnect();
   nodes.gain.disconnect();
   nodes.pan.disconnect();
+  nodes.analyzer.disconnect();
 }
 
 /**

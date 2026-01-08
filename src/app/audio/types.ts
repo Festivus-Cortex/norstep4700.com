@@ -50,7 +50,7 @@ export interface MusicTrackState {
 
 /**
  * Contains the Web Audio API nodes for a single track.
- * These nodes form a chain: source → gain → pan → music set output
+ * These nodes form a chain: source → gain → pan → analyzer → music set output
  */
 export interface MusicTrackNodes {
   /** AudioBufferSourceNode - plays the audio buffer (one-time use, recreated on each play) */
@@ -59,6 +59,8 @@ export interface MusicTrackNodes {
   gain: GainNode;
   /** StereoPannerNode - controls left/right positioning */
   pan: StereoPannerNode;
+  /** AnalyserNode - provides per-track frequency analysis */
+  analyzer: AnalyserNode;
 }
 
 /**
@@ -74,6 +76,8 @@ export interface MusicSetData {
   nodes: MusicTrackNodes[];
   /** The master gain node for this music set (parent node for all tracks) */
   musicSetNode: GainNode;
+  /** Map of track IDs to their analyzer nodes for per-track audio analysis */
+  trackAnalyzers: Map<string, AnalyserNode>;
 }
 
 /**

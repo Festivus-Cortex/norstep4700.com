@@ -4,6 +4,7 @@ import React, { useCallback } from "react";
 import { Flex, IconButton, Text } from "@/once-ui/components";
 import { Slider } from "./Slider";
 import { useTrackControls } from "@/hooks/audio/useTrackControls";
+import { TrackVisualizer } from "./TrackVisualizer";
 import styles from "./TrackControl.module.scss";
 import classNames from "classnames";
 
@@ -123,9 +124,12 @@ export const TrackControl = React.memo<TrackControlProps>(
       >
         {/* Track name and control buttons */}
         <Flex horizontal="space-between" vertical="center" gap="8">
-          <Text variant="label-default-m" onBackground="neutral-strong">
-            {trackName}
-          </Text>
+          <Flex gap="8" vertical="center">
+            <TrackVisualizer trackId={trackId} trackName={trackName} />
+            <Text variant="label-default-m" onBackground="neutral-strong">
+              {trackName}
+            </Text>
+          </Flex>
           <Flex gap="4">
             <IconButton
               icon={track.isEffectivelyMuted ? "volumeOff" : "volume2"}

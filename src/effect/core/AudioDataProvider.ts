@@ -21,17 +21,20 @@ class AudioDataProviderImpl {
   private static instance: AudioDataProviderImpl | null = null;
 
   /** Buffer for frequency data */
-  private frequencyBuffer: Uint8Array;
+  private frequencyBuffer: Uint8Array<ArrayBuffer>;
   /** Buffer for time domain (waveform) data */
-  private timeDomainBuffer: Uint8Array;
+  private timeDomainBuffer: Uint8Array<ArrayBuffer>;
+  /** Map of track IDs to their analyzer nodes */
+  private trackAnalyzers: Map<string, AnalyserNode> = new Map();
 
   private constructor() {
     // Initialize buffers based on analyzer config or defaults
     const frequencyBinCount = audioAnalyzer?.frequencyBinCount ?? 512;
     const fftSize = audioAnalyzer?.fftSize ?? 1024;
 
-    this.frequencyBuffer = new Uint8Array(frequencyBinCount);
-    this.timeDomainBuffer = new Uint8Array(fftSize);
+    // Create buffers with explicit ArrayBuffer (not SharedArrayBuffer)
+    this.frequencyBuffer = new Uint8Array(new ArrayBuffer(frequencyBinCount));
+    this.timeDomainBuffer = new Uint8Array(new ArrayBuffer(fftSize));
   }
 
   static getInstance(): AudioDataProviderImpl {
@@ -51,13 +54,8 @@ class AudioDataProviderImpl {
     }
 
     // Fill buffers with current audio data
-    // Type assertion needed due to Uint8Array generic parameter mismatch
-    audioAnalyzer.getByteFrequencyData(
-      this.frequencyBuffer as unknown as Uint8Array<ArrayBuffer>
-    );
-    audioAnalyzer.getByteTimeDomainData(
-      this.timeDomainBuffer as unknown as Uint8Array<ArrayBuffer>
-    );
+    audioAnalyzer.getByteFrequencyData(this.frequencyBuffer);
+    audioAnalyzer.getByteTimeDomainData(this.timeDomainBuffer);
 
     // Compute metrics
     const rms = this.computeRMS();
@@ -140,6 +138,61 @@ class AudioDataProviderImpl {
   isAvailable(): boolean {
     return audioAnalyzer !== undefined;
   }
+
+  /**
+   * Register a per-track analyzer node.
+   *
+   * @param trackId - Unique track identifier
+   * @param analyzer - AnalyserNode for this track
+   */
+  registerTrackAnalyzer(trackId: string, analyzer: AnalyserNode): void {
+    this.trackAnalyzers.set(trackId, analyzer);
+  }
+
+  /**
+   * Unregister a per-track analyzer node.
+   *
+   * @param trackId - Track identifier to remove
+   */
+  unregisterTrackAnalyzer(trackId: string): void {
+    this.trackAnalyzers.delete(trackId);
+  }
+
+  /**
+   * Get audio data for a specific track.
+   * Returns empty data if track analyzer is not registered.
+   *
+   * @param trackId - Track identifier
+   * @returns AudioFrameData for the specific track
+   */
+  getTrackFrameData(trackId: string): AudioFrameData {
+    const analyzer = this.trackAnalyzers.get(trackId);
+    if (!analyzer) {
+      return this.getEmptyFrameData();
+    }
+
+    // Reuse global buffers (safe since single-threaded)
+    analyzer.getByteFrequencyData(this.frequencyBuffer);
+    analyzer.getByteTimeDomainData(this.timeDomainBuffer);
+
+    // Compute metrics
+    const rms = this.computeRMS();
+    const bass = this.getBandAverage(0, 10);
+    const midLow = this.getBandAverage(11, 40);
+    const midHigh = this.getBandAverage(41, 80);
+    const treble = this.getBandAverage(81, 200);
+
+    return {
+      frequencyData: this.frequencyBuffer,
+      timeDomainData: this.timeDomainBuffer,
+      rms,
+      bass,
+      midLow,
+      midHigh,
+      treble,
+      timestamp: performance.now(),
+    };
+  }
 }
 
 /**
@@ -148,5 +201,11 @@ class AudioDataProviderImpl {
 export const AudioDataProvider = {
   getInstance: () => AudioDataProviderImpl.getInstance(),
   getFrameData: () => AudioDataProviderImpl.getInstance().getFrameData(),
+  getTrackFrameData: (trackId: string) =>
+    AudioDataProviderImpl.getInstance().getTrackFrameData(trackId),
+  registerTrackAnalyzer: (trackId: string, analyzer: AnalyserNode) =>
+    AudioDataProviderImpl.getInstance().registerTrackAnalyzer(trackId, analyzer),
+  unregisterTrackAnalyzer: (trackId: string) =>
+    AudioDataProviderImpl.getInstance().unregisterTrackAnalyzer(trackId),
   isAvailable: () => AudioDataProviderImpl.getInstance().isAvailable(),
 };

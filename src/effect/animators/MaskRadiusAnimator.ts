@@ -9,7 +9,7 @@ import { EffectFactory } from "../core/EffectFactory";
 import { EffectRegistry } from "../core/EffectRegistry";
 import {
   AudioFrameData,
-  AudioSource,
+  AudioAnalysisSource,
   BaseEffectParams,
   EffectInstance,
   EffectIntensity,
@@ -22,7 +22,7 @@ import { smoothDamp, clamp } from "@/utils/math";
  */
 export interface MaskRadiusAnimatorParams extends BaseEffectParams {
   /** Which audio metric drives the effect */
-  audioSource: AudioSource;
+  audioSource: AudioAnalysisSource;
   /** Base radius value (center of effect range) in vh */
   baseRadius: number;
   /** Minimum radius in vh */

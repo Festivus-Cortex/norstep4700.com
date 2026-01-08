@@ -236,17 +236,22 @@ class EffectEngineImpl {
       this.fpsHistory.shift();
     }
 
-    // Get audio data once per frame
-    const audioData: AudioFrameData = AudioDataProvider.getFrameData();
+    // Get global audio data once per frame
+    const globalAudioData: AudioFrameData = AudioDataProvider.getFrameData();
 
     // Update all effects
-    for (const [, entry] of this.effects) {
+    for (const [id, entry] of this.effects) {
       const params = entry.instance.getParams();
 
       // Skip disabled effects
       if (params.enabled === false) {
         continue;
       }
+
+      // Get track-specific data if trackId is specified, otherwise use global
+      const audioData = params.trackId
+        ? AudioDataProvider.getTrackFrameData(params.trackId)
+        : globalAudioData;
 
       // Update and store new output
       entry.currentOutput = entry.instance.update(audioData, deltaTime);

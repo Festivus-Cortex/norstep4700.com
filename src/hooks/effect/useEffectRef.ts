@@ -63,45 +63,42 @@ export function useEffectRef<TOutput extends EffectOutput>(
 
   /**
    * Ref callback - called when element mounts/unmounts.
+   * Just stores the element reference.
    */
   const refCallback = useCallback(
     (element: HTMLElement | null) => {
-      // Cleanup previous subscription if element changes
-      if (unsubscribeRef.current) {
-        unsubscribeRef.current();
-        unsubscribeRef.current = null;
-      }
-
       elementRef.current = element;
-
-      if (element) {
-        // Apply initial values
-        const values = EffectEngine.getEffectOutput<TOutput>(effectId);
-        if (values) {
-          applyValuesRef.current(element, values);
-        }
-
-        // Subscribe to updates
-        unsubscribeRef.current = EffectEngine.subscribe(effectId, () => {
-          const newValues = EffectEngine.getEffectOutput<TOutput>(effectId);
-          if (newValues && elementRef.current) {
-            applyValuesRef.current(elementRef.current, newValues);
-          }
-        });
-      }
     },
     [effectId]
   );
 
-  // Cleanup on unmount
+  // Subscribe in useEffect (runs after effect registration)
   useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
+    // Apply initial values
+    const values = EffectEngine.getEffectOutput<TOutput>(effectId);
+    if (values) {
+      applyValuesRef.current(element, values);
+    }
+
+    // Subscribe to updates
+    unsubscribeRef.current = EffectEngine.subscribe(effectId, () => {
+      const newValues = EffectEngine.getEffectOutput<TOutput>(effectId);
+      if (newValues && elementRef.current) {
+        applyValuesRef.current(elementRef.current, newValues);
+      }
+    });
+
+    // Cleanup
     return () => {
       if (unsubscribeRef.current) {
         unsubscribeRef.current();
         unsubscribeRef.current = null;
       }
     };
-  }, []);
+  }, [effectId]);
 
   return refCallback;
 }

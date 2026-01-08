@@ -12,7 +12,7 @@ import { Flex } from "./Flex";
 import { DisplayProps } from "../interfaces";
 import styles from "./Background.module.scss";
 import classNames from "classnames";
-import { AudioSource, EffectIntensity } from "@/effect/core/types";
+import { AudioAnalysisSource, EffectIntensity } from "@/effect/core/types";
 import {
   MaskRadiusAnimatorOutput,
   MaskRadiusAnimatorParams,
@@ -79,7 +79,7 @@ interface AudioReactiveMaskProps {
   /** Effect intensity level */
   intensity?: EffectIntensity;
   /** Which audio metric drives the effect */
-  audioSource?: AudioSource;
+  audioSource?: AudioAnalysisSource;
   /** Base radius in vh (center of effect range) */
   baseRadius?: number;
   /** Minimum radius in vh */
@@ -128,7 +128,6 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
     const backgroundRef = useRef<HTMLDivElement>(null);
 
-    // FIXME PRESTON: MOVE CONFIG OUT FROM HERE!
     // Set up audio-reactive mask effect if enabled
     const effectId = "background-mask-effect";
     const effectParams: Partial<MaskRadiusAnimatorParams> | undefined =
@@ -188,16 +187,6 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
       };
 
       document.addEventListener("mousemove", handleMouseMove);
-
-      // FIXME: testing stuff - remove
-      /*const swapRadius = () => {
-        if (!mask.radius) {
-          return;
-        }
-        mask.radius = Math.random();
-        setTimeout(swapRadius, 5000);
-      };
-      setTimeout(swapRadius, 5000);*/
 
       return () => {
         document.removeEventListener("mousemove", handleMouseMove);
