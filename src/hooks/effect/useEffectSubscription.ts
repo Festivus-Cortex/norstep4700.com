@@ -10,6 +10,7 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { EffectEngine } from "../../effect/core/EffectEngine";
 import { EffectRegistry } from "../../effect/core/EffectRegistry";
+import { loadEffectConfig } from "../../effect/config/loader";
 import {
   EffectIntensity,
   EffectOutput,
@@ -29,6 +30,8 @@ export interface UseEffectOptions<TParams extends BaseEffectParams> {
   params?: Partial<TParams>;
   /** Whether to start immediately (default: true) */
   autoStart?: boolean;
+  /** Optional variant name from config (e.g., "trackVisualizer") */
+  variant?: string;
 }
 
 /**
@@ -60,7 +63,7 @@ export function useEffectSubscription<
   TParams extends BaseEffectParams = BaseEffectParams,
   TOutput extends EffectOutput = EffectOutput
 >(options: UseEffectOptions<TParams>): EffectSubscription<TOutput> | null {
-  const { type, id, params, autoStart = true } = options;
+  const { type, id, params, autoStart = true, variant } = options;
 
   /** Track the instance ID for cleanup */
   const instanceIdRef = useRef<string | null>(null);
@@ -72,26 +75,53 @@ export function useEffectSubscription<
   useEffect(() => {
     if (!autoStart) return;
 
-    // Get the animator
-    const factory = EffectRegistry.getAnimator<TParams, TOutput>(type);
-    if (!factory) {
-      console.error(
-        `[useEffectSubscription] Animator "${type}" not found. ` +
-          `Available types: ${
-            EffectRegistry.getRegisteredTypes().join(", ") || "(none)"
-          }`
-      );
-      return;
-    }
+    let isMounted = true;
 
-    // Create and register the instance
-    const instance = factory.create(id, params);
-    EffectEngine.registerEffect(instance);
-    instanceIdRef.current = id;
-    setIsSubscribed(true);
+    // Async function to load config and create effect
+    const initEffect = async () => {
+      try {
+        console.log(`[useEffectSubscription] Loading config for effect "${id}"...`);
+        // Load config first (no-op if already loaded)
+        await loadEffectConfig();
+        console.log(`[useEffectSubscription] Config loaded for effect "${id}"`);
+
+        // Check if component is still mounted
+        if (!isMounted) {
+          console.log(`[useEffectSubscription] Component unmounted before creating effect "${id}"`);
+          return;
+        }
+
+        // Get the animator
+        const factory = EffectRegistry.getAnimator<TParams, TOutput>(type);
+        if (!factory) {
+          console.error(
+            `[useEffectSubscription] Animator "${type}" not found. ` +
+              `Available types: ${
+                EffectRegistry.getRegisteredTypes().join(", ") || "(none)"
+              }`
+          );
+          return;
+        }
+
+        console.log(`[useEffectSubscription] Creating effect "${id}" with variant "${variant || 'none'}"`);
+        // Create and register the instance (use variant if specified)
+        const instance = variant
+          ? factory.createFromVariant(id, variant, params)
+          : factory.create(id, params);
+        EffectEngine.registerEffect(instance);
+        instanceIdRef.current = id;
+        setIsSubscribed(true);
+        console.log(`[useEffectSubscription] Effect "${id}" registered successfully`);
+      } catch (error) {
+        console.error("[useEffectSubscription] Failed to initialize effect:", error);
+      }
+    };
+
+    initEffect();
 
     // Cleanup on unmount
     return () => {
+      isMounted = false;
       if (instanceIdRef.current) {
         EffectEngine.unregisterEffect(instanceIdRef.current);
         instanceIdRef.current = null;
@@ -100,7 +130,7 @@ export function useEffectSubscription<
     };
     // Note: params intentionally excluded to avoid re-creating the effect
     // Use updateParams for runtime changes
-  }, [type, id, autoStart]);
+  }, [type, id, autoStart, variant]);
 
   // Update params when they change (without re-creating the effect)
   useEffect(() => {

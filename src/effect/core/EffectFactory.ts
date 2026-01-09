@@ -10,9 +10,11 @@ import {
   EffectOutput,
   EffectInstance,
   EffectIntensity,
-  DEFAULT_INTENSITY_MULTIPLIERS,
 } from "./types";
 import { mapRange, clamp } from "@/utils/math";
+import { getEffectConfigSync } from "../config/loader";
+import { createResolver } from "../config/resolver";
+import type { EffectsConfig } from "../config/types";
 
 /**
  * Abstract base class that all effect factories extend.
@@ -38,15 +40,17 @@ export abstract class EffectFactory<
 
   /**
    * Returns the default parameters for this effect type.
-   * Subclasses must implement this.
+   * Reads from the centralized config system.
    */
-  abstract getDefaultParams(): TParams;
+  getDefaultParams(): TParams {
+    const resolver = createResolver();
+    const effectType = this.type as keyof EffectsConfig;
 
-  /**
-   * Returns the default output values.
-   * Used before the first update and as fallback.
-   */
-  abstract getDefaultOutput(): TOutput;
+    return resolver.resolveParams<TParams>({
+      effectType,
+      intensity: EffectIntensity.MODERATE,
+    });
+  }
 
   /**
    * Creates an effect instance with the given ID and parameters.
@@ -78,11 +82,12 @@ export abstract class EffectFactory<
   /**
    * Returns intensity multipliers for each level.
    *
+   * By default, reads from the centralized config system.
    * Subclasses can override this to customize the intensity curve.
-   * Default values provide a linear progression from 20% to 100%.
    */
   protected getIntensityMultipliers(): Record<EffectIntensity, number> {
-    return { ...DEFAULT_INTENSITY_MULTIPLIERS };
+    const config = getEffectConfigSync();
+    return { ...config.intensityMultipliers };
   }
 
   /**
@@ -185,5 +190,35 @@ export abstract class EffectFactory<
       const result = base + effectiveAbove * t;
       return clamp(result, min, max);
     }
+  }
+
+  /**
+   * Creates an effect instance using a named variant from config.
+   *
+   * Variants are pre-defined parameter sets in the config that override defaults.
+   * Useful for common configurations like "trackVisualizer" that differ from
+   * the factory's base defaults.
+   *
+   * @param id - Unique identifier for this instance
+   * @param variantName - Name of the variant in the config
+   * @param params - Optional custom parameters (highest priority)
+   * @returns New effect instance with resolved parameters
+   */
+  createFromVariant(
+    id: string,
+    variantName: string,
+    params: Partial<TParams> = {}
+  ): EffectInstance<TParams, TOutput> {
+    const resolver = createResolver();
+    const effectType = this.type as keyof EffectsConfig;
+
+    const resolvedParams = resolver.resolveParams<TParams>({
+      effectType,
+      intensity: params.intensity ?? EffectIntensity.MODERATE,
+      variant: variantName,
+      customParams: params,
+    });
+
+    return this.createInstance(id, resolvedParams);
   }
 }

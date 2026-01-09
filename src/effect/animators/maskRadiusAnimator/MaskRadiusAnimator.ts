@@ -14,6 +14,7 @@ import {
 } from "../../core/types";
 import { smoothDamp, clamp } from "@/utils/math";
 import { MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput } from "./types";
+import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for MaskRadiusAnimator.
@@ -27,6 +28,7 @@ class MaskRadiusAnimatorEffectInstance
   private currentOutput: MaskRadiusAnimatorOutput;
   private smoothedValue: number = 0;
   private intensityMultipliers: Record<EffectIntensity, number>;
+  private normalization: { rmsMultiplier: number; frequencyDivisor: number };
 
   constructor(
     readonly id: string,
@@ -39,6 +41,10 @@ class MaskRadiusAnimatorEffectInstance
       radius: params.baseRadius,
       cssRadius: `${params.baseRadius}vh`,
     };
+
+    // Load normalization config
+    const config = getEffectConfigSync();
+    this.normalization = config.audioAnalysis.normalization;
   }
 
   start(): void {
@@ -51,7 +57,7 @@ class MaskRadiusAnimatorEffectInstance
     deltaTime: number
   ): MaskRadiusAnimatorOutput {
     const {
-      audioAnalysisSource: audioSource,
+      audioAnalysisSource,
       baseRadius,
       minRadius,
       maxRadius,
@@ -60,27 +66,35 @@ class MaskRadiusAnimatorEffectInstance
       intensityMultipliers: customMultipliers,
     } = this.params;
 
-    // Get raw audio value and normalize to 0-1
+    // Get raw audio value and normalize to 0-1 using config normalization
     let rawValue: number;
-    switch (audioSource) {
+    switch (audioAnalysisSource) {
       case "rms":
         // RMS is already 0-1, but typically peaks around 0.3-0.5
-        rawValue = clamp(audioData.rms * 2, 0, 1);
+        rawValue = clamp(
+          audioData.rms * this.normalization.rmsMultiplier,
+          0,
+          1
+        );
         break;
       case "bass":
-        rawValue = audioData.bass / 255;
+        rawValue = audioData.bass / this.normalization.frequencyDivisor;
         break;
       case "midLow":
-        rawValue = audioData.midLow / 255;
+        rawValue = audioData.midLow / this.normalization.frequencyDivisor;
         break;
       case "midHigh":
-        rawValue = audioData.midHigh / 255;
+        rawValue = audioData.midHigh / this.normalization.frequencyDivisor;
         break;
       case "treble":
-        rawValue = audioData.treble / 255;
+        rawValue = audioData.treble / this.normalization.frequencyDivisor;
         break;
       default:
-        rawValue = clamp(audioData.rms * 2, 0, 1);
+        rawValue = clamp(
+          audioData.rms * this.normalization.rmsMultiplier,
+          0,
+          1
+        );
     }
 
     // Apply smoothing (frame-rate independent)
@@ -142,25 +156,6 @@ export class MaskRadiusAnimatorFactory extends EffectFactory<
 > {
   readonly type = "maskRadiusAnimator";
   readonly description = "Animates mask radius based on audio levels";
-
-  getDefaultParams(): MaskRadiusAnimatorParams {
-    return {
-      intensity: EffectIntensity.MODERATE,
-      enabled: true,
-      audioAnalysisSource: "rms",
-      baseRadius: 50,
-      minRadius: 20,
-      maxRadius: 80,
-      smoothing: 0.7,
-    };
-  }
-
-  getDefaultOutput(): MaskRadiusAnimatorOutput {
-    return {
-      radius: 50,
-      cssRadius: "50vh",
-    };
-  }
 
   protected createInstance(
     id: string,

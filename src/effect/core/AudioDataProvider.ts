@@ -8,6 +8,8 @@
 
 import { audioAnalyzer } from "@/app/audio/audio";
 import { AudioFrameData } from "./types";
+import { getEffectConfigSync } from "../config/loader";
+import type { AudioAnalysisConfig } from "../config/types";
 
 /**
  * AudioDataProvider singleton.
@@ -26,11 +28,16 @@ class AudioDataProviderImpl {
   private timeDomainBuffer: Uint8Array<ArrayBuffer>;
   /** Map of track IDs to their analyzer nodes */
   private trackAnalyzers: Map<string, AnalyserNode> = new Map();
+  /** Audio configuration from effect config system */
+  private config: AudioAnalysisConfig;
 
   private constructor() {
-    // Initialize buffers based on analyzer config or defaults
-    const frequencyBinCount = audioAnalyzer?.frequencyBinCount ?? 512;
-    const fftSize = audioAnalyzer?.fftSize ?? 1024;
+    // Load audio analysis config
+    this.config = getEffectConfigSync().audioAnalysis;
+
+    // Initialize buffers based on config
+    const frequencyBinCount = this.config.fft.frequencyBinCount;
+    const fftSize = this.config.fft.fftSize;
 
     // Create buffers with explicit ArrayBuffer (not SharedArrayBuffer)
     this.frequencyBuffer = new Uint8Array(new ArrayBuffer(frequencyBinCount));
@@ -57,12 +64,13 @@ class AudioDataProviderImpl {
     audioAnalyzer.getByteFrequencyData(this.frequencyBuffer);
     audioAnalyzer.getByteTimeDomainData(this.timeDomainBuffer);
 
-    // Compute metrics
+    // Compute metrics using configured frequency bands
+    const bands = this.config.frequencyBands;
     const rms = this.computeRMS();
-    const bass = this.getBandAverage(0, 10);
-    const midLow = this.getBandAverage(11, 40);
-    const midHigh = this.getBandAverage(41, 80);
-    const treble = this.getBandAverage(81, 200);
+    const bass = this.getBandAverage(bands.bass.start, bands.bass.end);
+    const midLow = this.getBandAverage(bands.midLow.start, bands.midLow.end);
+    const midHigh = this.getBandAverage(bands.midHigh.start, bands.midHigh.end);
+    const treble = this.getBandAverage(bands.treble.start, bands.treble.end);
 
     return {
       frequencyData: this.frequencyBuffer,
@@ -175,13 +183,13 @@ class AudioDataProviderImpl {
     analyzer.getByteFrequencyData(this.frequencyBuffer);
     analyzer.getByteTimeDomainData(this.timeDomainBuffer);
 
-    // FIXME: make values configurable
-    // Compute metrics
+    // Compute metrics using configured frequency bands (same as global analysis)
+    const bands = this.config.frequencyBands;
     const rms = this.computeRMS();
-    const bass = this.getBandAverage(0, 10);
-    const midLow = this.getBandAverage(11, 40);
-    const midHigh = this.getBandAverage(41, 80);
-    const treble = this.getBandAverage(81, 511);
+    const bass = this.getBandAverage(bands.bass.start, bands.bass.end);
+    const midLow = this.getBandAverage(bands.midLow.start, bands.midLow.end);
+    const midHigh = this.getBandAverage(bands.midHigh.start, bands.midHigh.end);
+    const treble = this.getBandAverage(bands.treble.start, bands.treble.end);
 
     return {
       frequencyData: this.frequencyBuffer,

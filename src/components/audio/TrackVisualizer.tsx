@@ -31,18 +31,15 @@ export const TrackVisualizer: React.FC<TrackVisualizerProps> = ({
 }) => {
   const effectId = `track-viz-${trackId}`;
 
-  // Create effect bound to this specific track
+  // Create effect bound to this specific track using the "trackVisualizer" variant
+  // The variant config defines: minRadius=10, maxRadius=90, smoothing=0.2, audioAnalysisSource="bass"
   useEffectSubscription<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>({
     type: "maskRadiusAnimator",
     id: effectId,
+    variant: "trackVisualizer",
     params: {
-      trackId, // BIND TO SPECIFIC TRACK
-      intensity: EffectIntensity.STRONG,
-      audioAnalysisSource: "bass", // Bass is usually more prominent
-      baseRadius: 50,
-      minRadius: 10,
-      maxRadius: 90,
-      smoothing: 0.2, // Less smoothing = more responsive
+      trackId, // Bind to specific track for per-track audio analysis
+      intensity: EffectIntensity.EXTREME,
     },
     autoStart: true,
   });

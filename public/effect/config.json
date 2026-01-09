@@ -1,0 +1,64 @@
+{
+  "audioAnalysis": {
+    "fft": {
+      "fftSize": 1024,
+      "frequencyBinCount": 512
+    },
+    "frequencyBands": {
+      "bass": {
+        "start": 0,
+        "end": 10
+      },
+      "midLow": {
+        "start": 11,
+        "end": 40
+      },
+      "midHigh": {
+        "start": 41,
+        "end": 80
+      },
+      "treble": {
+        "start": 81,
+        "end": 511
+      }
+    },
+    "normalization": {
+      "rmsMultiplier": 2,
+      "frequencyDivisor": 255
+    }
+  },
+  "intensityMultipliers": {
+    "subtle": 0.2,
+    "mild": 0.4,
+    "moderate": 0.6,
+    "strong": 0.8,
+    "extreme": 1.0
+  },
+  "effects": {
+    "maskRadiusAnimator": {
+      "defaults": {
+        "audioAnalysisSource": "rms",
+        "baseRadius": 50,
+        "minRadius": 20,
+        "maxRadius": 80,
+        "smoothing": 0.7
+      },
+      "intensityOverrides": {
+        "subtle": {
+          "smoothing": 0.85
+        },
+        "extreme": {
+          "smoothing": 0.4
+        }
+      },
+      "variants": {
+        "trackVisualizer": {
+          "audioAnalysisSource": "bass",
+          "minRadius": 9,
+          "maxRadius": 90,
+          "smoothing": 0.2
+        }
+      }
+    }
+  }
+}
