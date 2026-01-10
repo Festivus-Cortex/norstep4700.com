@@ -15,9 +15,11 @@ import {
   MusicSetData,
 } from "@/app/audio/types";
 import { getAudioConfig, getAudioConfigSync } from "@/app/audio/getAudioConfig";
+import { initializeEffectConfig } from "@/effect/config/loader";
 
 interface AudioStateContextType extends AudioState {
   config: AudioConfig;
+  isEffectConfigInitialized: boolean;
   initializeAudio: () => void;
   setMasterMuted: (muted: boolean) => void;
   setMasterVolume: (volume: number) => void;
@@ -30,17 +32,32 @@ interface AudioStateContextType extends AudioState {
   setPlaying: (playing: boolean) => void;
 }
 
-const AudioStateContext = createContext<AudioStateContextType | undefined>(undefined);
+const AudioStateContext = createContext<AudioStateContextType | undefined>(
+  undefined
+);
 
 export function AudioStateProvider({ children }: { children: ReactNode }) {
   // Start with sync fallback config, will be updated with API data
   const [config, setConfig] = useState<AudioConfig>(getAudioConfigSync());
+  const [isEffectConfigInitialized, setIsEffectConfigInitialized] =
+    useState(false);
 
   // Fetch actual config from API on mount
   useEffect(() => {
     getAudioConfig().then((apiConfig) => {
       setConfig(apiConfig);
     });
+  }, []);
+
+  // Initialize effect config on mount (before any effects are created)
+  useEffect(() => {
+    initializeEffectConfig()
+      .then(() => {
+        setIsEffectConfigInitialized(true);
+      })
+      .catch((error) => {
+        console.error("Failed to initialize effect config:", error);
+      });
   }, []);
 
   // Initialize state
@@ -117,6 +134,7 @@ export function AudioStateProvider({ children }: { children: ReactNode }) {
   const value: AudioStateContextType = {
     ...state,
     config,
+    isEffectConfigInitialized,
     initializeAudio,
     setMasterMuted,
     setMasterVolume,
@@ -130,7 +148,9 @@ export function AudioStateProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AudioStateContext.Provider value={value}>{children}</AudioStateContext.Provider>
+    <AudioStateContext.Provider value={value}>
+      {children}
+    </AudioStateContext.Provider>
   );
 }
 

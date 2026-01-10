@@ -22,6 +22,12 @@ import {
 } from "./types";
 
 /**
+ * Effect event types for registration/unregistration notifications
+ */
+type EffectEventType = "registered" | "unregistered";
+type EffectEventListener = (effectId: string) => void;
+
+/**
  * Internal entry for a registered effect.
  */
 interface EffectEntry {
@@ -38,6 +44,9 @@ class EffectEngineImpl {
 
   /** Registered effect instances */
   private effects: Map<string, EffectEntry> = new Map();
+
+  /** Event listeners for effect lifecycle events */
+  private eventListeners: Map<EffectEventType, Set<EffectEventListener>> = new Map();
 
   /** RAF handle for cancellation */
   private animationFrameId: number | null = null;
@@ -93,6 +102,9 @@ class EffectEngineImpl {
     if (!this.isRunning && this.effects.size > 0) {
       this.start();
     }
+
+    // Emit registered event
+    this.emit("registered", instance.id);
   }
 
   /**
@@ -110,6 +122,9 @@ class EffectEngineImpl {
       entry.subscribers.clear();
       // Remove from map
       this.effects.delete(id);
+
+      // Emit unregistered event
+      this.emit("unregistered", id);
     }
 
     // Stop loop if no effects remain
@@ -193,6 +208,41 @@ class EffectEngineImpl {
    */
   getRegisteredEffectIds(): string[] {
     return Array.from(this.effects.keys());
+  }
+
+  /**
+   * Subscribe to effect lifecycle events.
+   *
+   * @param event - Event type to listen for ('registered' or 'unregistered')
+   * @param listener - Callback function that receives the effect ID
+   * @returns Unsubscribe function
+   */
+  on(event: EffectEventType, listener: EffectEventListener): () => void {
+    if (!this.eventListeners.has(event)) {
+      this.eventListeners.set(event, new Set());
+    }
+    this.eventListeners.get(event)!.add(listener);
+
+    // Return unsubscribe function
+    return () => {
+      this.eventListeners.get(event)?.delete(listener);
+    };
+  }
+
+  /**
+   * Emit an effect lifecycle event to all listeners.
+   *
+   * @param event - Event type to emit
+   * @param effectId - ID of the effect that triggered the event
+   */
+  private emit(event: EffectEventType, effectId: string): void {
+    this.eventListeners.get(event)?.forEach((listener) => {
+      try {
+        listener(effectId);
+      } catch (error) {
+        console.error(`[EffectEngine] Event listener error:`, error);
+      }
+    });
   }
 
   /**
@@ -315,6 +365,9 @@ export const EffectEngine = {
 
   getRegisteredEffectIds: () =>
     EffectEngineImpl.getInstance().getRegisteredEffectIds(),
+
+  on: (event: EffectEventType, listener: EffectEventListener) =>
+    EffectEngineImpl.getInstance().on(event, listener),
 
   destroy: () => EffectEngineImpl.getInstance().destroy(),
 };

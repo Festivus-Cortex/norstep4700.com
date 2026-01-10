@@ -13,7 +13,6 @@ import { Source_Code_Pro } from "next/font/google";
 import { person, home } from "@/app/resources/content";
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
 import { AudioStateProvider } from "@/context/AudioStateContext";
-import { EffectIntensity } from "@/effect/core/types";
 
 export async function generateMetadata() {
   return {
@@ -113,12 +112,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               mask={mask}
               audioReactiveMask={{
                 enabled: true,
-                intensity: EffectIntensity.MODERATE,
-                audioAnalysisSource: "rms",
-                baseRadius: mask.radius ?? 50,
-                minRadius: 20,
-                maxRadius: 80,
-                smoothing: 0.7,
               }}
               gradient={{
                 display: effects.gradient.display,

@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useEffectSubscription, useEffectRef } from "@/hooks/effect";
 import {
   MaskRadiusAnimatorParams,
   MaskRadiusAnimatorOutput,
 } from "@/effect/animators";
-import { EffectIntensity } from "@/effect/core/types";
+import { useAudioState } from "@/context/AudioStateContext";
+import { getEffectVariant } from "@/effect/config/loader";
 
 // Import animators to trigger factory registration
 import "@/effect/animators";
@@ -30,18 +31,27 @@ export const TrackVisualizer: React.FC<TrackVisualizerProps> = ({
   trackName,
 }) => {
   const effectId = `track-viz-${trackId}`;
+  const { isEffectConfigInitialized } = useAudioState();
 
-  // Create effect bound to this specific track using the "trackVisualizer" variant
-  // The variant config defines: minRadius=10, maxRadius=90, smoothing=0.2, audioAnalysisSource="bass"
+  // Get config params for trackVisualizer variant - only when initialized
+  const configParams = useMemo(() => {
+    if (!isEffectConfigInitialized) return null;
+    return getEffectVariant("maskRadiusAnimator", "trackVisualizer");
+  }, [isEffectConfigInitialized]);
+
+  // Create effect subscription - only starts AFTER config is initialized
+  // Hook is always called (Rules of Hooks), but autoStart controls when it runs
   useEffectSubscription<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>({
     type: "maskRadiusAnimator",
     id: effectId,
-    variant: "trackVisualizer",
-    params: {
-      trackId, // Bind to specific track for per-track audio analysis
-      intensity: EffectIntensity.EXTREME,
-    },
-    autoStart: true,
+    params: configParams
+      ? {
+          ...configParams,
+          trackId, // Binds to specific track
+          // intensity comes from config, can be overridden at runtime
+        }
+      : undefined,
+    autoStart: isEffectConfigInitialized && configParams !== null,
   });
 
   // Use ref for performance (direct DOM manipulation)

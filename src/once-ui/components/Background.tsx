@@ -4,6 +4,7 @@ import React, {
   CSSProperties,
   forwardRef,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -18,6 +19,8 @@ import {
   MaskRadiusAnimatorParams,
 } from "@/effect/animators";
 import { useEffectRef, useEffectSubscription } from "@/hooks/effect";
+import { useAudioState } from "@/context/AudioStateContext";
+import { getEffectDefaults } from "@/effect/config/loader";
 
 // NOTE: Be cautious about what is imported. Ensure no imports come from
 // /src/app or /src/component
@@ -72,22 +75,23 @@ interface LinesProps {
 
 /**
  * Configuration for audio-reactive mask effects.
+ * All params except 'enabled' are optional and will use config defaults if not provided.
  */
 interface AudioReactiveMaskProps {
   /** Enable audio-reactive mask radius */
   enabled: boolean;
-  /** Effect intensity level */
-  intensity: EffectIntensity;
-  /** Which audio metric drives the effect */
-  audioAnalysisSource: AudioAnalysisSource;
-  /** Base radius in vh (center of effect range) */
-  baseRadius: number;
-  /** Minimum radius in vh */
-  minRadius: number;
-  /** Maximum radius in vh */
-  maxRadius: number;
-  /** Smoothing factor (0-0.99, higher = smoother) */
-  smoothing: number;
+  /** Effect intensity level (optional, uses config default if not provided) */
+  intensity?: EffectIntensity;
+  /** Which audio metric drives the effect (optional, uses config default if not provided) */
+  audioAnalysisSource?: AudioAnalysisSource;
+  /** Base radius in vh (optional, uses config default if not provided) */
+  baseRadius?: number;
+  /** Minimum radius in vh (optional, uses config default if not provided) */
+  minRadius?: number;
+  /** Maximum radius in vh (optional, uses config default if not provided) */
+  maxRadius?: number;
+  /** Smoothing factor (optional, uses config default if not provided) */
+  smoothing?: number;
 }
 
 interface BackgroundProps extends React.ComponentProps<typeof Flex> {
@@ -127,18 +131,36 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
     const backgroundRef = useRef<HTMLDivElement>(null);
+    const { isEffectConfigInitialized } = useAudioState();
 
     // Set up audio-reactive mask effect if enabled
     const effectId = "background-mask-effect";
-    const effectFinalParams: MaskRadiusAnimatorParams | undefined =
-      audioReactiveMask?.enabled === true ? audioReactiveMask : undefined;
+
+    // Get config params for defaults - only when initialized
+    const configParams = useMemo(() => {
+      if (!isEffectConfigInitialized) return null;
+      return getEffectDefaults("maskRadiusAnimator");
+    }, [isEffectConfigInitialized]);
+
+    // Merge config params with prop overrides (props take precedence)
+    const effectParams = useMemo(() => {
+      if (!audioReactiveMask?.enabled || !configParams) return undefined;
+
+      return {
+        ...configParams,
+        ...audioReactiveMask,
+        enabled: true,
+      };
+    }, [audioReactiveMask, configParams]);
 
     // Create effect subscription when audio reactive mask is enabled
+    // Pass merged params (config defaults + prop overrides)
     useEffectSubscription<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>({
       type: "maskRadiusAnimator",
       id: effectId,
-      params: effectFinalParams,
-      autoStart: audioReactiveMask?.enabled ?? false,
+      params: effectParams,
+      autoStart:
+        isEffectConfigInitialized && (audioReactiveMask?.enabled ?? false),
     });
 
     // Use direct DOM manipulation for performance (no React re-renders)

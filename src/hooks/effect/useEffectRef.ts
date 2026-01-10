@@ -77,22 +77,42 @@ export function useEffectRef<TOutput extends EffectOutput>(
     const element = elementRef.current;
     if (!element) return;
 
-    // Apply initial values
-    const values = EffectEngine.getEffectOutput<TOutput>(effectId);
-    if (values) {
-      applyValuesRef.current(element, values);
-    }
+    let eventUnsubscribe: (() => void) | null = null;
 
-    // Subscribe to updates
-    unsubscribeRef.current = EffectEngine.subscribe(effectId, () => {
-      const newValues = EffectEngine.getEffectOutput<TOutput>(effectId);
-      if (newValues && elementRef.current) {
-        applyValuesRef.current(elementRef.current, newValues);
+    const setupSubscription = () => {
+      // Apply initial values
+      const values = EffectEngine.getEffectOutput<TOutput>(effectId);
+
+      if (values && element) {
+        applyValuesRef.current(element, values);
       }
-    });
+
+      // Subscribe to updates
+      unsubscribeRef.current = EffectEngine.subscribe(effectId, () => {
+        const newValues = EffectEngine.getEffectOutput<TOutput>(effectId);
+        if (newValues && elementRef.current) {
+          applyValuesRef.current(elementRef.current, newValues);
+        }
+      });
+    };
+
+    // Check if effect is already registered
+    if (EffectEngine.hasEffect(effectId)) {
+      setupSubscription();
+    } else {
+      // Not registered yet - listen for registration event
+      eventUnsubscribe = EffectEngine.on("registered", (registeredId) => {
+        if (registeredId === effectId) {
+          setupSubscription();
+        }
+      });
+    }
 
     // Cleanup
     return () => {
+      if (eventUnsubscribe) {
+        eventUnsubscribe();
+      }
       if (unsubscribeRef.current) {
         unsubscribeRef.current();
         unsubscribeRef.current = null;

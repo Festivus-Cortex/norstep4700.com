@@ -10,7 +10,6 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { EffectEngine } from "../../effect/core/EffectEngine";
 import { EffectRegistry } from "../../effect/core/EffectRegistry";
-import { loadEffectConfig } from "../../effect/config/loader";
 import {
   EffectIntensity,
   EffectOutput,
@@ -77,17 +76,12 @@ export function useEffectSubscription<
 
     let isMounted = true;
 
-    // Async function to load config and create effect
+    // Async function to create effect
+    // Note: Effect config is preloaded in AudioStateProvider
     const initEffect = async () => {
       try {
-        console.log(`[useEffectSubscription] Loading config for effect "${id}"...`);
-        // Load config first (no-op if already loaded)
-        await loadEffectConfig();
-        console.log(`[useEffectSubscription] Config loaded for effect "${id}"`);
-
         // Check if component is still mounted
         if (!isMounted) {
-          console.log(`[useEffectSubscription] Component unmounted before creating effect "${id}"`);
           return;
         }
 
@@ -103,7 +97,6 @@ export function useEffectSubscription<
           return;
         }
 
-        console.log(`[useEffectSubscription] Creating effect "${id}" with variant "${variant || 'none'}"`);
         // Create and register the instance (use variant if specified)
         const instance = variant
           ? factory.createFromVariant(id, variant, params)
@@ -111,7 +104,6 @@ export function useEffectSubscription<
         EffectEngine.registerEffect(instance);
         instanceIdRef.current = id;
         setIsSubscribed(true);
-        console.log(`[useEffectSubscription] Effect "${id}" registered successfully`);
       } catch (error) {
         console.error("[useEffectSubscription] Failed to initialize effect:", error);
       }

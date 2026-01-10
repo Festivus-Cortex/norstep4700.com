@@ -46,10 +46,7 @@ export interface EffectTypeConfig<
   TParams extends BaseEffectParams = BaseEffectParams
 > {
   /** Base default parameters for this effect type */
-  defaults: Omit<
-    TParams,
-    "intensity" | "enabled" | "intensityMultipliers" | "trackId"
-  >;
+  defaults: Omit<TParams, "enabled" | "intensityMultipliers" | "trackId">;
   /** Partial parameter overrides per intensity level */
   intensityOverrides?: Partial<
     Record<
@@ -65,22 +62,23 @@ export interface EffectTypeConfig<
   /** Named preset configurations for common use cases */
   variants?: Record<
     string,
-    Partial<
-      Omit<
-        TParams,
-        "intensity" | "enabled" | "intensityMultipliers" | "trackId"
-      >
-    >
+    Partial<Omit<TParams, "enabled" | "intensityMultipliers" | "trackId">>
   >;
 }
 
 /**
  * All effect type configurations
+ *
+ * TODO: It would be nice to find a way to not have to manually add animators to
+ * this type every time. Investigate alternatives.
  */
 export interface EffectsConfig {
   /** MaskRadiusAnimator configuration */
   maskRadiusAnimator: EffectTypeConfig<MaskRadiusAnimatorParams>;
   // Future effects can be added here
+
+  // TODO: Tinkering with comment in function. will come back to.
+  //[animatorType: string extends EffectTypeConfig]:EffectTypeConfig<MaskRadiusAnimatorParams>;
 }
 
 /**

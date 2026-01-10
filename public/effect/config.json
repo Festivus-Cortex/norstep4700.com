@@ -32,15 +32,16 @@
     "mild": 0.4,
     "moderate": 0.6,
     "strong": 0.8,
-    "extreme": 1.0
+    "extreme": 1.2
   },
   "effects": {
     "maskRadiusAnimator": {
       "defaults": {
+        "intensity": "extreme",
         "audioAnalysisSource": "rms",
         "baseRadius": 50,
         "minRadius": 20,
-        "maxRadius": 80,
+        "maxRadius": 100,
         "smoothing": 0.7
       },
       "intensityOverrides": {
@@ -53,7 +54,9 @@
       },
       "variants": {
         "trackVisualizer": {
+          "intensity": "strong",
           "audioAnalysisSource": "bass",
+          "baseRadius": 50,
           "minRadius": 9,
           "maxRadius": 90,
           "smoothing": 0.2
