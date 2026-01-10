@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 import { useEffectSubscription, useEffectRef } from "@/hooks/effect";
 import {
   MaskRadiusAnimatorParams,
   MaskRadiusAnimatorOutput,
 } from "@/effect/animators";
 import { useAudioState } from "@/context/AudioStateContext";
-import { getEffectVariant } from "@/effect/config/loader";
 
 // Import animators to trigger factory registration
 import "@/effect/animators";
@@ -15,6 +14,11 @@ import "@/effect/animators";
 interface TrackVisualizerProps {
   trackId: string;
   trackName: string;
+  /** Config params for the visualizer effect (passed from parent) */
+  configParams: Omit<
+    MaskRadiusAnimatorParams,
+    "enabled" | "intensityMultipliers" | "trackId"
+  > | null;
 }
 
 /**
@@ -29,18 +33,13 @@ interface TrackVisualizerProps {
 export const TrackVisualizer: React.FC<TrackVisualizerProps> = ({
   trackId,
   trackName,
+  configParams,
 }) => {
   const effectId = `track-viz-${trackId}`;
   const { isEffectConfigInitialized } = useAudioState();
 
-  // Get config params for trackVisualizer variant - only when initialized
-  const configParams = useMemo(() => {
-    if (!isEffectConfigInitialized) return null;
-    return getEffectVariant("maskRadiusAnimator", "trackVisualizer");
-  }, [isEffectConfigInitialized]);
-
   // Create effect subscription - only starts AFTER config is initialized
-  // Hook is always called (Rules of Hooks), but autoStart controls when it runs
+  // Config params are passed from parent (AudioControlPanel)
   useEffectSubscription<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>({
     type: "maskRadiusAnimator",
     id: effectId,

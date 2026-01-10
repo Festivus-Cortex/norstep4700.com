@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Flex, IconButton, SmartLink, Text } from "@/once-ui/components";
 import { AudioPanelToggle } from "./AudioPanelToggle";
 import { AudioControls } from "./AudioControls";
@@ -8,6 +8,9 @@ import { TrackControlsGrid } from "./TrackControlsGrid";
 import { audioCtx, audioError } from "@/app/audio/audio";
 import styles from "./AudioControlPanel.module.scss";
 import classNames from "classnames";
+import { useAudioState } from "@/context/AudioStateContext";
+import { getEffectVariant } from "@/effect/config/loader";
+import type { MaskRadiusAnimatorParams } from "@/effect/animators";
 
 /**
  * Main audio control panel component.
@@ -39,6 +42,15 @@ export const AudioControlPanel: React.FC = () => {
 
   /** Reference to the scrollable panel element */
   const panelRef = useRef<HTMLDivElement>(null);
+
+  /** Get effect config initialization state */
+  const { isEffectConfigInitialized } = useAudioState();
+
+  /** Load track visualizer config params - shared by all track visualizers */
+  const trackVisualizerConfig = useMemo(() => {
+    if (!isEffectConfigInitialized) return null;
+    return getEffectVariant("maskRadiusAnimator", "trackVisualizer");
+  }, [isEffectConfigInitialized]);
 
   /**
    * Measure the navbar controls width on mount and window resize.
@@ -248,7 +260,7 @@ export const AudioControlPanel: React.FC = () => {
                   <AudioControls />
 
                   {/* Track controls */}
-                  <TrackControlsGrid />
+                  <TrackControlsGrid visualizerConfig={trackVisualizerConfig} />
                 </>
               )}
             </Flex>

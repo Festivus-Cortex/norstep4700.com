@@ -4,6 +4,15 @@ import React from "react";
 import { Grid } from "@/once-ui/components";
 import { TrackControl } from "./TrackControl";
 import { useTrackControls } from "@/hooks/audio/useTrackControls";
+import type { MaskRadiusAnimatorParams } from "@/effect/animators";
+
+interface TrackControlsGridProps {
+  /** Config params for track visualizer effects (shared by all tracks) */
+  visualizerConfig: Omit<
+    MaskRadiusAnimatorParams,
+    "enabled" | "intensityMultipliers" | "trackId"
+  > | null;
+}
 
 /**
  * Grid layout for individual track controls.
@@ -16,7 +25,9 @@ import { useTrackControls } from "@/hooks/audio/useTrackControls";
  * Each track gets its own TrackControl component with mute, solo, volume, and pan controls.
  * If no tracks are loaded, the grid is hidden.
  */
-export const TrackControlsGrid: React.FC = () => {
+export const TrackControlsGrid: React.FC<TrackControlsGridProps> = ({
+  visualizerConfig,
+}) => {
   const { tracks } = useTrackControls();
 
   // Don't render the grid if there are no tracks loaded
@@ -38,6 +49,7 @@ export const TrackControlsGrid: React.FC = () => {
           key={track.id}
           trackId={track.id}
           trackName={track.name}
+          visualizerConfig={visualizerConfig}
         />
       ))}
     </Grid>

@@ -11,8 +11,9 @@ import { Inter } from "next/font/google";
 import { Source_Code_Pro } from "next/font/google";
 
 import { person, home } from "@/app/resources/content";
-import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
+import { Column, Flex, ToastProvider } from "@/once-ui/components";
 import { AudioStateProvider } from "@/context/AudioStateContext";
+import { AudioReactiveBackground } from "@/components/audio/AudioReactiveBackground";
 
 export async function generateMetadata() {
   return {
@@ -108,7 +109,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             margin="0"
             padding="0"
           >
-            <Background
+            <AudioReactiveBackground
               mask={mask}
               audioReactiveMask={{
                 enabled: true,

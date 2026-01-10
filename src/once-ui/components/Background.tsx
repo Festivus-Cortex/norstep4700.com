@@ -4,7 +4,6 @@ import React, {
   CSSProperties,
   forwardRef,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -20,7 +19,6 @@ import {
 } from "@/effect/animators";
 import { useEffectRef, useEffectSubscription } from "@/hooks/effect";
 import { useAudioState } from "@/context/AudioStateContext";
-import { getEffectDefaults } from "@/effect/config/loader";
 
 // NOTE: Be cautious about what is imported. Ensure no imports come from
 // /src/app or /src/component
@@ -94,7 +92,7 @@ interface AudioReactiveMaskProps {
   smoothing?: number;
 }
 
-interface BackgroundProps extends React.ComponentProps<typeof Flex> {
+export interface BackgroundProps extends React.ComponentProps<typeof Flex> {
   position?: CSSProperties["position"];
   gradient?: GradientProps;
   dots?: DotsProps;
@@ -136,29 +134,12 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     // Set up audio-reactive mask effect if enabled
     const effectId = "background-mask-effect";
 
-    // Get config params for defaults - only when initialized
-    const configParams = useMemo(() => {
-      if (!isEffectConfigInitialized) return null;
-      return getEffectDefaults("maskRadiusAnimator");
-    }, [isEffectConfigInitialized]);
-
-    // Merge config params with prop overrides (props take precedence)
-    const effectParams = useMemo(() => {
-      if (!audioReactiveMask?.enabled || !configParams) return undefined;
-
-      return {
-        ...configParams,
-        ...audioReactiveMask,
-        enabled: true,
-      };
-    }, [audioReactiveMask, configParams]);
-
     // Create effect subscription when audio reactive mask is enabled
-    // Pass merged params (config defaults + prop overrides)
+    // Config params are already merged in BackgroundWithConfig wrapper
     useEffectSubscription<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>({
       type: "maskRadiusAnimator",
       id: effectId,
-      params: effectParams,
+      params: audioReactiveMask?.enabled ? audioReactiveMask : undefined,
       autoStart:
         isEffectConfigInitialized && (audioReactiveMask?.enabled ?? false),
     });

@@ -46,6 +46,12 @@ interface TrackControlProps {
   /** Display name for the track */
   trackName: string;
 
+  /** Config params for track visualizer effect */
+  visualizerConfig: Omit<
+    import("@/effect/animators").MaskRadiusAnimatorParams,
+    "enabled" | "intensityMultipliers" | "trackId"
+  > | null;
+
   /** Optional CSS class name */
   className?: string;
 }
@@ -62,7 +68,7 @@ interface TrackControlProps {
  * The component is memoized to prevent unnecessary re-renders when other tracks change.
  */
 export const TrackControl = React.memo<TrackControlProps>(
-  ({ trackId, trackName, className }) => {
+  ({ trackId, trackName, visualizerConfig, className }) => {
     const { tracks, toggleMute, toggleSolo, updateVolume, updatePan } =
       useTrackControls();
 
@@ -125,7 +131,11 @@ export const TrackControl = React.memo<TrackControlProps>(
         {/* Track name and control buttons */}
         <Flex horizontal="space-between" vertical="center" gap="8">
           <Flex gap="8" vertical="center">
-            <TrackVisualizer trackId={trackId} trackName={trackName} />
+            <TrackVisualizer
+              trackId={trackId}
+              trackName={trackName}
+              configParams={visualizerConfig}
+            />
             <Text variant="label-default-m" onBackground="neutral-strong">
               {trackName}
             </Text>

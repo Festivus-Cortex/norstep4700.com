@@ -37,11 +37,11 @@
   "effects": {
     "maskRadiusAnimator": {
       "defaults": {
-        "intensity": "extreme",
+        "intensity": "strong",
         "audioAnalysisSource": "rms",
-        "baseRadius": 50,
-        "minRadius": 20,
-        "maxRadius": 100,
+        "baseRadius": 75,
+        "minRadius": 35,
+        "maxRadius": 110,
         "smoothing": 0.7
       },
       "intensityOverrides": {
