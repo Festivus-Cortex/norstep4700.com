@@ -23,9 +23,10 @@ import { getEffectConfigSync } from "../../config/loader";
 /**
  * Internal effect instance for GlitchIntensityAnimator.
  */
-class GlitchIntensityAnimatorEffectInstance
-  implements EffectInstance<GlitchIntensityAnimatorParams, GlitchIntensityAnimatorOutput>
-{
+class GlitchIntensityAnimatorEffectInstance implements EffectInstance<
+  GlitchIntensityAnimatorParams,
+  GlitchIntensityAnimatorOutput
+> {
   readonly factoryType = "glitchIntensityAnimator";
 
   private params: GlitchIntensityAnimatorParams;
@@ -175,12 +176,16 @@ export class GlitchIntensityAnimatorFactory extends EffectFactory<
   GlitchIntensityAnimatorOutput
 > {
   readonly type = "glitchIntensityAnimator";
-  readonly description = "Controls glitch effect intensity based on audio levels";
+  readonly description =
+    "Controls glitch effect intensity based on audio levels";
 
   protected createInstance(
     id: string,
     params: GlitchIntensityAnimatorParams
-  ): EffectInstance<GlitchIntensityAnimatorParams, GlitchIntensityAnimatorOutput> {
+  ): EffectInstance<
+    GlitchIntensityAnimatorParams,
+    GlitchIntensityAnimatorOutput
+  > {
     return new GlitchIntensityAnimatorEffectInstance(
       id,
       params,

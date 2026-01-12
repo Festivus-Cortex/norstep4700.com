@@ -50,7 +50,7 @@ export interface AudioAnalysisConfig {
  * Effect-specific configuration with defaults, intensity overrides, and variants
  */
 export interface EffectTypeConfig<
-  TParams extends BaseEffectParams = BaseEffectParams
+  TParams extends BaseEffectParams = BaseEffectParams,
 > {
   /** Base default parameters for this effect type */
   defaults: Omit<TParams, "enabled" | "intensityMultipliers" | "trackId">;

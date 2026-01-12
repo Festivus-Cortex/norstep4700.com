@@ -27,7 +27,6 @@ For production use, using a proxy like `nginx` to host the incoming traffic of `
 ## Future Considerations
 
 - Critical Items
-
   - Audio Visual WOW Factor
 
 - Nice To Have

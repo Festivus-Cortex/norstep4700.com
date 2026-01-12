@@ -60,7 +60,7 @@ export interface UseEffectOptions<TParams extends BaseEffectParams> {
  */
 export function useEffectSubscription<
   TParams extends BaseEffectParams = BaseEffectParams,
-  TOutput extends EffectOutput = EffectOutput
+  TOutput extends EffectOutput = EffectOutput,
 >(options: UseEffectOptions<TParams>): EffectSubscription<TOutput> | null {
   const { type, id, params, autoStart = true, variant } = options;
 

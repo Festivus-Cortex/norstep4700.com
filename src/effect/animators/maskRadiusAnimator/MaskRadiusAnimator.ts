@@ -19,9 +19,10 @@ import { getEffectConfigSync } from "../../config/loader";
 /**
  * Internal effect instance for MaskRadiusAnimator.
  */
-class MaskRadiusAnimatorEffectInstance
-  implements EffectInstance<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>
-{
+class MaskRadiusAnimatorEffectInstance implements EffectInstance<
+  MaskRadiusAnimatorParams,
+  MaskRadiusAnimatorOutput
+> {
   readonly factoryType = "maskRadiusAnimator";
 
   private params: MaskRadiusAnimatorParams;

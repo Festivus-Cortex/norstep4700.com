@@ -13,15 +13,19 @@ import {
   EffectIntensity,
 } from "../../core/types";
 import { smoothDamp, clamp } from "@/utils/math";
-import { GradientScaleAnimatorParams, GradientScaleAnimatorOutput } from "./types";
+import {
+  GradientScaleAnimatorParams,
+  GradientScaleAnimatorOutput,
+} from "./types";
 import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for GradientScaleAnimator.
  */
-class GradientScaleAnimatorEffectInstance
-  implements EffectInstance<GradientScaleAnimatorParams, GradientScaleAnimatorOutput>
-{
+class GradientScaleAnimatorEffectInstance implements EffectInstance<
+  GradientScaleAnimatorParams,
+  GradientScaleAnimatorOutput
+> {
   readonly factoryType = "gradientScaleAnimator";
 
   private params: GradientScaleAnimatorParams;
@@ -98,8 +102,14 @@ class GradientScaleAnimatorEffectInstance
     const scaleRange = maxScale - minScale;
     const effectiveRange = scaleRange * multiplier;
     const baseScale = 1.0;
-    const effectiveMinScale = Math.max(minScale, baseScale - effectiveRange / 2);
-    const effectiveMaxScale = Math.min(maxScale, baseScale + effectiveRange / 2);
+    const effectiveMinScale = Math.max(
+      minScale,
+      baseScale - effectiveRange / 2
+    );
+    const effectiveMaxScale = Math.min(
+      maxScale,
+      baseScale + effectiveRange / 2
+    );
 
     let width: number;
     let height: number;
@@ -114,7 +124,8 @@ class GradientScaleAnimatorEffectInstance
         deltaTime
       );
       const scaleFactor =
-        effectiveMinScale + this.smoothedWidthValue * (effectiveMaxScale - effectiveMinScale);
+        effectiveMinScale +
+        this.smoothedWidthValue * (effectiveMaxScale - effectiveMinScale);
       width = baseWidth * scaleFactor;
       height = baseHeight * scaleFactor;
     } else {
@@ -122,9 +133,14 @@ class GradientScaleAnimatorEffectInstance
       // This creates an ellipse that changes shape with the music
       const widthRaw = getAudioValue(audioAnalysisSource);
       // Use bass for width expansion, treble for height - creates interesting shapes
-      const heightSource = audioAnalysisSource === "bass" ? "treble" :
-                          audioAnalysisSource === "treble" ? "bass" :
-                          audioAnalysisSource === "midLow" ? "midHigh" : "midLow";
+      const heightSource =
+        audioAnalysisSource === "bass"
+          ? "treble"
+          : audioAnalysisSource === "treble"
+            ? "bass"
+            : audioAnalysisSource === "midLow"
+              ? "midHigh"
+              : "midLow";
       const heightRaw = getAudioValue(heightSource);
 
       this.smoothedWidthValue = smoothDamp(
@@ -141,9 +157,11 @@ class GradientScaleAnimatorEffectInstance
       );
 
       const widthScaleFactor =
-        effectiveMinScale + this.smoothedWidthValue * (effectiveMaxScale - effectiveMinScale);
+        effectiveMinScale +
+        this.smoothedWidthValue * (effectiveMaxScale - effectiveMinScale);
       const heightScaleFactor =
-        effectiveMinScale + this.smoothedHeightValue * (effectiveMaxScale - effectiveMinScale);
+        effectiveMinScale +
+        this.smoothedHeightValue * (effectiveMaxScale - effectiveMinScale);
 
       width = baseWidth * widthScaleFactor;
       height = baseHeight * heightScaleFactor;

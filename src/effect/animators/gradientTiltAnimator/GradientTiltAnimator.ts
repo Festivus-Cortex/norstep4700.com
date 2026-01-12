@@ -13,15 +13,19 @@ import {
   EffectIntensity,
 } from "../../core/types";
 import { smoothDamp, clamp } from "@/utils/math";
-import { GradientTiltAnimatorParams, GradientTiltAnimatorOutput } from "./types";
+import {
+  GradientTiltAnimatorParams,
+  GradientTiltAnimatorOutput,
+} from "./types";
 import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for GradientTiltAnimator.
  */
-class GradientTiltAnimatorEffectInstance
-  implements EffectInstance<GradientTiltAnimatorParams, GradientTiltAnimatorOutput>
-{
+class GradientTiltAnimatorEffectInstance implements EffectInstance<
+  GradientTiltAnimatorParams,
+  GradientTiltAnimatorOutput
+> {
   readonly factoryType = "gradientTiltAnimator";
 
   private params: GradientTiltAnimatorParams;
@@ -159,7 +163,8 @@ export class GradientTiltAnimatorFactory extends EffectFactory<
   GradientTiltAnimatorOutput
 > {
   readonly type = "gradientTiltAnimator";
-  readonly description = "Animates gradient tilt/rotation based on audio levels";
+  readonly description =
+    "Animates gradient tilt/rotation based on audio levels";
 
   protected createInstance(
     id: string,

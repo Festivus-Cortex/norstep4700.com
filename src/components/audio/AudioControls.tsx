@@ -58,8 +58,12 @@ export const AudioControls: React.FC = () => {
     isPlaying,
   } = useAudioManager();
 
-  const { currentMusicSet, loadingMusicSet, switchMusicSet, availableMusicSets } =
-    useAudioMusicSet();
+  const {
+    currentMusicSet,
+    loadingMusicSet,
+    switchMusicSet,
+    availableMusicSets,
+  } = useAudioMusicSet();
 
   /**
    * Tracks whether the user has interacted with any audio control.

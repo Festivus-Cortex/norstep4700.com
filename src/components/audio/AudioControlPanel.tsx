@@ -181,8 +181,8 @@ export const AudioControlPanel: React.FC = () => {
               ? `${expandedWidth}px`
               : "100%"
             : collapsedWidth
-            ? `${collapsedWidth}px`
-            : "85%",
+              ? `${collapsedWidth}px`
+              : "85%",
           margin: "0 auto",
         }}
       >
@@ -199,7 +199,10 @@ export const AudioControlPanel: React.FC = () => {
                   variant="ghost"
                   tooltip="Scroll up"
                   onClick={() =>
-                    panelRef.current?.scrollBy({ top: -200, behavior: "smooth" })
+                    panelRef.current?.scrollBy({
+                      top: -200,
+                      behavior: "smooth",
+                    })
                   }
                   aria-label="Scroll up"
                 />

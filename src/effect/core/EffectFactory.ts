@@ -25,7 +25,7 @@ import type { EffectsConfig } from "../config/types";
  */
 export abstract class EffectFactory<
   TParams extends BaseEffectParams = BaseEffectParams,
-  TOutput extends EffectOutput = EffectOutput
+  TOutput extends EffectOutput = EffectOutput,
 > {
   /**
    * Unique identifier for this factory type.

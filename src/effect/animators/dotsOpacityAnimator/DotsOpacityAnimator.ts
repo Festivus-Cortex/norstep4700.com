@@ -19,9 +19,10 @@ import { getEffectConfigSync } from "../../config/loader";
 /**
  * Internal effect instance for DotsOpacityAnimator.
  */
-class DotsOpacityAnimatorEffectInstance
-  implements EffectInstance<DotsOpacityAnimatorParams, DotsOpacityAnimatorOutput>
-{
+class DotsOpacityAnimatorEffectInstance implements EffectInstance<
+  DotsOpacityAnimatorParams,
+  DotsOpacityAnimatorOutput
+> {
   readonly factoryType = "dotsOpacityAnimator";
 
   private params: DotsOpacityAnimatorParams;

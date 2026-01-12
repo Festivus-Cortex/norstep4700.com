@@ -46,7 +46,8 @@ class EffectEngineImpl {
   private effects: Map<string, EffectEntry> = new Map();
 
   /** Event listeners for effect lifecycle events */
-  private eventListeners: Map<EffectEventType, Set<EffectEventListener>> = new Map();
+  private eventListeners: Map<EffectEventType, Set<EffectEventListener>> =
+    new Map();
 
   /** RAF handle for cancellation */
   private animationFrameId: number | null = null;
@@ -78,9 +79,10 @@ class EffectEngineImpl {
    *
    * @param instance - The effect instance to register
    */
-  registerEffect<TParams extends BaseEffectParams, TOutput extends EffectOutput>(
-    instance: EffectInstance<TParams, TOutput>
-  ): void {
+  registerEffect<
+    TParams extends BaseEffectParams,
+    TOutput extends EffectOutput,
+  >(instance: EffectInstance<TParams, TOutput>): void {
     if (this.effects.has(instance.id)) {
       console.warn(
         `[EffectEngine] Effect "${instance.id}" already registered. Replacing.`
@@ -343,7 +345,10 @@ class EffectEngineImpl {
 export const EffectEngine = {
   getInstance: () => EffectEngineImpl.getInstance(),
 
-  registerEffect: <TParams extends BaseEffectParams, TOutput extends EffectOutput>(
+  registerEffect: <
+    TParams extends BaseEffectParams,
+    TOutput extends EffectOutput,
+  >(
     instance: EffectInstance<TParams, TOutput>
   ) => EffectEngineImpl.getInstance().registerEffect(instance),
 

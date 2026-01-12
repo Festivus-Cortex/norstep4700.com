@@ -22,9 +22,10 @@ import { getEffectConfigSync } from "../../config/loader";
 /**
  * Internal effect instance for GradientPositionAnimator.
  */
-class GradientPositionAnimatorEffectInstance
-  implements EffectInstance<GradientPositionAnimatorParams, GradientPositionAnimatorOutput>
-{
+class GradientPositionAnimatorEffectInstance implements EffectInstance<
+  GradientPositionAnimatorParams,
+  GradientPositionAnimatorOutput
+> {
   readonly factoryType = "gradientPositionAnimator";
 
   private params: GradientPositionAnimatorParams;
@@ -149,9 +150,11 @@ class GradientPositionAnimatorEffectInstance
           break;
         case "radial":
           // Rotate around base position
-          this.radialAngle += Math.PI / 4 + Math.random() * Math.PI / 4;
-          this.peakOffsetX = Math.cos(this.radialAngle) * effectiveDeviation * rawValue;
-          this.peakOffsetY = Math.sin(this.radialAngle) * effectiveDeviation * rawValue;
+          this.radialAngle += Math.PI / 4 + (Math.random() * Math.PI) / 4;
+          this.peakOffsetX =
+            Math.cos(this.radialAngle) * effectiveDeviation * rawValue;
+          this.peakOffsetY =
+            Math.sin(this.radialAngle) * effectiveDeviation * rawValue;
           break;
         case "bounce":
           // Bounce outward from center based on audio intensity
@@ -172,8 +175,18 @@ class GradientPositionAnimatorEffectInstance
     this.targetY = baseY + this.peakOffsetY;
 
     // Smooth current position toward target
-    this.currentX = smoothDamp(this.currentX, this.targetX, smoothing, deltaTime);
-    this.currentY = smoothDamp(this.currentY, this.targetY, smoothing, deltaTime);
+    this.currentX = smoothDamp(
+      this.currentX,
+      this.targetX,
+      smoothing,
+      deltaTime
+    );
+    this.currentY = smoothDamp(
+      this.currentY,
+      this.targetY,
+      smoothing,
+      deltaTime
+    );
 
     // Clamp to valid range (allowing some overflow for visual effect)
     const clampedX = clamp(this.currentX, 0, 100);
@@ -219,7 +232,10 @@ export class GradientPositionAnimatorFactory extends EffectFactory<
   protected createInstance(
     id: string,
     params: GradientPositionAnimatorParams
-  ): EffectInstance<GradientPositionAnimatorParams, GradientPositionAnimatorOutput> {
+  ): EffectInstance<
+    GradientPositionAnimatorParams,
+    GradientPositionAnimatorOutput
+  > {
     return new GradientPositionAnimatorEffectInstance(
       id,
       params,

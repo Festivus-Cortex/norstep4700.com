@@ -85,7 +85,7 @@ export interface BaseEffectParams {
  */
 export interface EffectInstance<
   TParams extends BaseEffectParams,
-  TOutput extends EffectOutput
+  TOutput extends EffectOutput,
 > {
   /** Unique identifier for this instance */
   readonly id: string;
@@ -182,7 +182,12 @@ export interface EngineState {
  * Audio analysis source options for effects.
  * Determines which audio analysis metric drives the effect.
  */
-export type AudioAnalysisSource = "rms" | "bass" | "midLow" | "midHigh" | "treble";
+export type AudioAnalysisSource =
+  | "rms"
+  | "bass"
+  | "midLow"
+  | "midHigh"
+  | "treble";
 
 /**
  * Helper type for CSS value outputs.

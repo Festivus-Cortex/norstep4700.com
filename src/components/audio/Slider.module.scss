@@ -78,7 +78,9 @@
   position: absolute;
   height: 100%;
   background: var(--accent-solid-medium); /* Accent color for active state */
-  transition: width var(--transition-micro-fast), left var(--transition-micro-fast); /* Smooth changes */
+  transition:
+    width var(--transition-micro-fast),
+    left var(--transition-micro-fast); /* Smooth changes */
   pointer-events: none; /* Let clicks pass through to input */
   border-radius: var(--radius-m) 0 0 var(--radius-m); /* Rounded left edge */
 
@@ -113,6 +115,8 @@
  */
 @media (--s) {
   .sliderContainer {
-    height: var(--static-space-48); /* 48px - iOS/Android recommended touch target */
+    height: var(
+      --static-space-48
+    ); /* 48px - iOS/Android recommended touch target */
   }
 }

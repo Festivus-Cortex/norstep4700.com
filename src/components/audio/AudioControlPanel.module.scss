@@ -52,7 +52,9 @@
     top: auto !important;
     bottom: 0 !important;
     /* Position above navbar with proper spacing */
-    padding-bottom: calc(var(--static-space-80) + var(--static-space-4)) !important;
+    padding-bottom: calc(
+      var(--static-space-80) + var(--static-space-4)
+    ) !important;
   }
 }
 
