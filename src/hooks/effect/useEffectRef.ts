@@ -9,7 +9,7 @@
  * Pattern used by: Framer Motion, react-spring, GSAP
  */
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { EffectEngine } from "../../effect/core/EffectEngine";
 import { EffectOutput } from "../../effect/core/types";
 
@@ -61,13 +61,17 @@ export function useEffectRef<TOutput extends EffectOutput>(
   const applyValuesRef = useRef(applyValues);
   applyValuesRef.current = applyValues;
 
+  /** Track when element is attached to trigger useEffect re-run */
+  const [hasElement, setHasElement] = useState(false);
+
   /**
    * Ref callback - called when element mounts/unmounts.
-   * Just stores the element reference.
+   * Stores the element reference and triggers useEffect re-run.
    */
   const refCallback = useCallback(
     (element: HTMLElement | null) => {
       elementRef.current = element;
+      setHasElement(!!element);
     },
     [effectId]
   );
@@ -77,12 +81,17 @@ export function useEffectRef<TOutput extends EffectOutput>(
     const element = elementRef.current;
     if (!element) return;
 
+    // Already subscribed - don't set up again
+    if (unsubscribeRef.current) return;
+
     let eventUnsubscribe: (() => void) | null = null;
 
     const setupSubscription = () => {
+      // Guard against double subscription from event + useEffect race
+      if (unsubscribeRef.current) return;
+
       // Apply initial values
       const values = EffectEngine.getEffectOutput<TOutput>(effectId);
-
       if (values && element) {
         applyValuesRef.current(element, values);
       }
@@ -118,7 +127,7 @@ export function useEffectRef<TOutput extends EffectOutput>(
         unsubscribeRef.current = null;
       }
     };
-  }, [effectId]);
+  }, [effectId, hasElement]);
 
   return refCallback;
 }

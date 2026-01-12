@@ -54,11 +54,11 @@ export interface AudioFrameData {
 
 /**
  * Base output type for effect values.
- * Effects can output any combination of numbers and strings.
+ * Effects can output numbers, strings, and booleans.
  * Concrete effect outputs should extend this interface.
  */
 export interface EffectOutput {
-  [key: string]: number | string;
+  [key: string]: number | string | boolean;
 }
 
 /**

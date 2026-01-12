@@ -3,6 +3,7 @@
 import React, {
   CSSProperties,
   forwardRef,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -16,6 +17,15 @@ import { AudioAnalysisSource, EffectIntensity } from "@/effect/core/types";
 import {
   MaskRadiusAnimatorOutput,
   MaskRadiusAnimatorParams,
+  GradientTiltAnimatorOutput,
+  GradientTiltAnimatorParams,
+  GradientScaleAnimatorOutput,
+  GradientScaleAnimatorParams,
+  GradientPositionAnimatorOutput,
+  GradientPositionAnimatorParams,
+  DotsOpacityAnimatorOutput,
+  DotsOpacityAnimatorParams,
+  MovementStyle,
 } from "@/effect/animators";
 import { useEffectRef, useEffectSubscription } from "@/hooks/effect";
 import { useAudioState } from "@/context/AudioStateContext";
@@ -92,6 +102,64 @@ interface AudioReactiveMaskProps {
   smoothing?: number;
 }
 
+/**
+ * Configuration for audio-reactive gradient tilt effects.
+ */
+interface AudioReactiveGradientTiltProps {
+  enabled: boolean;
+  intensity?: EffectIntensity;
+  audioAnalysisSource?: AudioAnalysisSource;
+  baseTilt?: number;
+  minTilt?: number;
+  maxTilt?: number;
+  smoothing?: number;
+  oscillate?: boolean;
+}
+
+/**
+ * Configuration for audio-reactive gradient scale effects.
+ */
+interface AudioReactiveGradientScaleProps {
+  enabled: boolean;
+  intensity?: EffectIntensity;
+  audioAnalysisSource?: AudioAnalysisSource;
+  baseWidth?: number;
+  baseHeight?: number;
+  minScale?: number;
+  maxScale?: number;
+  smoothing?: number;
+  aspectLock?: boolean;
+}
+
+/**
+ * Configuration for audio-reactive gradient position effects.
+ */
+interface AudioReactiveGradientPositionProps {
+  enabled: boolean;
+  intensity?: EffectIntensity;
+  audioAnalysisSource?: AudioAnalysisSource;
+  baseX?: number;
+  baseY?: number;
+  maxDeviation?: number;
+  smoothing?: number;
+  peakThreshold?: number;
+  peakDecay?: number;
+  movementStyle?: MovementStyle;
+}
+
+/**
+ * Configuration for audio-reactive dots opacity effects.
+ */
+interface AudioReactiveDotsOpacityProps {
+  enabled: boolean;
+  intensity?: EffectIntensity;
+  audioAnalysisSource?: AudioAnalysisSource;
+  baseOpacity?: number;
+  minOpacity?: number;
+  maxOpacity?: number;
+  smoothing?: number;
+}
+
 export interface BackgroundProps extends React.ComponentProps<typeof Flex> {
   position?: CSSProperties["position"];
   gradient?: GradientProps;
@@ -104,6 +172,14 @@ export interface BackgroundProps extends React.ComponentProps<typeof Flex> {
   children?: React.ReactNode;
   /** Enable audio-reactive mask effects */
   audioReactiveMask?: AudioReactiveMaskProps;
+  /** Enable audio-reactive gradient tilt effects */
+  audioReactiveGradientTilt?: AudioReactiveGradientTiltProps;
+  /** Enable audio-reactive gradient scale effects */
+  audioReactiveGradientScale?: AudioReactiveGradientScaleProps;
+  /** Enable audio-reactive gradient position effects */
+  audioReactiveGradientPosition?: AudioReactiveGradientPositionProps;
+  /** Enable audio-reactive dots opacity effects */
+  audioReactiveDotsOpacity?: AudioReactiveDotsOpacityProps;
 }
 
 const Background = forwardRef<HTMLDivElement, BackgroundProps>(
@@ -119,6 +195,10 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
       className,
       style,
       audioReactiveMask,
+      audioReactiveGradientTilt,
+      audioReactiveGradientScale,
+      audioReactiveGradientPosition,
+      audioReactiveDotsOpacity,
       ...rest
     },
     forwardedRef
@@ -151,6 +231,113 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
         element.style.setProperty("--mask-radius", values.cssRadius);
       }
     );
+
+    // Set up audio-reactive gradient tilt effect
+    const gradientTiltEffectId = "background-gradient-tilt-effect";
+    useEffectSubscription<GradientTiltAnimatorParams, GradientTiltAnimatorOutput>({
+      type: "gradientTiltAnimator",
+      id: gradientTiltEffectId,
+      params: audioReactiveGradientTilt?.enabled ? audioReactiveGradientTilt : undefined,
+      autoStart:
+        isEffectConfigInitialized && (audioReactiveGradientTilt?.enabled ?? false),
+    });
+
+    // Set up audio-reactive gradient scale effect
+    const gradientScaleEffectId = "background-gradient-scale-effect";
+    useEffectSubscription<GradientScaleAnimatorParams, GradientScaleAnimatorOutput>({
+      type: "gradientScaleAnimator",
+      id: gradientScaleEffectId,
+      params: audioReactiveGradientScale?.enabled ? audioReactiveGradientScale : undefined,
+      autoStart:
+        isEffectConfigInitialized && (audioReactiveGradientScale?.enabled ?? false),
+    });
+
+    // Set up audio-reactive gradient position effect
+    const gradientPositionEffectId = "background-gradient-position-effect";
+    useEffectSubscription<GradientPositionAnimatorParams, GradientPositionAnimatorOutput>({
+      type: "gradientPositionAnimator",
+      id: gradientPositionEffectId,
+      params: audioReactiveGradientPosition?.enabled ? audioReactiveGradientPosition : undefined,
+      autoStart:
+        isEffectConfigInitialized && (audioReactiveGradientPosition?.enabled ?? false),
+    });
+
+    // Set up audio-reactive dots opacity effect
+    const dotsOpacityEffectId = "background-dots-opacity-effect";
+    useEffectSubscription<DotsOpacityAnimatorParams, DotsOpacityAnimatorOutput>({
+      type: "dotsOpacityAnimator",
+      id: dotsOpacityEffectId,
+      params: audioReactiveDotsOpacity?.enabled ? audioReactiveDotsOpacity : undefined,
+      autoStart:
+        isEffectConfigInitialized && (audioReactiveDotsOpacity?.enabled ?? false),
+    });
+
+    // Gradient effect ref - applies tilt
+    const gradientRef = useEffectRef<GradientTiltAnimatorOutput>(
+      gradientTiltEffectId,
+      (element, values) => {
+        element.style.setProperty("--gradient-tilt", values.cssTilt);
+      }
+    );
+
+    // Gradient scale effect ref
+    const gradientScaleRef = useEffectRef<GradientScaleAnimatorOutput>(
+      gradientScaleEffectId,
+      (element, values) => {
+        element.style.setProperty("--gradient-width", values.cssWidth);
+        element.style.setProperty("--gradient-height", values.cssHeight);
+      }
+    );
+
+    // Gradient position effect ref
+    const gradientPositionRef = useEffectRef<GradientPositionAnimatorOutput>(
+      gradientPositionEffectId,
+      (element, values) => {
+        element.style.setProperty("--gradient-position-x", values.cssX);
+        element.style.setProperty("--gradient-position-y", values.cssY);
+      }
+    );
+
+    // Dots opacity effect ref
+    const dotsOpacityRef = useEffectRef<DotsOpacityAnimatorOutput>(
+      dotsOpacityEffectId,
+      (element, values) => {
+        element.style.opacity = String(values.normalizedOpacity);
+      }
+    );
+
+    // Store refs in a mutable ref to avoid recreating callback when ref functions change
+    const gradientRefsRef = useRef({ gradientRef, gradientScaleRef, gradientPositionRef });
+    gradientRefsRef.current = { gradientRef, gradientScaleRef, gradientPositionRef };
+
+    // Combined ref callback for gradient element - stable callback
+    const gradientRefCallback = useCallback((element: HTMLDivElement | null) => {
+      if (!element) return;
+      const refs = gradientRefsRef.current;
+      if (audioReactiveGradientTilt?.enabled) {
+        refs.gradientRef(element);
+      }
+      if (audioReactiveGradientScale?.enabled) {
+        refs.gradientScaleRef(element);
+      }
+      if (audioReactiveGradientPosition?.enabled) {
+        refs.gradientPositionRef(element);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [audioReactiveGradientTilt?.enabled, audioReactiveGradientScale?.enabled, audioReactiveGradientPosition?.enabled]);
+
+    // Store dots ref in a mutable ref
+    const dotsRefsRef = useRef({ dotsOpacityRef });
+    dotsRefsRef.current = { dotsOpacityRef };
+
+    // Combined ref callback for dots element
+    const dotsRefCallback = useCallback((element: HTMLDivElement | null) => {
+      if (!element) return;
+      if (audioReactiveDotsOpacity?.enabled) {
+        dotsRefsRef.current.dotsOpacityRef(element);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [audioReactiveDotsOpacity?.enabled]);
 
     // Combine refs: backgroundRef for internal use, forwardedRef for external, audioMaskRef for effects
     const combinedRefCallback = (element: HTMLDivElement | null) => {
@@ -271,6 +458,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
       >
         {gradient.display && (
           <Flex
+            ref={gradientRefCallback}
             position="absolute"
             className={styles.gradient}
             opacity={gradient.opacity}
@@ -295,6 +483,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
         )}
         {dots.display && (
           <Flex
+            ref={dotsRefCallback}
             position="absolute"
             top="0"
             left="0"

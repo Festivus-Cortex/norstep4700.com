@@ -157,7 +157,9 @@ class EffectEngineImpl {
     const entry = this.effects.get(id);
     if (entry) {
       entry.subscribers.add(callback);
-      return () => entry.subscribers.delete(callback);
+      return () => {
+        entry.subscribers.delete(callback);
+      };
     }
     // Return no-op if effect not found
     return () => {};
@@ -290,7 +292,7 @@ class EffectEngineImpl {
     const globalAudioData: AudioFrameData = AudioDataProvider.getFrameData();
 
     // Update all effects
-    for (const [id, entry] of this.effects) {
+    for (const [, entry] of this.effects) {
       const params = entry.instance.getParams();
 
       // Skip disabled effects

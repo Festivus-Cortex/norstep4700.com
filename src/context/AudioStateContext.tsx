@@ -17,6 +17,10 @@ import {
 import { getAudioConfig, getAudioConfigSync } from "@/app/audio/getAudioConfig";
 import { initializeEffectConfig } from "@/effect/config/loader";
 
+// Import animators to trigger self-registration with EffectRegistry
+// This must happen before any component tries to create effects
+import "@/effect/animators";
+
 interface AudioStateContextType extends AudioState {
   config: AudioConfig;
   isEffectConfigInitialized: boolean;

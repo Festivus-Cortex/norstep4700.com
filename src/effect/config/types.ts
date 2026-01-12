@@ -6,7 +6,14 @@
  */
 
 import { BaseEffectParams, EffectIntensity } from "../core/types";
-import { MaskRadiusAnimatorParams } from "../animators";
+import {
+  MaskRadiusAnimatorParams,
+  GradientTiltAnimatorParams,
+  DotsOpacityAnimatorParams,
+  GradientScaleAnimatorParams,
+  GlitchIntensityAnimatorParams,
+  GradientPositionAnimatorParams,
+} from "../animators";
 
 /**
  * Audio analysis configuration
@@ -75,10 +82,16 @@ export interface EffectTypeConfig<
 export interface EffectsConfig {
   /** MaskRadiusAnimator configuration */
   maskRadiusAnimator: EffectTypeConfig<MaskRadiusAnimatorParams>;
-  // Future effects can be added here
-
-  // TODO: Tinkering with comment in function. will come back to.
-  //[animatorType: string extends EffectTypeConfig]:EffectTypeConfig<MaskRadiusAnimatorParams>;
+  /** GradientTiltAnimator configuration */
+  gradientTiltAnimator: EffectTypeConfig<GradientTiltAnimatorParams>;
+  /** DotsOpacityAnimator configuration */
+  dotsOpacityAnimator: EffectTypeConfig<DotsOpacityAnimatorParams>;
+  /** GradientScaleAnimator configuration */
+  gradientScaleAnimator: EffectTypeConfig<GradientScaleAnimatorParams>;
+  /** GlitchIntensityAnimator configuration */
+  glitchIntensityAnimator: EffectTypeConfig<GlitchIntensityAnimatorParams>;
+  /** GradientPositionAnimator configuration */
+  gradientPositionAnimator: EffectTypeConfig<GradientPositionAnimatorParams>;
 }
 
 /**

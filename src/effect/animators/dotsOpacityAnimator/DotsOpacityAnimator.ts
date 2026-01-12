@@ -1,8 +1,8 @@
 /**
- * MaskRadiusAnimator - Audio-reactive mask radius effect.
+ * DotsOpacityAnimator - Audio-reactive dots layer opacity effect.
  *
- * Animates a mask radius (like the spotlight effect in Background.tsx)
- * based on audio levels. Supports different audio sources and smoothing.
+ * Fades the dots layer in and out based on audio levels (typically mid-high).
+ * Creates a shimmer/sparkle effect that responds to harmonic content.
  */
 
 import { EffectFactory } from "../../core/EffectFactory";
@@ -13,33 +13,33 @@ import {
   EffectIntensity,
 } from "../../core/types";
 import { smoothDamp, clamp } from "@/utils/math";
-import { MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput } from "./types";
+import { DotsOpacityAnimatorParams, DotsOpacityAnimatorOutput } from "./types";
 import { getEffectConfigSync } from "../../config/loader";
 
 /**
- * Internal effect instance for MaskRadiusAnimator.
+ * Internal effect instance for DotsOpacityAnimator.
  */
-class MaskRadiusAnimatorEffectInstance
-  implements EffectInstance<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>
+class DotsOpacityAnimatorEffectInstance
+  implements EffectInstance<DotsOpacityAnimatorParams, DotsOpacityAnimatorOutput>
 {
-  readonly factoryType = "maskRadiusAnimator";
+  readonly factoryType = "dotsOpacityAnimator";
 
-  private params: MaskRadiusAnimatorParams;
-  private currentOutput: MaskRadiusAnimatorOutput;
+  private params: DotsOpacityAnimatorParams;
+  private currentOutput: DotsOpacityAnimatorOutput;
   private smoothedValue: number = 0;
   private intensityMultipliers: Record<EffectIntensity, number>;
   private normalization: { rmsMultiplier: number; frequencyDivisor: number };
 
   constructor(
     readonly id: string,
-    params: MaskRadiusAnimatorParams,
+    params: DotsOpacityAnimatorParams,
     intensityMultipliers: Record<EffectIntensity, number>
   ) {
     this.params = params;
     this.intensityMultipliers = intensityMultipliers;
     this.currentOutput = {
-      radius: params.baseRadius,
-      cssRadius: `${params.baseRadius}vh`,
+      opacity: params.baseOpacity,
+      normalizedOpacity: params.baseOpacity / 100,
     };
 
     // Load normalization config
@@ -48,29 +48,28 @@ class MaskRadiusAnimatorEffectInstance
   }
 
   start(): void {
-    // Initialize smoothed value to base
-    this.smoothedValue = 0.5; // Normalized middle
+    // Initialize smoothed value to center
+    this.smoothedValue = 0.5;
   }
 
   update(
     audioData: AudioFrameData,
     deltaTime: number
-  ): MaskRadiusAnimatorOutput {
+  ): DotsOpacityAnimatorOutput {
     const {
       audioAnalysisSource,
-      baseRadius,
-      minRadius,
-      maxRadius,
+      baseOpacity,
+      minOpacity,
+      maxOpacity,
       smoothing,
       intensity,
       intensityMultipliers: customMultipliers,
     } = this.params;
 
-    // Get raw audio value and normalize to 0-1 using config normalization
+    // Get raw audio value and normalize to 0-1
     let rawValue: number;
     switch (audioAnalysisSource) {
       case "rms":
-        // RMS is already 0-1, but typically peaks around 0.3-0.5
         rawValue = clamp(
           audioData.rms * this.normalization.rmsMultiplier,
           0,
@@ -92,7 +91,7 @@ class MaskRadiusAnimatorEffectInstance
       default:
         rawValue = 0;
         console.warn(
-          "maskRadiusAnimator has no way to analyze for give method of: " +
+          "dotsOpacityAnimator has no way to analyze for given method of: " +
             audioAnalysisSource
         );
     }
@@ -110,21 +109,21 @@ class MaskRadiusAnimatorEffectInstance
     const multiplier = multipliers[intensity];
 
     // Calculate effective range based on intensity
-    const range = maxRadius - minRadius;
+    const range = maxOpacity - minOpacity;
     const effectiveRange = range * multiplier;
 
-    // Center the effective range around the base radius
-    const effectiveMin = Math.max(minRadius, baseRadius - effectiveRange / 2);
-    const effectiveMax = Math.min(maxRadius, baseRadius + effectiveRange / 2);
+    // Center the effective range around the base opacity
+    const effectiveMin = Math.max(minOpacity, baseOpacity - effectiveRange / 2);
+    const effectiveMax = Math.min(maxOpacity, baseOpacity + effectiveRange / 2);
 
-    // Map smoothed value to radius
-    const radius =
+    // Map smoothed value to opacity
+    const opacity =
       effectiveMin + this.smoothedValue * (effectiveMax - effectiveMin);
-    const clampedRadius = clamp(radius, minRadius, maxRadius);
+    const clampedOpacity = clamp(opacity, minOpacity, maxOpacity);
 
     this.currentOutput = {
-      radius: clampedRadius,
-      cssRadius: `${clampedRadius}vh`,
+      opacity: clampedOpacity,
+      normalizedOpacity: clampedOpacity / 100,
     };
 
     return this.currentOutput;
@@ -134,34 +133,34 @@ class MaskRadiusAnimatorEffectInstance
     // No cleanup needed
   }
 
-  setParams(params: Partial<MaskRadiusAnimatorParams>): void {
+  setParams(params: Partial<DotsOpacityAnimatorParams>): void {
     this.params = { ...this.params, ...params };
   }
 
-  getParams(): MaskRadiusAnimatorParams {
+  getParams(): DotsOpacityAnimatorParams {
     return { ...this.params };
   }
 
-  getCurrentOutput(): MaskRadiusAnimatorOutput {
+  getCurrentOutput(): DotsOpacityAnimatorOutput {
     return { ...this.currentOutput };
   }
 }
 
 /**
- * Factory for creating MaskRadiusAnimator effect instances.
+ * Factory for creating DotsOpacityAnimator effect instances.
  */
-export class MaskRadiusAnimatorFactory extends EffectFactory<
-  MaskRadiusAnimatorParams,
-  MaskRadiusAnimatorOutput
+export class DotsOpacityAnimatorFactory extends EffectFactory<
+  DotsOpacityAnimatorParams,
+  DotsOpacityAnimatorOutput
 > {
-  readonly type = "maskRadiusAnimator";
-  readonly description = "Animates mask radius based on audio levels";
+  readonly type = "dotsOpacityAnimator";
+  readonly description = "Animates dots layer opacity based on audio levels";
 
   protected createInstance(
     id: string,
-    params: MaskRadiusAnimatorParams
-  ): EffectInstance<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput> {
-    return new MaskRadiusAnimatorEffectInstance(
+    params: DotsOpacityAnimatorParams
+  ): EffectInstance<DotsOpacityAnimatorParams, DotsOpacityAnimatorOutput> {
+    return new DotsOpacityAnimatorEffectInstance(
       id,
       params,
       this.getIntensityMultipliers()
@@ -170,4 +169,4 @@ export class MaskRadiusAnimatorFactory extends EffectFactory<
 }
 
 // Self-register the factory
-EffectRegistry.register(new MaskRadiusAnimatorFactory());
+EffectRegistry.register(new DotsOpacityAnimatorFactory());

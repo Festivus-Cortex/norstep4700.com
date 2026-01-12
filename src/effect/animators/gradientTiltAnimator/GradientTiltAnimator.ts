@@ -1,8 +1,8 @@
 /**
- * MaskRadiusAnimator - Audio-reactive mask radius effect.
+ * GradientTiltAnimator - Audio-reactive gradient rotation effect.
  *
- * Animates a mask radius (like the spotlight effect in Background.tsx)
- * based on audio levels. Supports different audio sources and smoothing.
+ * Animates gradient tilt/rotation based on audio levels (typically RMS).
+ * Creates a subtle swaying effect that follows the music's energy.
  */
 
 import { EffectFactory } from "../../core/EffectFactory";
@@ -13,33 +13,33 @@ import {
   EffectIntensity,
 } from "../../core/types";
 import { smoothDamp, clamp } from "@/utils/math";
-import { MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput } from "./types";
+import { GradientTiltAnimatorParams, GradientTiltAnimatorOutput } from "./types";
 import { getEffectConfigSync } from "../../config/loader";
 
 /**
- * Internal effect instance for MaskRadiusAnimator.
+ * Internal effect instance for GradientTiltAnimator.
  */
-class MaskRadiusAnimatorEffectInstance
-  implements EffectInstance<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput>
+class GradientTiltAnimatorEffectInstance
+  implements EffectInstance<GradientTiltAnimatorParams, GradientTiltAnimatorOutput>
 {
-  readonly factoryType = "maskRadiusAnimator";
+  readonly factoryType = "gradientTiltAnimator";
 
-  private params: MaskRadiusAnimatorParams;
-  private currentOutput: MaskRadiusAnimatorOutput;
+  private params: GradientTiltAnimatorParams;
+  private currentOutput: GradientTiltAnimatorOutput;
   private smoothedValue: number = 0;
   private intensityMultipliers: Record<EffectIntensity, number>;
   private normalization: { rmsMultiplier: number; frequencyDivisor: number };
 
   constructor(
     readonly id: string,
-    params: MaskRadiusAnimatorParams,
+    params: GradientTiltAnimatorParams,
     intensityMultipliers: Record<EffectIntensity, number>
   ) {
     this.params = params;
     this.intensityMultipliers = intensityMultipliers;
     this.currentOutput = {
-      radius: params.baseRadius,
-      cssRadius: `${params.baseRadius}vh`,
+      tilt: params.baseTilt,
+      cssTilt: `${params.baseTilt}deg`,
     };
 
     // Load normalization config
@@ -48,29 +48,29 @@ class MaskRadiusAnimatorEffectInstance
   }
 
   start(): void {
-    // Initialize smoothed value to base
-    this.smoothedValue = 0.5; // Normalized middle
+    // Initialize smoothed value to center
+    this.smoothedValue = 0.5;
   }
 
   update(
     audioData: AudioFrameData,
     deltaTime: number
-  ): MaskRadiusAnimatorOutput {
+  ): GradientTiltAnimatorOutput {
     const {
       audioAnalysisSource,
-      baseRadius,
-      minRadius,
-      maxRadius,
+      baseTilt,
+      minTilt,
+      maxTilt,
       smoothing,
       intensity,
+      oscillate,
       intensityMultipliers: customMultipliers,
     } = this.params;
 
-    // Get raw audio value and normalize to 0-1 using config normalization
+    // Get raw audio value and normalize to 0-1
     let rawValue: number;
     switch (audioAnalysisSource) {
       case "rms":
-        // RMS is already 0-1, but typically peaks around 0.3-0.5
         rawValue = clamp(
           audioData.rms * this.normalization.rmsMultiplier,
           0,
@@ -92,7 +92,7 @@ class MaskRadiusAnimatorEffectInstance
       default:
         rawValue = 0;
         console.warn(
-          "maskRadiusAnimator has no way to analyze for give method of: " +
+          "gradientTiltAnimator has no way to analyze for given method of: " +
             audioAnalysisSource
         );
     }
@@ -110,21 +110,25 @@ class MaskRadiusAnimatorEffectInstance
     const multiplier = multipliers[intensity];
 
     // Calculate effective range based on intensity
-    const range = maxRadius - minRadius;
+    const range = maxTilt - minTilt;
     const effectiveRange = range * multiplier;
 
-    // Center the effective range around the base radius
-    const effectiveMin = Math.max(minRadius, baseRadius - effectiveRange / 2);
-    const effectiveMax = Math.min(maxRadius, baseRadius + effectiveRange / 2);
+    let tilt: number;
+    if (oscillate) {
+      // Oscillate around base tilt
+      const effectiveMin = Math.max(minTilt, baseTilt - effectiveRange / 2);
+      const effectiveMax = Math.min(maxTilt, baseTilt + effectiveRange / 2);
+      tilt = effectiveMin + this.smoothedValue * (effectiveMax - effectiveMin);
+    } else {
+      // Linear mapping from min to max
+      tilt = minTilt + this.smoothedValue * effectiveRange;
+    }
 
-    // Map smoothed value to radius
-    const radius =
-      effectiveMin + this.smoothedValue * (effectiveMax - effectiveMin);
-    const clampedRadius = clamp(radius, minRadius, maxRadius);
+    const clampedTilt = clamp(tilt, minTilt, maxTilt);
 
     this.currentOutput = {
-      radius: clampedRadius,
-      cssRadius: `${clampedRadius}vh`,
+      tilt: clampedTilt,
+      cssTilt: `${clampedTilt}deg`,
     };
 
     return this.currentOutput;
@@ -134,34 +138,34 @@ class MaskRadiusAnimatorEffectInstance
     // No cleanup needed
   }
 
-  setParams(params: Partial<MaskRadiusAnimatorParams>): void {
+  setParams(params: Partial<GradientTiltAnimatorParams>): void {
     this.params = { ...this.params, ...params };
   }
 
-  getParams(): MaskRadiusAnimatorParams {
+  getParams(): GradientTiltAnimatorParams {
     return { ...this.params };
   }
 
-  getCurrentOutput(): MaskRadiusAnimatorOutput {
+  getCurrentOutput(): GradientTiltAnimatorOutput {
     return { ...this.currentOutput };
   }
 }
 
 /**
- * Factory for creating MaskRadiusAnimator effect instances.
+ * Factory for creating GradientTiltAnimator effect instances.
  */
-export class MaskRadiusAnimatorFactory extends EffectFactory<
-  MaskRadiusAnimatorParams,
-  MaskRadiusAnimatorOutput
+export class GradientTiltAnimatorFactory extends EffectFactory<
+  GradientTiltAnimatorParams,
+  GradientTiltAnimatorOutput
 > {
-  readonly type = "maskRadiusAnimator";
-  readonly description = "Animates mask radius based on audio levels";
+  readonly type = "gradientTiltAnimator";
+  readonly description = "Animates gradient tilt/rotation based on audio levels";
 
   protected createInstance(
     id: string,
-    params: MaskRadiusAnimatorParams
-  ): EffectInstance<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput> {
-    return new MaskRadiusAnimatorEffectInstance(
+    params: GradientTiltAnimatorParams
+  ): EffectInstance<GradientTiltAnimatorParams, GradientTiltAnimatorOutput> {
+    return new GradientTiltAnimatorEffectInstance(
       id,
       params,
       this.getIntensityMultipliers()
@@ -170,4 +174,4 @@ export class MaskRadiusAnimatorFactory extends EffectFactory<
 }
 
 // Self-register the factory
-EffectRegistry.register(new MaskRadiusAnimatorFactory());
+EffectRegistry.register(new GradientTiltAnimatorFactory());

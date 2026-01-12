@@ -114,6 +114,18 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               audioReactiveMask={{
                 enabled: true,
               }}
+              audioReactiveGradientTilt={{
+                enabled: true,
+              }}
+              audioReactiveGradientScale={{
+                enabled: true,
+              }}
+              audioReactiveGradientPosition={{
+                enabled: true,
+              }}
+              audioReactiveDotsOpacity={{
+                enabled: true,
+              }}
               gradient={{
                 display: effects.gradient.display,
                 x: effects.gradient.x,
