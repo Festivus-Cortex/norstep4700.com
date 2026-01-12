@@ -106,6 +106,14 @@ export function getAudioError(): Error | null {
 }
 
 /**
+ * Checks if the audio context has been successfully initialized.
+ * @returns true if audio context is initialized and ready to use
+ */
+export function getIsInitialized(): boolean {
+  return isInitialized;
+}
+
+/**
  * Sets the master volume.
  *
  * @param volume - Linear volume level (0-1)

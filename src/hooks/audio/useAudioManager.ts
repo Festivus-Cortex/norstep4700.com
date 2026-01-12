@@ -11,14 +11,16 @@ import { useEffect } from "react";
 export function useAudioManager() {
   const context = useAudioState();
 
-  // Sync master volume with audio node when it changes
+  // Sync master volume with audio node when it changes (only after initialization)
   useEffect(() => {
+    if (!context.isInitialized) return;
+
     let volume = context.masterVolume;
     if (context.isMasterMuted) {
       volume = 0;
     }
     setMasterVolume(volume);
-  }, [context.masterVolume, context.isMasterMuted]);
+  }, [context.masterVolume, context.isMasterMuted, context.isInitialized]);
 
   const toggleMasterMute = () => {
     context.setMasterMuted(!context.isMasterMuted);

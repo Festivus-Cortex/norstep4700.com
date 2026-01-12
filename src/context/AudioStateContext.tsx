@@ -20,6 +20,7 @@ import {
   initializeAudioContext,
   closeAudioContext,
   getAudioError,
+  getIsInitialized,
   pauseAudio,
   resumeAudio,
 } from "@/app/audio/audio";
@@ -109,10 +110,11 @@ export function AudioStateProvider({ children }: { children: ReactNode }) {
   const initializeAudio = useCallback(async () => {
     try {
       await initializeAudioContext();
+      const initialized = getIsInitialized();
       const error = getAudioError();
       setState((prev) => ({
         ...prev,
-        isInitialized: error === null,
+        isInitialized: initialized,
         audioError: error,
       }));
     } catch (error) {

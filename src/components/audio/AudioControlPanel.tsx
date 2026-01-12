@@ -5,7 +5,6 @@ import { Flex, IconButton, SmartLink, Text } from "@/once-ui/components";
 import { AudioPanelToggle } from "./AudioPanelToggle";
 import { AudioControls } from "./AudioControls";
 import { TrackControlsGrid } from "./TrackControlsGrid";
-import { getAudioContext } from "@/app/audio/audio";
 import styles from "./AudioControlPanel.module.scss";
 import classNames from "classnames";
 import { useAudioState } from "@/context/AudioStateContext";
@@ -165,7 +164,9 @@ export const AudioControlPanel: React.FC = () => {
    * If not supported or config failed, show an error message instead of audio controls.
    */
   const { audioError, configError, effectConfigError } = useAudioState();
-  const hasAudioSupport = !audioError && getAudioContext() !== null;
+  // Show error only if audio initialization was attempted and failed (audioError is set)
+  // Don't show error if audio simply hasn't been initialized yet (lazy initialization)
+  const hasAudioSupport = audioError === null;
   const hasConfigError = configError !== null || effectConfigError !== null;
 
   return (
@@ -183,8 +184,8 @@ export const AudioControlPanel: React.FC = () => {
               ? `${expandedWidth}px`
               : "100%"
             : collapsedWidth
-              ? `${collapsedWidth}px`
-              : "85%",
+            ? `${collapsedWidth}px`
+            : "85%",
           margin: "0 auto",
         }}
       >
