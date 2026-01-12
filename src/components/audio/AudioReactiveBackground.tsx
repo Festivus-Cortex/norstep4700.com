@@ -13,7 +13,10 @@ import type { BackgroundProps } from "@/once-ui/components/Background";
  * allowing Background to create audio-reactive effects with config values.
  */
 export const AudioReactiveBackground: React.FC<BackgroundProps> = (props) => {
-  const { isEffectConfigInitialized } = useAudioState();
+  const { isEffectConfigInitialized, tracks } = useAudioState();
+
+  // Only enable audio-reactive effects when tracks are loaded (music set is loaded)
+  const haveTracksLoaded = tracks.length > 0;
 
   // Load effect configs - only when initialized
   const maskConfig = useMemo(() => {
@@ -41,41 +44,63 @@ export const AudioReactiveBackground: React.FC<BackgroundProps> = (props) => {
     return getEffectDefaults("dotsOpacityAnimator");
   }, [isEffectConfigInitialized]);
 
-  // Merge configs with props
+  // Merge configs with props - only enable when tracks are loaded
   const audioReactiveMaskWithConfig = useMemo(() => {
-    if (!props.audioReactiveMask?.enabled || !maskConfig) {
+    if (!props.audioReactiveMask?.enabled || !maskConfig || !haveTracksLoaded) {
       return props.audioReactiveMask;
     }
     return { ...maskConfig, ...props.audioReactiveMask };
-  }, [props.audioReactiveMask, maskConfig]);
+  }, [props.audioReactiveMask, maskConfig, haveTracksLoaded]);
 
   const audioReactiveGradientTiltWithConfig = useMemo(() => {
     if (!props.audioReactiveGradientTilt?.enabled || !gradientTiltConfig) {
       return props.audioReactiveGradientTilt;
     }
+    if (!haveTracksLoaded) {
+      return { ...props.audioReactiveGradientTilt, enabled: false };
+    }
     return { ...gradientTiltConfig, ...props.audioReactiveGradientTilt };
-  }, [props.audioReactiveGradientTilt, gradientTiltConfig]);
+  }, [props.audioReactiveGradientTilt, gradientTiltConfig, haveTracksLoaded]);
 
   const audioReactiveGradientScaleWithConfig = useMemo(() => {
     if (!props.audioReactiveGradientScale?.enabled || !gradientScaleConfig) {
       return props.audioReactiveGradientScale;
     }
+    if (!haveTracksLoaded) {
+      return { ...props.audioReactiveGradientScale, enabled: false };
+    }
     return { ...gradientScaleConfig, ...props.audioReactiveGradientScale };
-  }, [props.audioReactiveGradientScale, gradientScaleConfig]);
+  }, [props.audioReactiveGradientScale, gradientScaleConfig, haveTracksLoaded]);
 
   const audioReactiveGradientPositionWithConfig = useMemo(() => {
-    if (!props.audioReactiveGradientPosition?.enabled || !gradientPositionConfig) {
+    if (
+      !props.audioReactiveGradientPosition?.enabled ||
+      !gradientPositionConfig
+    ) {
       return props.audioReactiveGradientPosition;
     }
-    return { ...gradientPositionConfig, ...props.audioReactiveGradientPosition };
-  }, [props.audioReactiveGradientPosition, gradientPositionConfig]);
+    if (!haveTracksLoaded) {
+      return { ...props.audioReactiveGradientPosition, enabled: false };
+    }
+    return {
+      ...gradientPositionConfig,
+      ...props.audioReactiveGradientPosition,
+    };
+  }, [
+    props.audioReactiveGradientPosition,
+    gradientPositionConfig,
+    haveTracksLoaded,
+  ]);
 
   const audioReactiveDotsOpacityWithConfig = useMemo(() => {
     if (!props.audioReactiveDotsOpacity?.enabled || !dotsOpacityConfig) {
       return props.audioReactiveDotsOpacity;
     }
+    if (!haveTracksLoaded) {
+      return { ...props.audioReactiveDotsOpacity, enabled: false };
+    }
     return { ...dotsOpacityConfig, ...props.audioReactiveDotsOpacity };
-  }, [props.audioReactiveDotsOpacity, dotsOpacityConfig]);
+  }, [props.audioReactiveDotsOpacity, dotsOpacityConfig, haveTracksLoaded]);
 
   return (
     <Background
