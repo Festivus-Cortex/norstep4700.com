@@ -1,7 +1,6 @@
-import { Assert } from "@/utils/assert";
 import { MusicTrackNodes } from "./types";
 import { disconnectTrackNodes, stopTrack } from "./tracks";
-import { audioAnalyzer, audioCtx } from "./audio";
+import { getAudioAnalyzer, getAudioContext } from "./audio";
 
 /**
  * Disconnects and cleans up a music set node and all its connected tracks.
@@ -30,10 +29,14 @@ export function disconnectMusicSetNodes(
  * @returns GainNode for the music set
  */
 export function createMusicSetNode(): GainNode {
-  Assert.isTrue(
-    audioCtx !== undefined && audioAnalyzer !== undefined,
-    "createTrackNodes - unable to create nodes. Audio is not correctly setup."
-  );
+  const audioCtx = getAudioContext();
+  const audioAnalyzer = getAudioAnalyzer();
+
+  if (!audioCtx || !audioAnalyzer) {
+    throw new Error(
+      "createMusicSetNode - unable to create nodes. Audio context not initialized."
+    );
+  }
 
   // Create the node at full volume by default. This will not be used directly
   // to manage volume for the music sets
@@ -56,10 +59,13 @@ export function fadeInMusicSet(
   trackNodes: MusicTrackNodes[],
   duration: number = 2
 ): void {
-  Assert.exists(
-    audioCtx,
-    "fadeInMusicSet - unable to fade in. No audio context exists."
-  );
+  const audioCtx = getAudioContext();
+  if (!audioCtx) {
+    console.warn(
+      "fadeInMusicSet - unable to fade in. Audio context not initialized."
+    );
+    return;
+  }
 
   const now = audioCtx.currentTime;
 

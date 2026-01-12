@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { CustomMDX } from "@/components/mdx";
+import { CustomMDX } from "@/components/Mdx";
 import { getPosts } from "@/app/utils/utils";
 import {
   AvatarGroup,

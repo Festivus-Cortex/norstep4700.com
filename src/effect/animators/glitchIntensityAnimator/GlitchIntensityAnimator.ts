@@ -5,8 +5,6 @@
  * Triggers digital disruption effects during high-frequency peaks (hi-hats, cymbals).
  */
 
-import { EffectFactory } from "../../core/EffectFactory";
-import { EffectRegistry } from "../../core/EffectRegistry";
 import {
   AudioFrameData,
   EffectInstance,
@@ -22,8 +20,9 @@ import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for GlitchIntensityAnimator.
+ * Exported for use by the factory.
  */
-class GlitchIntensityAnimatorEffectInstance implements EffectInstance<
+export class GlitchIntensityAnimatorEffectInstance implements EffectInstance<
   GlitchIntensityAnimatorParams,
   GlitchIntensityAnimatorOutput
 > {
@@ -167,32 +166,3 @@ class GlitchIntensityAnimatorEffectInstance implements EffectInstance<
     return { ...this.currentOutput };
   }
 }
-
-/**
- * Factory for creating GlitchIntensityAnimator effect instances.
- */
-export class GlitchIntensityAnimatorFactory extends EffectFactory<
-  GlitchIntensityAnimatorParams,
-  GlitchIntensityAnimatorOutput
-> {
-  readonly type = "glitchIntensityAnimator";
-  readonly description =
-    "Controls glitch effect intensity based on audio levels";
-
-  protected createInstance(
-    id: string,
-    params: GlitchIntensityAnimatorParams
-  ): EffectInstance<
-    GlitchIntensityAnimatorParams,
-    GlitchIntensityAnimatorOutput
-  > {
-    return new GlitchIntensityAnimatorEffectInstance(
-      id,
-      params,
-      this.getIntensityMultipliers()
-    );
-  }
-}
-
-// Self-register the factory
-EffectRegistry.register(new GlitchIntensityAnimatorFactory());

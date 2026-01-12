@@ -87,6 +87,8 @@ export interface MusicSetData {
 export interface AudioState {
   /** Whether the audio system has been initialized (user interaction required) */
   isInitialized: boolean;
+  /** Error that occurred during audio initialization, null if no error */
+  audioError: Error | null;
   /** Whether the master output is muted */
   isMasterMuted: boolean;
   /** Master volume level (0-1) applied to all audio output */

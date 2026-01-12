@@ -16,14 +16,20 @@ import {
 } from "@/app/audio/types";
 import { getAudioConfig, getAudioConfigSync } from "@/app/audio/getAudioConfig";
 import { initializeEffectConfig } from "@/effect/config/loader";
-
-// Import animators to trigger self-registration with EffectRegistry
-// This must happen before any component tries to create effects
-import "@/effect/animators";
+import {
+  initializeAudioContext,
+  closeAudioContext,
+  getAudioError,
+  pauseAudio,
+  resumeAudio,
+} from "@/app/audio/audio";
+import { registerAnimators } from "@/effect/animators";
 
 interface AudioStateContextType extends AudioState {
   config: AudioConfig;
+  configError: Error | null;
   isEffectConfigInitialized: boolean;
+  effectConfigError: Error | null;
   initializeAudio: () => void;
   setMasterMuted: (muted: boolean) => void;
   setMasterVolume: (volume: number) => void;
@@ -43,30 +49,54 @@ const AudioStateContext = createContext<AudioStateContextType | undefined>(
 export function AudioStateProvider({ children }: { children: ReactNode }) {
   // Start with sync fallback config, will be updated with API data
   const [config, setConfig] = useState<AudioConfig>(getAudioConfigSync());
+  const [configError, setConfigError] = useState<Error | null>(null);
   const [isEffectConfigInitialized, setIsEffectConfigInitialized] =
     useState(false);
+  const [effectConfigError, setEffectConfigError] = useState<Error | null>(
+    null
+  );
 
   // Fetch actual config from API on mount
   useEffect(() => {
-    getAudioConfig().then((apiConfig) => {
-      setConfig(apiConfig);
-    });
+    getAudioConfig()
+      .then((apiConfig) => {
+        setConfig(apiConfig);
+        setConfigError(null);
+      })
+      .catch((error) => {
+        console.error("Failed to load audio config:", error);
+        setConfigError(
+          error instanceof Error
+            ? error
+            : new Error("Failed to load audio configuration")
+        );
+      });
   }, []);
 
-  // Initialize effect config on mount (before any effects are created)
+  // Register animators and initialize effect config on mount (before any effects are created)
   useEffect(() => {
+    // Explicitly register all animators with the EffectRegistry
+    registerAnimators();
+
     initializeEffectConfig()
       .then(() => {
         setIsEffectConfigInitialized(true);
+        setEffectConfigError(null);
       })
       .catch((error) => {
         console.error("Failed to initialize effect config:", error);
+        setEffectConfigError(
+          error instanceof Error
+            ? error
+            : new Error("Failed to initialize effect configuration")
+        );
       });
   }, []);
 
   // Initialize state
   const [state, setState] = useState<AudioState>({
     isInitialized: false,
+    audioError: null,
     isMasterMuted: false, // Default to unmuted
     masterVolume: config.defaultSettings.masterVolume,
     currentSet: null,
@@ -76,8 +106,22 @@ export function AudioStateProvider({ children }: { children: ReactNode }) {
     isPlaying: false,
   });
 
-  const initializeAudio = useCallback(() => {
-    setState((prev) => ({ ...prev, isInitialized: true }));
+  const initializeAudio = useCallback(async () => {
+    try {
+      await initializeAudioContext();
+      const error = getAudioError();
+      setState((prev) => ({
+        ...prev,
+        isInitialized: error === null,
+        audioError: error,
+      }));
+    } catch (error) {
+      setState((prev) => ({
+        ...prev,
+        isInitialized: false,
+        audioError: error as Error,
+      }));
+    }
   }, []);
 
   const setMasterMuted = useCallback((muted: boolean) => {
@@ -135,10 +179,44 @@ export function AudioStateProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, isPlaying: playing }));
   }, []);
 
+  // Cleanup audio context on unmount
+  useEffect(() => {
+    return () => {
+      closeAudioContext();
+    };
+  }, []);
+
+  // Page Visibility API integration for auto-pause/resume
+  useEffect(() => {
+    if (!state.isInitialized) return;
+
+    const handleVisibilityChange = async () => {
+      if (document.hidden) {
+        // Tab is hidden - pause if playing
+        if (state.isPlaying) {
+          await pauseAudio();
+        }
+      } else {
+        // Tab is visible - resume if was playing
+        if (state.isPlaying) {
+          await resumeAudio();
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [state.isInitialized, state.isPlaying]);
+
   const value: AudioStateContextType = {
     ...state,
     config,
+    configError,
     isEffectConfigInitialized,
+    effectConfigError,
     initializeAudio,
     setMasterMuted,
     setMasterVolume,

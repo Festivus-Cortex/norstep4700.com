@@ -5,7 +5,7 @@ import { Flex, IconButton, SmartLink, Text } from "@/once-ui/components";
 import { AudioPanelToggle } from "./AudioPanelToggle";
 import { AudioControls } from "./AudioControls";
 import { TrackControlsGrid } from "./TrackControlsGrid";
-import { audioCtx, audioError } from "@/app/audio/audio";
+import { getAudioContext } from "@/app/audio/audio";
 import styles from "./AudioControlPanel.module.scss";
 import classNames from "classnames";
 import { useAudioState } from "@/context/AudioStateContext";
@@ -160,11 +160,13 @@ export const AudioControlPanel: React.FC = () => {
   };
 
   /**
-   * Check if the browser/device supports Web Audio API.
+   * Check if the browser/device supports Web Audio API and config loaded.
    *
-   * If not supported, show an error message instead of audio controls.
+   * If not supported or config failed, show an error message instead of audio controls.
    */
-  const hasAudioSupport = !audioError && audioCtx !== undefined;
+  const { audioError, configError, effectConfigError } = useAudioState();
+  const hasAudioSupport = !audioError && getAudioContext() !== null;
+  const hasConfigError = configError !== null || effectConfigError !== null;
 
   return (
     <div
@@ -245,6 +247,39 @@ export const AudioControlPanel: React.FC = () => {
                     This option requires web audio support from your browser and
                     device. Ensure you have an audio output available and your
                     browser is allowing audio.
+                  </Text>
+                </Flex>
+              ) : hasConfigError ? (
+                <Flex
+                  direction="column"
+                  gap="12"
+                  radius="m"
+                  background="neutral-weak"
+                  border="neutral-medium"
+                  className={styles.errorMessage}
+                >
+                  <Text variant="body-default-m" onBackground="neutral-strong">
+                    <strong>Failed to load audio configuration</strong>
+                  </Text>
+                  {configError && (
+                    <Text
+                      variant="body-default-s"
+                      onBackground="neutral-medium"
+                    >
+                      Audio Config Error: {configError.message}
+                    </Text>
+                  )}
+                  {effectConfigError && (
+                    <Text
+                      variant="body-default-s"
+                      onBackground="neutral-medium"
+                    >
+                      Effect Config Error: {effectConfigError.message}
+                    </Text>
+                  )}
+                  <Text variant="body-default-s" onBackground="neutral-medium">
+                    Please check the browser console for more details or try
+                    refreshing the page.
                   </Text>
                 </Flex>
               ) : (

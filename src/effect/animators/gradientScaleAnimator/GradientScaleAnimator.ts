@@ -5,8 +5,6 @@
  * Creates a breathing/pulsating effect that follows the music's rhythm.
  */
 
-import { EffectFactory } from "../../core/EffectFactory";
-import { EffectRegistry } from "../../core/EffectRegistry";
 import {
   AudioFrameData,
   EffectInstance,
@@ -21,8 +19,9 @@ import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for GradientScaleAnimator.
+ * Exported for use by the factory.
  */
-class GradientScaleAnimatorEffectInstance implements EffectInstance<
+export class GradientScaleAnimatorEffectInstance implements EffectInstance<
   GradientScaleAnimatorParams,
   GradientScaleAnimatorOutput
 > {
@@ -193,28 +192,3 @@ class GradientScaleAnimatorEffectInstance implements EffectInstance<
     return { ...this.currentOutput };
   }
 }
-
-/**
- * Factory for creating GradientScaleAnimator effect instances.
- */
-export class GradientScaleAnimatorFactory extends EffectFactory<
-  GradientScaleAnimatorParams,
-  GradientScaleAnimatorOutput
-> {
-  readonly type = "gradientScaleAnimator";
-  readonly description = "Animates gradient scale based on audio levels";
-
-  protected createInstance(
-    id: string,
-    params: GradientScaleAnimatorParams
-  ): EffectInstance<GradientScaleAnimatorParams, GradientScaleAnimatorOutput> {
-    return new GradientScaleAnimatorEffectInstance(
-      id,
-      params,
-      this.getIntensityMultipliers()
-    );
-  }
-}
-
-// Self-register the factory
-EffectRegistry.register(new GradientScaleAnimatorFactory());

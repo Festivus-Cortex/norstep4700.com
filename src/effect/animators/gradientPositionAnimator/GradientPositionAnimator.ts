@@ -5,8 +5,6 @@
  * Creates dynamic movement that emphasizes rhythmic beats.
  */
 
-import { EffectFactory } from "../../core/EffectFactory";
-import { EffectRegistry } from "../../core/EffectRegistry";
 import {
   AudioFrameData,
   EffectInstance,
@@ -21,8 +19,9 @@ import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for GradientPositionAnimator.
+ * Exported for use by the factory.
  */
-class GradientPositionAnimatorEffectInstance implements EffectInstance<
+export class GradientPositionAnimatorEffectInstance implements EffectInstance<
   GradientPositionAnimatorParams,
   GradientPositionAnimatorOutput
 > {
@@ -218,31 +217,3 @@ class GradientPositionAnimatorEffectInstance implements EffectInstance<
     return { ...this.currentOutput };
   }
 }
-
-/**
- * Factory for creating GradientPositionAnimator effect instances.
- */
-export class GradientPositionAnimatorFactory extends EffectFactory<
-  GradientPositionAnimatorParams,
-  GradientPositionAnimatorOutput
-> {
-  readonly type = "gradientPositionAnimator";
-  readonly description = "Animates gradient position based on audio peaks";
-
-  protected createInstance(
-    id: string,
-    params: GradientPositionAnimatorParams
-  ): EffectInstance<
-    GradientPositionAnimatorParams,
-    GradientPositionAnimatorOutput
-  > {
-    return new GradientPositionAnimatorEffectInstance(
-      id,
-      params,
-      this.getIntensityMultipliers()
-    );
-  }
-}
-
-// Self-register the factory
-EffectRegistry.register(new GradientPositionAnimatorFactory());

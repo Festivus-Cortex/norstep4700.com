@@ -10,6 +10,15 @@ interface AudioPanelToggleProps {
   className?: string;
 }
 
+/**
+ * A compact toggle button for expanding/collapsing the audio control panel.
+ *
+ * Displays a volume icon, "Audio Controls" text, and a chevron indicator.
+ * Used in the collapsed state of AudioControlPanel to allow users to expand the full controls.
+ *
+ * @param onClick - Handler called when the button is clicked
+ * @param className - Optional additional CSS classes
+ */
 export const AudioPanelToggle: React.FC<AudioPanelToggleProps> = ({
   onClick,
   className,

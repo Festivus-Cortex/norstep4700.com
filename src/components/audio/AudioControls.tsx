@@ -92,7 +92,7 @@ export const AudioControls: React.FC = () => {
     async (value: string) => {
       // Initialize audio context if not already done
       if (!isInitialized) {
-        initializeAudio();
+        await initializeAudio();
       }
 
       // Track first user interaction
@@ -112,7 +112,7 @@ export const AudioControls: React.FC = () => {
    * Initializes audio context on first interaction, then toggles
    * the master mute state affecting all tracks.
    */
-  const handleMuteToggle = useCallback(() => {
+  const handleMuteToggle = useCallback(async () => {
     // Initialize audio context if not already done
     if (!isInitialized) {
       initializeAudio();
@@ -135,10 +135,10 @@ export const AudioControls: React.FC = () => {
    * @param sliderValue - Linear slider value (0-1)
    */
   const handleVolumeChange = useCallback(
-    (sliderValue: number) => {
+    async (sliderValue: number) => {
       // Initialize audio context if not already done
       if (!isInitialized) {
-        initializeAudio();
+        await initializeAudio();
       }
 
       // Track first user interaction
@@ -158,7 +158,7 @@ export const AudioControls: React.FC = () => {
    * Initializes audio context on first interaction, then toggles
    * the play/pause state of the audio context.
    */
-  const handlePlayPauseToggle = useCallback(() => {
+  const handlePlayPauseToggle = useCallback(async () => {
     // Initialize audio context if not already done
     if (!isInitialized) {
       initializeAudio();

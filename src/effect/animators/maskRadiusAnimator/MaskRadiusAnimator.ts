@@ -5,8 +5,6 @@
  * based on audio levels. Supports different audio sources and smoothing.
  */
 
-import { EffectFactory } from "../../core/EffectFactory";
-import { EffectRegistry } from "../../core/EffectRegistry";
 import {
   AudioFrameData,
   EffectInstance,
@@ -18,8 +16,9 @@ import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for MaskRadiusAnimator.
+ * Exported for use by the factory.
  */
-class MaskRadiusAnimatorEffectInstance implements EffectInstance<
+export class MaskRadiusAnimatorEffectInstance implements EffectInstance<
   MaskRadiusAnimatorParams,
   MaskRadiusAnimatorOutput
 > {
@@ -148,27 +147,3 @@ class MaskRadiusAnimatorEffectInstance implements EffectInstance<
   }
 }
 
-/**
- * Factory for creating MaskRadiusAnimator effect instances.
- */
-export class MaskRadiusAnimatorFactory extends EffectFactory<
-  MaskRadiusAnimatorParams,
-  MaskRadiusAnimatorOutput
-> {
-  readonly type = "maskRadiusAnimator";
-  readonly description = "Animates mask radius based on audio levels";
-
-  protected createInstance(
-    id: string,
-    params: MaskRadiusAnimatorParams
-  ): EffectInstance<MaskRadiusAnimatorParams, MaskRadiusAnimatorOutput> {
-    return new MaskRadiusAnimatorEffectInstance(
-      id,
-      params,
-      this.getIntensityMultipliers()
-    );
-  }
-}
-
-// Self-register the factory
-EffectRegistry.register(new MaskRadiusAnimatorFactory());

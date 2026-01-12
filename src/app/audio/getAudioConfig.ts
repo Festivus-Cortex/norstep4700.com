@@ -33,24 +33,42 @@ export function getAudioConfigDefaultSettings(): AudioConfigDefaultSettings {
  * Fetches audio configuration from the server API.
  * The API dynamically scans the public/audio directory to discover music sets and tracks.
  *
- * Falls back to hardcoded config if the fetch fails.
+ * Throws an error if the fetch fails to allow proper error handling upstream.
  */
 export async function getAudioConfig(): Promise<AudioConfig> {
   try {
     const response = await fetch("/api/audio-config");
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch audio config: ${response.statusText}`);
+      // Try to parse error details from response
+      let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        if (errorData.error || errorData.message) {
+          errorMessage = errorData.message || errorData.error;
+        }
+      } catch {
+        // Failed to parse error JSON, use status text
+      }
+      throw new Error(`Failed to load audio configuration: ${errorMessage}`);
     }
 
     const config: AudioConfig = await response.json();
+
+    // Validate that we actually got music sets
+    if (!config.musicSets || config.musicSets.length === 0) {
+      throw new Error(
+        "Audio configuration loaded but contains no music sets. Please check that audio files exist in the public/audio directory."
+      );
+    }
+
     return config;
   } catch (error) {
-    console.warn(
-      "Failed to fetch audio config from API, using fallback:",
-      error
-    );
-    return getFallbackConfig();
+    // Re-throw with better context
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("An unknown error occurred while loading audio configuration");
   }
 }
 

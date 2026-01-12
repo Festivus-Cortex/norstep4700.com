@@ -6,8 +6,6 @@
  * Creates a shimmer/sparkle effect that responds to harmonic content.
  */
 
-import { EffectFactory } from "../../core/EffectFactory";
-import { EffectRegistry } from "../../core/EffectRegistry";
 import {
   AudioFrameData,
   EffectInstance,
@@ -19,8 +17,9 @@ import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for ElementOpacityAnimator.
+ * Exported for use by the factory.
  */
-class ElementOpacityAnimatorEffectInstance implements EffectInstance<
+export class ElementOpacityAnimatorEffectInstance implements EffectInstance<
   ElementOpacityAnimatorParams,
   ElementOpacityAnimatorOutput
 > {
@@ -147,28 +146,3 @@ class ElementOpacityAnimatorEffectInstance implements EffectInstance<
     return { ...this.currentOutput };
   }
 }
-
-/**
- * Factory for creating ElementOpacityAnimator effect instances.
- */
-export class ElementOpacityAnimatorFactory extends EffectFactory<
-  ElementOpacityAnimatorParams,
-  ElementOpacityAnimatorOutput
-> {
-  readonly type = "elementOpacityAnimator";
-  readonly description = "Animates element opacity based on audio levels";
-
-  protected createInstance(
-    id: string,
-    params: ElementOpacityAnimatorParams
-  ): EffectInstance<ElementOpacityAnimatorParams, ElementOpacityAnimatorOutput> {
-    return new ElementOpacityAnimatorEffectInstance(
-      id,
-      params,
-      this.getIntensityMultipliers()
-    );
-  }
-}
-
-// Self-register the factory
-EffectRegistry.register(new ElementOpacityAnimatorFactory());

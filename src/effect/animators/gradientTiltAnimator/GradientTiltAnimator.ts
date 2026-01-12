@@ -5,8 +5,6 @@
  * Creates a subtle swaying effect that follows the music's energy.
  */
 
-import { EffectFactory } from "../../core/EffectFactory";
-import { EffectRegistry } from "../../core/EffectRegistry";
 import {
   AudioFrameData,
   EffectInstance,
@@ -21,8 +19,9 @@ import { getEffectConfigSync } from "../../config/loader";
 
 /**
  * Internal effect instance for GradientTiltAnimator.
+ * Exported for use by the factory.
  */
-class GradientTiltAnimatorEffectInstance implements EffectInstance<
+export class GradientTiltAnimatorEffectInstance implements EffectInstance<
   GradientTiltAnimatorParams,
   GradientTiltAnimatorOutput
 > {
@@ -154,29 +153,3 @@ class GradientTiltAnimatorEffectInstance implements EffectInstance<
     return { ...this.currentOutput };
   }
 }
-
-/**
- * Factory for creating GradientTiltAnimator effect instances.
- */
-export class GradientTiltAnimatorFactory extends EffectFactory<
-  GradientTiltAnimatorParams,
-  GradientTiltAnimatorOutput
-> {
-  readonly type = "gradientTiltAnimator";
-  readonly description =
-    "Animates gradient tilt/rotation based on audio levels";
-
-  protected createInstance(
-    id: string,
-    params: GradientTiltAnimatorParams
-  ): EffectInstance<GradientTiltAnimatorParams, GradientTiltAnimatorOutput> {
-    return new GradientTiltAnimatorEffectInstance(
-      id,
-      params,
-      this.getIntensityMultipliers()
-    );
-  }
-}
-
-// Self-register the factory
-EffectRegistry.register(new GradientTiltAnimatorFactory());

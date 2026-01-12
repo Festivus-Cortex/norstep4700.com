@@ -1,7 +1,7 @@
 import React from "react";
 import { baseURL } from "@/app/resources";
 import { resume } from "@/app/resources/content";
-import PdfViewer from "../../components/utils/pdfViewer";
+import PdfViewer from "../../components/utils/PdfViewer";
 import { Column, Heading, SmartLink } from "@/once-ui/components";
 
 /**

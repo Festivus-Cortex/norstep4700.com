@@ -3,6 +3,16 @@ import { person, social } from "@/app/resources/content";
 import styles from "./Footer.module.scss";
 import { routes } from "@/app/resources";
 
+/**
+ * Site footer component displaying copyright information and social media links.
+ *
+ * This component appears at the bottom of every page and includes:
+ * - Copyright notice with current year and person's name
+ * - Optional link to license page (if enabled in routes configuration)
+ * - Social media icon buttons for configured platforms
+ *
+ * The layout is responsive, stacking vertically on mobile devices.
+ */
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
 

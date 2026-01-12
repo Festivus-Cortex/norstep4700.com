@@ -1,8 +1,6 @@
 "use client";
 
-import { Assert } from "@/utils/assert";
-
-import { audioCtx, audioRoot, audioAnalyzer, linearToGain } from "./audio";
+import { getAudioContext, linearToGain } from "./audio";
 import { MusicTrackNodes } from "./types";
 
 /**
@@ -25,10 +23,12 @@ export function createTrackNodes(
   initialPan: number = 0,
   loop: boolean = true
 ): MusicTrackNodes {
-  Assert.exists(
-    audioCtx,
-    "createTrackNodes - unable to create nodes. No audio context exists."
-  );
+  const audioCtx = getAudioContext();
+  if (!audioCtx) {
+    throw new Error(
+      "createTrackNodes - unable to create nodes. Audio context not initialized."
+    );
+  }
 
   // Create source node (one-time use in Web Audio API)
   const source = audioCtx.createBufferSource();

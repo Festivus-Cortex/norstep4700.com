@@ -8,6 +8,20 @@ import { HeadingLink } from "@/components";
 import { TextProps } from "@/once-ui/interfaces";
 import { SmartImageProps } from "@/once-ui/components/SmartImage";
 
+/**
+ * MDX rendering components with custom React component overrides.
+ *
+ * This file provides the CustomMDX component which renders MDX content with custom
+ * implementations for HTML elements like headings, links, images, code blocks, and tables.
+ *
+ * Key features:
+ * - Automatic heading ID generation with anchor links
+ * - Smart internal/external link handling
+ * - Enhanced image display with zoom capability
+ * - Syntax-highlighted code blocks
+ * - Custom table rendering
+ */
+
 type TableProps = {
   data: {
     headers: string[];

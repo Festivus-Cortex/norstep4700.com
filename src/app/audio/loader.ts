@@ -1,7 +1,6 @@
 "use client";
 
-import { Assert } from "@/utils/assert";
-import { audioCtx } from "./audio";
+import { getAudioContext } from "./audio";
 
 /**
  * Loads an audio buffer from URL.
@@ -16,10 +15,15 @@ const loadAudioBuffer = (url: string): Promise<AudioBuffer> => {
     request.responseType = "arraybuffer";
 
     request.onload = () => {
-      Assert.exists(
-        audioCtx,
-        "loadAudioBuffer - cannot complete loading audio buffer. No audio context exists to decode."
-      );
+      const audioCtx = getAudioContext();
+      if (!audioCtx) {
+        reject(
+          new Error(
+            "loadAudioBuffer - cannot complete loading audio buffer. No audio context exists to decode."
+          )
+        );
+        return;
+      }
       audioCtx.decodeAudioData(
         request.response,
         (buffer) => resolve(buffer),

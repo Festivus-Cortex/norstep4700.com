@@ -21,6 +21,26 @@ interface ProjectCardProps {
   link: string;
 }
 
+/**
+ * Displays a project card with image carousel, title, description, team avatars, and action links.
+ *
+ * This component is used on the work/projects listing page to showcase individual projects.
+ * It includes:
+ * - An image carousel showing project screenshots
+ * - Project title and description
+ * - Team member avatars
+ * - "Read more" link to the full project page
+ * - Optional external link for live demos or repositories
+ *
+ * @param href - Internal link to the full project page
+ * @param priority - Whether images should be loaded with priority
+ * @param images - Array of images for the carousel
+ * @param title - Project title
+ * @param content - Project content (used to determine if "Read more" should show)
+ * @param description - Short project description
+ * @param avatars - Team member avatar images
+ * @param link - Optional external link (e.g., live demo, GitHub repo)
+ */
 export const ProjectCard: React.FC<ProjectCardProps> = ({
   href,
   images = [],

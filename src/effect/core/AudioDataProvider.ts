@@ -6,7 +6,7 @@
  * than per-effect.
  */
 
-import { audioAnalyzer } from "@/app/audio/audio";
+import { getAudioAnalyzer } from "@/app/audio/audio";
 import { AudioFrameData } from "./types";
 import { getEffectConfigSync } from "../config/loader";
 import type { AudioAnalysisConfig } from "../config/types";
@@ -56,6 +56,7 @@ class AudioDataProviderImpl {
    * All frequency bands are pre-computed for efficiency.
    */
   getFrameData(): AudioFrameData {
+    const audioAnalyzer = getAudioAnalyzer();
     if (!audioAnalyzer) {
       return this.getEmptyFrameData();
     }
@@ -144,7 +145,7 @@ class AudioDataProviderImpl {
    * Check if audio analysis is available.
    */
   isAvailable(): boolean {
-    return audioAnalyzer !== undefined;
+    return getAudioAnalyzer() !== null;
   }
 
   /**

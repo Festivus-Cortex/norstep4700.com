@@ -8,6 +8,16 @@ interface PostsProps {
   thumbnail?: boolean;
 }
 
+/**
+ * Displays a grid of blog posts sorted by publication date (newest first).
+ *
+ * This component fetches blog posts from the file system and renders them in a responsive grid.
+ * Posts are automatically sorted by publication date with the most recent posts appearing first.
+ *
+ * @param range - Optional range of posts to display (e.g., [1, 5] shows posts 1-5, [1] shows all posts starting from 1)
+ * @param columns - Number of columns in the grid layout (1, 2, or 3). Defaults to 1. Always uses 1 column on mobile.
+ * @param thumbnail - Whether to display post thumbnails. Defaults to false.
+ */
 export function Posts({ range, columns = "1", thumbnail = false }: PostsProps) {
   let allBlogs = getPosts(["src", "app", "blog", "posts"]);
 

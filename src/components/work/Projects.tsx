@@ -12,6 +12,18 @@ interface ProjectsProps {
   byTitle?: string[];
 }
 
+/**
+ * Displays a list of project cards sorted by publication date (newest first).
+ *
+ * This component fetches project posts from the file system and renders them as ProjectCard components.
+ * Projects can be filtered by index range or by specific titles, but not both simultaneously.
+ *
+ * The first two projects are marked with priority for optimized image loading.
+ *
+ * @param range - Optional 1-based index range (e.g., [1, 5] shows projects 1-5, [1] shows from 1 to end)
+ * @param byTitle - Optional array of project titles to display in the order specified
+ * @throws Error if both range and byTitle are provided, or if a specified title is not found
+ */
 export function Projects({ range, byTitle }: ProjectsProps) {
   let allProjects = getPosts(["src", "app", "work", "projects"]);
 

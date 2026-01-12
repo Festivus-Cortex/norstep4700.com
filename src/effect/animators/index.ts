@@ -1,17 +1,37 @@
 /**
  * Effect Animators Index
  *
- * Importing this module registers all animators with the EffectRegistry.
- * Import this in your app's entry point or where effects are needed.
+ * Central registration point for all effect animators.
+ * Call registerAnimators() to explicitly register all animators with the EffectRegistry.
  */
 
-// Import animators to trigger self-registration
-import "./maskRadiusAnimator/MaskRadiusAnimator";
-import "./gradientTiltAnimator/GradientTiltAnimator";
-import "./elementOpacityAnimator/ElementOpacityAnimator";
-import "./gradientScaleAnimator/GradientScaleAnimator";
-import "./glitchIntensityAnimator/GlitchIntensityAnimator";
-import "./gradientPositionAnimator/GradientPositionAnimator";
+import { EffectRegistry } from "../core/EffectRegistry";
+import { MaskRadiusAnimatorFactory } from "./maskRadiusAnimator/MaskRadiusAnimatorFactory";
+import { GradientTiltAnimatorFactory } from "./gradientTiltAnimator/GradientTiltAnimatorFactory";
+import { ElementOpacityAnimatorFactory } from "./elementOpacityAnimator/ElementOpacityAnimatorFactory";
+import { GradientScaleAnimatorFactory } from "./gradientScaleAnimator/GradientScaleAnimatorFactory";
+import { GlitchIntensityAnimatorFactory } from "./glitchIntensityAnimator/GlitchIntensityAnimatorFactory";
+import { GradientPositionAnimatorFactory } from "./gradientPositionAnimator/GradientPositionAnimatorFactory";
+
+/**
+ * Registers all animator factories with the EffectRegistry.
+ * This function should be called once during application initialization,
+ * before any effects are created.
+ *
+ * @example
+ * ```typescript
+ * // In your app initialization
+ * registerAnimators();
+ * ```
+ */
+export function registerAnimators(): void {
+  EffectRegistry.register(new MaskRadiusAnimatorFactory());
+  EffectRegistry.register(new GradientTiltAnimatorFactory());
+  EffectRegistry.register(new ElementOpacityAnimatorFactory());
+  EffectRegistry.register(new GradientScaleAnimatorFactory());
+  EffectRegistry.register(new GlitchIntensityAnimatorFactory());
+  EffectRegistry.register(new GradientPositionAnimatorFactory());
+}
 
 // Re-export factory types and params for consumer convenience
 export {
