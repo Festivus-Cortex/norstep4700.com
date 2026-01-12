@@ -128,18 +128,20 @@ export const TrackControl = React.memo<TrackControlProps>(
         background="surface"
         className={classNames(styles.trackControl, className)}
       >
-        {/* Track name and control buttons */}
+        {/* Track name - full width */}
+        <Flex horizontal="center">
+          <Text variant="label-default-m" onBackground="neutral-strong">
+            {trackName}
+          </Text>
+        </Flex>
+
+        {/* Visualizer and control buttons */}
         <Flex horizontal="space-between" vertical="center" gap="8">
-          <Flex gap="8" vertical="center">
-            <TrackVisualizer
-              trackId={trackId}
-              trackName={trackName}
-              configParams={visualizerConfig}
-            />
-            <Text variant="label-default-m" onBackground="neutral-strong">
-              {trackName}
-            </Text>
-          </Flex>
+          <TrackVisualizer
+            trackId={trackId}
+            trackName={trackName}
+            configParams={visualizerConfig}
+          />
           <Flex gap="4">
             <IconButton
               icon={track.isEffectivelyMuted ? "volumeOff" : "volume2"}

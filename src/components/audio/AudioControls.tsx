@@ -74,10 +74,13 @@ export const AudioControls: React.FC = () => {
   /**
    * Convert available music sets to options for the SegmentedControl.
    * Maps music set objects to { label, value } format.
+   * Disable all buttons when a music set is loading.
    */
+  const isLoadingSet = loadingMusicSet !== null;
   const musicSetOptions = availableMusicSets.map((musicSet) => ({
     label: musicSet.displayName,
     value: musicSet.id.toString(),
+    disabled: isLoadingSet,
   }));
 
   /**
