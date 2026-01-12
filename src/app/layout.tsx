@@ -123,7 +123,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               audioReactiveGradientPosition={{
                 enabled: true,
               }}
-              audioReactiveDotsOpacity={{
+              audioReactiveElementOpacity={{
                 enabled: true,
               }}
               gradient={{

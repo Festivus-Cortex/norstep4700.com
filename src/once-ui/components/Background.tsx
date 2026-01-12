@@ -23,8 +23,8 @@ import {
   GradientScaleAnimatorParams,
   GradientPositionAnimatorOutput,
   GradientPositionAnimatorParams,
-  DotsOpacityAnimatorOutput,
-  DotsOpacityAnimatorParams,
+  ElementOpacityAnimatorOutput,
+  ElementOpacityAnimatorParams,
   MovementStyle,
 } from "@/effect/animators";
 import { useEffectRef, useEffectSubscription } from "@/hooks/effect";
@@ -148,9 +148,9 @@ interface AudioReactiveGradientPositionProps {
 }
 
 /**
- * Configuration for audio-reactive dots opacity effects.
+ * Configuration for audio-reactive element opacity effects.
  */
-interface AudioReactiveDotsOpacityProps {
+interface AudioReactiveElementOpacityProps {
   enabled: boolean;
   intensity?: EffectIntensity;
   audioAnalysisSource?: AudioAnalysisSource;
@@ -178,8 +178,8 @@ export interface BackgroundProps extends React.ComponentProps<typeof Flex> {
   audioReactiveGradientScale?: AudioReactiveGradientScaleProps;
   /** Enable audio-reactive gradient position effects */
   audioReactiveGradientPosition?: AudioReactiveGradientPositionProps;
-  /** Enable audio-reactive dots opacity effects */
-  audioReactiveDotsOpacity?: AudioReactiveDotsOpacityProps;
+  /** Enable audio-reactive element opacity effects */
+  audioReactiveElementOpacity?: AudioReactiveElementOpacityProps;
 }
 
 const Background = forwardRef<HTMLDivElement, BackgroundProps>(
@@ -198,7 +198,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
       audioReactiveGradientTilt,
       audioReactiveGradientScale,
       audioReactiveGradientPosition,
-      audioReactiveDotsOpacity,
+      audioReactiveElementOpacity,
       ...rest
     },
     forwardedRef
@@ -262,14 +262,14 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
         isEffectConfigInitialized && (audioReactiveGradientPosition?.enabled ?? false),
     });
 
-    // Set up audio-reactive dots opacity effect
-    const dotsOpacityEffectId = "background-dots-opacity-effect";
-    useEffectSubscription<DotsOpacityAnimatorParams, DotsOpacityAnimatorOutput>({
-      type: "dotsOpacityAnimator",
-      id: dotsOpacityEffectId,
-      params: audioReactiveDotsOpacity?.enabled ? audioReactiveDotsOpacity : undefined,
+    // Set up audio-reactive element opacity effect
+    const elementOpacityEffectId = "background-element-opacity-effect";
+    useEffectSubscription<ElementOpacityAnimatorParams, ElementOpacityAnimatorOutput>({
+      type: "elementOpacityAnimator",
+      id: elementOpacityEffectId,
+      params: audioReactiveElementOpacity?.enabled ? audioReactiveElementOpacity : undefined,
       autoStart:
-        isEffectConfigInitialized && (audioReactiveDotsOpacity?.enabled ?? false),
+        isEffectConfigInitialized && (audioReactiveElementOpacity?.enabled ?? false),
     });
 
     // Gradient effect ref - applies tilt
@@ -298,9 +298,9 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
       }
     );
 
-    // Dots opacity effect ref
-    const dotsOpacityRef = useEffectRef<DotsOpacityAnimatorOutput>(
-      dotsOpacityEffectId,
+    // Element opacity effect ref
+    const elementOpacityRef = useEffectRef<ElementOpacityAnimatorOutput>(
+      elementOpacityEffectId,
       (element, values) => {
         element.style.opacity = String(values.normalizedOpacity);
       }
@@ -326,18 +326,18 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [audioReactiveGradientTilt?.enabled, audioReactiveGradientScale?.enabled, audioReactiveGradientPosition?.enabled]);
 
-    // Store dots ref in a mutable ref
-    const dotsRefsRef = useRef({ dotsOpacityRef });
-    dotsRefsRef.current = { dotsOpacityRef };
+    // Store element opacity ref in a mutable ref
+    const elementRefsRef = useRef({ elementOpacityRef });
+    elementRefsRef.current = { elementOpacityRef };
 
-    // Combined ref callback for dots element
-    const dotsRefCallback = useCallback((element: HTMLDivElement | null) => {
+    // Combined ref callback for element (dots) opacity
+    const elementOpacityRefCallback = useCallback((element: HTMLDivElement | null) => {
       if (!element) return;
-      if (audioReactiveDotsOpacity?.enabled) {
-        dotsRefsRef.current.dotsOpacityRef(element);
+      if (audioReactiveElementOpacity?.enabled) {
+        elementRefsRef.current.elementOpacityRef(element);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [audioReactiveDotsOpacity?.enabled]);
+    }, [audioReactiveElementOpacity?.enabled]);
 
     // Combine refs: backgroundRef for internal use, forwardedRef for external, audioMaskRef for effects
     const combinedRefCallback = (element: HTMLDivElement | null) => {
@@ -483,7 +483,7 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
         )}
         {dots.display && (
           <Flex
-            ref={dotsRefCallback}
+            ref={elementOpacityRefCallback}
             position="absolute"
             top="0"
             left="0"

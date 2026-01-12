@@ -9,7 +9,7 @@ import { BaseEffectParams, EffectIntensity } from "../core/types";
 import {
   MaskRadiusAnimatorParams,
   GradientTiltAnimatorParams,
-  DotsOpacityAnimatorParams,
+  ElementOpacityAnimatorParams,
   GradientScaleAnimatorParams,
   GlitchIntensityAnimatorParams,
   GradientPositionAnimatorParams,
@@ -84,8 +84,8 @@ export interface EffectsConfig {
   maskRadiusAnimator: EffectTypeConfig<MaskRadiusAnimatorParams>;
   /** GradientTiltAnimator configuration */
   gradientTiltAnimator: EffectTypeConfig<GradientTiltAnimatorParams>;
-  /** DotsOpacityAnimator configuration */
-  dotsOpacityAnimator: EffectTypeConfig<DotsOpacityAnimatorParams>;
+  /** ElementOpacityAnimator configuration */
+  elementOpacityAnimator: EffectTypeConfig<ElementOpacityAnimatorParams>;
   /** GradientScaleAnimator configuration */
   gradientScaleAnimator: EffectTypeConfig<GradientScaleAnimatorParams>;
   /** GlitchIntensityAnimator configuration */

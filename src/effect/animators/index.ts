@@ -8,7 +8,7 @@
 // Import animators to trigger self-registration
 import "./maskRadiusAnimator/MaskRadiusAnimator";
 import "./gradientTiltAnimator/GradientTiltAnimator";
-import "./dotsOpacityAnimator/DotsOpacityAnimator";
+import "./elementOpacityAnimator/ElementOpacityAnimator";
 import "./gradientScaleAnimator/GradientScaleAnimator";
 import "./glitchIntensityAnimator/GlitchIntensityAnimator";
 import "./gradientPositionAnimator/GradientPositionAnimator";
@@ -25,9 +25,9 @@ export {
 } from "./gradientTiltAnimator/types";
 
 export {
-  type DotsOpacityAnimatorParams,
-  type DotsOpacityAnimatorOutput,
-} from "./dotsOpacityAnimator/types";
+  type ElementOpacityAnimatorParams,
+  type ElementOpacityAnimatorOutput,
+} from "./elementOpacityAnimator/types";
 
 export {
   type GradientScaleAnimatorParams,

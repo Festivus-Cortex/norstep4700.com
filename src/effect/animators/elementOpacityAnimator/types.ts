@@ -5,9 +5,9 @@ import {
 } from "../../core/types";
 
 /**
- * Parameters for the DotsOpacityAnimator effect.
+ * Parameters for the ElementOpacityAnimator effect.
  */
-export interface DotsOpacityAnimatorParams extends BaseEffectParams {
+export interface ElementOpacityAnimatorParams extends BaseEffectParams {
   /** Which audio metric drives the effect */
   audioAnalysisSource: AudioAnalysisSource;
   /** Base opacity (0-100, center of effect range) */
@@ -21,9 +21,9 @@ export interface DotsOpacityAnimatorParams extends BaseEffectParams {
 }
 
 /**
- * Output from the DotsOpacityAnimator effect.
+ * Output from the ElementOpacityAnimator effect.
  */
-export interface DotsOpacityAnimatorOutput extends EffectOutput {
+export interface ElementOpacityAnimatorOutput extends EffectOutput {
   /** Current opacity (0-100 for Flex opacity prop) */
   opacity: number;
   /** Normalized opacity (0-1 for CSS opacity property) */

@@ -39,9 +39,9 @@ export const AudioReactiveBackground: React.FC<BackgroundProps> = (props) => {
     return getEffectDefaults("gradientPositionAnimator");
   }, [isEffectConfigInitialized]);
 
-  const dotsOpacityConfig = useMemo(() => {
+  const elementOpacityConfig = useMemo(() => {
     if (!isEffectConfigInitialized) return null;
-    return getEffectDefaults("dotsOpacityAnimator");
+    return getEffectDefaults("elementOpacityAnimator");
   }, [isEffectConfigInitialized]);
 
   // Merge configs with props - only enable when tracks are loaded
@@ -92,15 +92,15 @@ export const AudioReactiveBackground: React.FC<BackgroundProps> = (props) => {
     haveTracksLoaded,
   ]);
 
-  const audioReactiveDotsOpacityWithConfig = useMemo(() => {
-    if (!props.audioReactiveDotsOpacity?.enabled || !dotsOpacityConfig) {
-      return props.audioReactiveDotsOpacity;
+  const audioReactiveElementOpacityWithConfig = useMemo(() => {
+    if (!props.audioReactiveElementOpacity?.enabled || !elementOpacityConfig) {
+      return props.audioReactiveElementOpacity;
     }
     if (!haveTracksLoaded) {
-      return { ...props.audioReactiveDotsOpacity, enabled: false };
+      return { ...props.audioReactiveElementOpacity, enabled: false };
     }
-    return { ...dotsOpacityConfig, ...props.audioReactiveDotsOpacity };
-  }, [props.audioReactiveDotsOpacity, dotsOpacityConfig, haveTracksLoaded]);
+    return { ...elementOpacityConfig, ...props.audioReactiveElementOpacity };
+  }, [props.audioReactiveElementOpacity, elementOpacityConfig, haveTracksLoaded]);
 
   return (
     <Background
@@ -109,7 +109,7 @@ export const AudioReactiveBackground: React.FC<BackgroundProps> = (props) => {
       audioReactiveGradientTilt={audioReactiveGradientTiltWithConfig}
       audioReactiveGradientScale={audioReactiveGradientScaleWithConfig}
       audioReactiveGradientPosition={audioReactiveGradientPositionWithConfig}
-      audioReactiveDotsOpacity={audioReactiveDotsOpacityWithConfig}
+      audioReactiveElementOpacity={audioReactiveElementOpacityWithConfig}
     />
   );
 };

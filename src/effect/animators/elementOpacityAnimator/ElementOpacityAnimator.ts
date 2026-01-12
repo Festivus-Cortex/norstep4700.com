@@ -1,7 +1,8 @@
 /**
- * DotsOpacityAnimator - Audio-reactive dots layer opacity effect.
+ * ElementOpacityAnimator - Audio-reactive element opacity effect.
  *
- * Fades the dots layer in and out based on audio levels (typically mid-high).
+ * Fades element opacity in and out based on audio levels.
+ * Can be applied to any visual element (dots, shapes, layers, etc.).
  * Creates a shimmer/sparkle effect that responds to harmonic content.
  */
 
@@ -13,27 +14,27 @@ import {
   EffectIntensity,
 } from "../../core/types";
 import { smoothDamp, clamp } from "@/utils/math";
-import { DotsOpacityAnimatorParams, DotsOpacityAnimatorOutput } from "./types";
+import { ElementOpacityAnimatorParams, ElementOpacityAnimatorOutput } from "./types";
 import { getEffectConfigSync } from "../../config/loader";
 
 /**
- * Internal effect instance for DotsOpacityAnimator.
+ * Internal effect instance for ElementOpacityAnimator.
  */
-class DotsOpacityAnimatorEffectInstance implements EffectInstance<
-  DotsOpacityAnimatorParams,
-  DotsOpacityAnimatorOutput
+class ElementOpacityAnimatorEffectInstance implements EffectInstance<
+  ElementOpacityAnimatorParams,
+  ElementOpacityAnimatorOutput
 > {
-  readonly factoryType = "dotsOpacityAnimator";
+  readonly factoryType = "elementOpacityAnimator";
 
-  private params: DotsOpacityAnimatorParams;
-  private currentOutput: DotsOpacityAnimatorOutput;
+  private params: ElementOpacityAnimatorParams;
+  private currentOutput: ElementOpacityAnimatorOutput;
   private smoothedValue: number = 0;
   private intensityMultipliers: Record<EffectIntensity, number>;
   private normalization: { rmsMultiplier: number; frequencyDivisor: number };
 
   constructor(
     readonly id: string,
-    params: DotsOpacityAnimatorParams,
+    params: ElementOpacityAnimatorParams,
     intensityMultipliers: Record<EffectIntensity, number>
   ) {
     this.params = params;
@@ -56,7 +57,7 @@ class DotsOpacityAnimatorEffectInstance implements EffectInstance<
   update(
     audioData: AudioFrameData,
     deltaTime: number
-  ): DotsOpacityAnimatorOutput {
+  ): ElementOpacityAnimatorOutput {
     const {
       audioAnalysisSource,
       baseOpacity,
@@ -92,7 +93,7 @@ class DotsOpacityAnimatorEffectInstance implements EffectInstance<
       default:
         rawValue = 0;
         console.warn(
-          "dotsOpacityAnimator has no way to analyze for given method of: " +
+          "elementOpacityAnimator has no way to analyze for given method of: " +
             audioAnalysisSource
         );
     }
@@ -134,34 +135,34 @@ class DotsOpacityAnimatorEffectInstance implements EffectInstance<
     // No cleanup needed
   }
 
-  setParams(params: Partial<DotsOpacityAnimatorParams>): void {
+  setParams(params: Partial<ElementOpacityAnimatorParams>): void {
     this.params = { ...this.params, ...params };
   }
 
-  getParams(): DotsOpacityAnimatorParams {
+  getParams(): ElementOpacityAnimatorParams {
     return { ...this.params };
   }
 
-  getCurrentOutput(): DotsOpacityAnimatorOutput {
+  getCurrentOutput(): ElementOpacityAnimatorOutput {
     return { ...this.currentOutput };
   }
 }
 
 /**
- * Factory for creating DotsOpacityAnimator effect instances.
+ * Factory for creating ElementOpacityAnimator effect instances.
  */
-export class DotsOpacityAnimatorFactory extends EffectFactory<
-  DotsOpacityAnimatorParams,
-  DotsOpacityAnimatorOutput
+export class ElementOpacityAnimatorFactory extends EffectFactory<
+  ElementOpacityAnimatorParams,
+  ElementOpacityAnimatorOutput
 > {
-  readonly type = "dotsOpacityAnimator";
-  readonly description = "Animates dots layer opacity based on audio levels";
+  readonly type = "elementOpacityAnimator";
+  readonly description = "Animates element opacity based on audio levels";
 
   protected createInstance(
     id: string,
-    params: DotsOpacityAnimatorParams
-  ): EffectInstance<DotsOpacityAnimatorParams, DotsOpacityAnimatorOutput> {
-    return new DotsOpacityAnimatorEffectInstance(
+    params: ElementOpacityAnimatorParams
+  ): EffectInstance<ElementOpacityAnimatorParams, ElementOpacityAnimatorOutput> {
+    return new ElementOpacityAnimatorEffectInstance(
       id,
       params,
       this.getIntensityMultipliers()
@@ -170,4 +171,4 @@ export class DotsOpacityAnimatorFactory extends EffectFactory<
 }
 
 // Self-register the factory
-EffectRegistry.register(new DotsOpacityAnimatorFactory());
+EffectRegistry.register(new ElementOpacityAnimatorFactory());

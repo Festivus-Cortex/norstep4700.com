@@ -86,7 +86,7 @@
         }
       }
     },
-    "dotsOpacityAnimator": {
+    "elementOpacityAnimator": {
       "defaults": {
         "intensity": "extreme",
         "audioAnalysisSource": "midHigh",
