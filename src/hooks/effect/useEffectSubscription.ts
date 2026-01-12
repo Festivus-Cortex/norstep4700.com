@@ -85,8 +85,6 @@ export function useEffectSubscription<
           return;
         }
 
-        console.log(`[useEffectSubscription] Initializing ${type} with id ${id}`);
-
         // Get the animator
         const factory = EffectRegistry.getAnimator<TParams, TOutput>(type);
         if (!factory) {
@@ -106,9 +104,11 @@ export function useEffectSubscription<
         EffectEngine.registerEffect(instance);
         instanceIdRef.current = id;
         setIsSubscribed(true);
-        console.log(`[useEffectSubscription] Successfully registered ${type} with id ${id}`);
       } catch (error) {
-        console.error("[useEffectSubscription] Failed to initialize effect:", error);
+        console.error(
+          "[useEffectSubscription] Failed to initialize effect:",
+          error
+        );
       }
     };
 
