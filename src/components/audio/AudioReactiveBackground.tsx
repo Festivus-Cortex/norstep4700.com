@@ -46,8 +46,12 @@ export const AudioReactiveBackground: React.FC<BackgroundProps> = (props) => {
 
   // Merge configs with props - only enable when tracks are loaded
   const audioReactiveMaskWithConfig = useMemo(() => {
-    if (!props.audioReactiveMask?.enabled || !maskConfig || !haveTracksLoaded) {
+    if (!props.audioReactiveMask?.enabled || !maskConfig) {
       return props.audioReactiveMask;
+    }
+    // Disable effect if no tracks are loaded
+    if (!haveTracksLoaded) {
+      return { ...props.audioReactiveMask, enabled: false };
     }
     return { ...maskConfig, ...props.audioReactiveMask };
   }, [props.audioReactiveMask, maskConfig, haveTracksLoaded]);
