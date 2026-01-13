@@ -12,6 +12,18 @@ interface HeadingLinkProps {
   style?: React.CSSProperties;
 }
 
+/**
+ * A heading component with a built-in link icon that allows users to copy the heading's URL anchor.
+ *
+ * When clicked, this component copies the full URL with hash anchor to the clipboard
+ * and displays a toast notification. Useful for creating shareable links to specific
+ * sections within long-form content.
+ *
+ * @param id - The HTML id attribute for the heading, used as the URL anchor
+ * @param level - Heading level (1-6), mapped to appropriate HTML tag and styling
+ * @param children - The heading text content
+ * @param style - Optional inline styles to apply to the wrapper
+ */
 export const HeadingLink: React.FC<HeadingLinkProps> = ({
   id,
   level,

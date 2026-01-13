@@ -12,6 +12,13 @@ import {
 } from "@/once-ui/components";
 import { JSX, useState } from "react";
 
+/**
+ * Utility function to delay execution until after a specified time has passed without new calls.
+ *
+ * @param func - The function to debounce
+ * @param delay - Delay in milliseconds before executing the function
+ * @returns Debounced version of the function
+ */
 function debounce<T extends (...args: any[]) => void>(
   func: T,
   delay: number
@@ -29,6 +36,19 @@ type NewsletterProps = {
   description: string | JSX.Element;
 };
 
+/**
+ * Newsletter subscription component integrated with Mailchimp.
+ *
+ * This component provides an email signup form that:
+ * - Validates email format in real-time with debouncing
+ * - Submits to a configured Mailchimp action URL
+ * - Shows validation errors for invalid email addresses
+ * - Opens the Mailchimp subscription page in a new tab on submission
+ *
+ * The component can be conditionally displayed based on the newsletter configuration.
+ *
+ * @param newsletter - Configuration object with display flag, title, and description
+ */
 export const Mailchimp = ({ newsletter }: { newsletter: NewsletterProps }) => {
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");

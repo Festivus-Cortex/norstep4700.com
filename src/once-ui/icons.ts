@@ -23,6 +23,12 @@ import {
   HiArrowRight,
   HiOutlineEye,
   HiOutlineEyeSlash,
+  HiSpeakerWave,
+  HiSpeakerXMark,
+  HiOutlineSpeakerWave,
+  HiStar,
+  HiPlay,
+  HiPause,
 } from "react-icons/hi2";
 
 import {
@@ -67,4 +73,13 @@ export const iconLibrary: Record<string, IconType> = {
   x: FaXTwitter,
   clipboard: HiClipboard,
   arrowUpRightFromSquare: HiArrowTopRightOnSquare,
+
+  // NOTE: THe below icons were added as part of the portfolio site. Consider
+  // moving this elsewhere.
+  volumeHigh: HiSpeakerWave,
+  volumeOff: HiSpeakerXMark,
+  volume2: HiOutlineSpeakerWave,
+  star: HiStar,
+  play: HiPlay,
+  pause: HiPause,
 };

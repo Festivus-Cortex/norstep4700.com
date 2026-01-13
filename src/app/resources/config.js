@@ -49,9 +49,9 @@ const effects = {
   },
   dots: {
     display: true,
-    size: 2,
+    size: 32,
     color: "brand-on-background-weak",
-    opacity: 20,
+    opacity: 80,
   },
   lines: {
     display: true,

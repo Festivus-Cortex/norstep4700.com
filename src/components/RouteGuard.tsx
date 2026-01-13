@@ -3,13 +3,37 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { routes, protectedRoutes } from "@/app/resources";
-import { Flex, Spinner, Input, Button, Heading, Column, PasswordInput } from "@/once-ui/components";
+import {
+  Flex,
+  Spinner,
+  Input,
+  Button,
+  Heading,
+  Column,
+  PasswordInput,
+} from "@/once-ui/components";
 import NotFound from "@/app/not-found";
 
 interface RouteGuardProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
+/**
+ * Route guard component that controls access to routes based on configuration and authentication.
+ *
+ * This component provides three levels of protection:
+ * 1. **Route enabled check**: Verifies the route is enabled in the `routes` configuration
+ * 2. **Password protection**: For routes marked in `protectedRoutes`, requires password authentication
+ * 3. **Session management**: Checks for existing authentication sessions to avoid repeated password entry
+ *
+ * Behavior:
+ * - Shows a spinner while checking route status and authentication
+ * - Returns a 404 page for disabled routes
+ * - Shows a password prompt for protected routes without valid authentication
+ * - Renders children for accessible routes
+ *
+ * @param children - The content to render if the route is accessible
+ */
 const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   const pathname = usePathname();
   const [isRouteEnabled, setIsRouteEnabled] = useState(false);
@@ -85,8 +109,8 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   }
 
   if (!isRouteEnabled) {
-		return <NotFound />;
-	}
+    return <NotFound />;
+  }
 
   if (isPasswordRequired && !isAuthenticated) {
     return (

@@ -1,0 +1,31 @@
+/**
+ * Master Controls Component Styles
+ *
+ * Contains zone selector, mute all button, and master volume slider.
+ * Elevated appearance to distinguish from individual track controls.
+ */
+
+/**
+ * Container for master audio controls.
+ * Uses shadow to create visual hierarchy above track controls.
+ */
+.masterControls {
+  box-shadow: var(--shadow-m); /* Medium elevation */
+  transition: all var(--transition-micro-medium);
+
+  /* Increase elevation on hover for depth effect */
+  &:hover {
+    box-shadow: var(--shadow-l); /* Large elevation */
+  }
+}
+
+/**
+ * Mobile adjustments
+ * Tighter spacing to fit more content on smaller screens
+ */
+@media (--s) {
+  .masterControls {
+    padding: var(--static-space-12); /* Reduced from 16 */
+    gap: var(--static-space-12); /* Reduced from 16 */
+  }
+}

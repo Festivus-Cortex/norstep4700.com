@@ -5,6 +5,21 @@ import { SmartImage } from "@/once-ui/components";
 import styles from "./Gallery.module.scss";
 import { gallery } from "@/app/resources/content";
 
+/**
+ * Responsive masonry grid layout for displaying gallery images.
+ *
+ * This component uses react-masonry-css to create a Pinterest-style grid that:
+ * - Adapts column count based on viewport width (1-4 columns)
+ * - Prioritizes loading the first 10 images for better performance
+ * - Respects image orientation (horizontal vs vertical)
+ * - Provides responsive image sizing with appropriate srcset
+ *
+ * Breakpoints:
+ * - Default (≥1440px): 4 columns
+ * - 1440px: 3 columns
+ * - 1024px: 2 columns
+ * - 560px: 1 column
+ */
 export default function MasonryGrid() {
   const breakpointColumnsObj = {
     default: 4,

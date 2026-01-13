@@ -25,7 +25,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# env files - except example
+.env
 .env*.local
 
 # vercel
@@ -34,6 +35,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude (AI)
+.claude
 
 # The PDF worker script is copied from node_modules to public folder
 public/scripts/pdf.worker.min.mjs

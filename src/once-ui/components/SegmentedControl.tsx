@@ -8,9 +8,13 @@ interface ButtonOption extends Omit<ToggleButtonProps, "selected"> {
   value: string;
 }
 
-interface SegmentedControlProps extends Omit<React.ComponentProps<typeof Scroller>, "onToggle"> {
+interface SegmentedControlProps
+  extends Omit<React.ComponentProps<typeof Scroller>, "onToggle"> {
   buttons: ButtonOption[];
-  onToggle: (value: string, event?: React.MouseEvent<HTMLButtonElement>) => void;
+  onToggle: (
+    value: string,
+    event?: React.MouseEvent<HTMLButtonElement>
+  ) => void;
   defaultSelected?: string;
   fillWidth?: boolean;
   selected?: string;
@@ -44,8 +48,15 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
 
   const handleButtonClick = (
     clickedButton: ButtonOption,
-    event: React.MouseEvent<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement>
   ) => {
+    // Norstep: Don't handle clicks on disabled buttons
+    if (clickedButton.disabled) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     event.stopPropagation();
     const newSelected = clickedButton.value;
     setInternalSelected(newSelected);
@@ -53,7 +64,9 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const focusedIndex = buttonRefs.current.findIndex((ref) => ref === document.activeElement);
+    const focusedIndex = buttonRefs.current.findIndex(
+      (ref) => ref === document.activeElement
+    );
 
     switch (event.key) {
       case "ArrowLeft":
@@ -63,8 +76,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
           focusedIndex === -1
             ? buttons.length - 1 // If nothing is focused, focus the last item
             : focusedIndex > 0
-              ? focusedIndex - 1
-              : buttons.length - 1;
+            ? focusedIndex - 1
+            : buttons.length - 1;
         buttonRefs.current[prevIndex]?.focus();
         break;
       case "ArrowRight":
@@ -74,8 +87,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
           focusedIndex === -1
             ? 0 // If nothing is focused, focus the first item
             : focusedIndex < buttons.length - 1
-              ? focusedIndex + 1
-              : 0;
+            ? focusedIndex + 1
+            : 0;
         buttonRefs.current[nextIndex]?.focus();
         break;
       case "Enter":
@@ -83,8 +96,11 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
         event.preventDefault();
         if (focusedIndex >= 0 && focusedIndex < buttons.length) {
           const focusedButton = buttons[focusedIndex];
-          setInternalSelected(focusedButton.value);
-          onToggle(focusedButton.value);
+          // Norstep: Don't handle keyboard activation on disabled buttons
+          if (!focusedButton.disabled) {
+            setInternalSelected(focusedButton.value);
+            onToggle(focusedButton.value);
+          }
         }
         break;
       default:
@@ -92,7 +108,9 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     }
   };
 
-  const selectedIndex = buttons.findIndex((button) => button.value === internalSelected);
+  const selectedIndex = buttons.findIndex(
+    (button) => button.value === internalSelected
+  );
 
   return (
     <Scroller
@@ -111,7 +129,13 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
                 buttonRefs.current[index] = el as HTMLButtonElement;
               }}
               variant="outline"
-              radius={index === 0 ? "left" : index === buttons.length - 1 ? "right" : "none"}
+              radius={
+                index === 0
+                  ? "left"
+                  : index === buttons.length - 1
+                  ? "right"
+                  : "none"
+              }
               key={button.value}
               selected={index === selectedIndex}
               onClick={(event) => handleButtonClick(button, event)}

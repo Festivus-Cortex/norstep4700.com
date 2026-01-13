@@ -1,0 +1,68 @@
+/**
+ * Audio Panel Toggle Styles
+ *
+ * Button shown when audio control panel is collapsed.
+ * Features attention-grabbing pulse/glow animation to encourage interaction.
+ */
+
+/**
+ * Toggle button container.
+ * Combines pulsing animation with interactive scaling for visual interest.
+ */
+.toggle {
+  cursor: pointer;
+  transition: all var(--transition-micro-medium);
+  box-shadow: var(--shadow-m);
+  animation: pulseGlow 4s ease-in-out infinite; /* Continuous subtle pulse */
+  border: none; /* Remove default button border */
+
+  /* Enhance glow on hover */
+  &:hover {
+    box-shadow: var(--shadow-l);
+    animation-play-state: paused; /* Pause pulse during interaction */
+  }
+
+  /* Accessible keyboard focus indicator */
+  &:focus-visible {
+    outline: 2px solid var(--accent-border-medium);
+    outline-offset: 2px;
+  }
+
+  /* Reduce shadow on click for pressed effect */
+  &:active {
+    box-shadow: var(--shadow-s);
+  }
+}
+
+/**
+ * Pulse/glow animation keyframes.
+ * Creates a breathing glow effect that attracts attention without being distracting.
+ *
+ * Animation phases:
+ * 0%: Minimal glow
+ * 50%: Maximum glow
+ * 100%: Back to minimal glow
+ */
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 var(--accent-alpha-weak),
+      /* No glow */ var(--shadow-m); /* Standard shadow */
+  }
+  50% {
+    box-shadow:
+      0 0 20px 4px var(--accent-alpha-medium),
+      /* Accent glow */ var(--shadow-l); /* Larger shadow */
+  }
+}
+
+/**
+ * Mobile adjustments
+ * Increase padding for easier touch interaction
+ */
+@media (--s) {
+  .toggle {
+    padding: var(--static-space-16); /* Larger touch target */
+  }
+}

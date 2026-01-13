@@ -1,0 +1,122 @@
+/**
+ * Slider Component Styles
+ *
+ * Custom range slider for volume (0-1) and pan (-1 to 1) controls.
+ * Uses a native <input type="range"> for accessibility, hidden with custom styling.
+ */
+
+/**
+ * Container for the entire slider component.
+ * Provides the background track and touch target area.
+ */
+.sliderContainer {
+  height: var(--static-space-40); /* 40px - comfortable desktop interaction */
+  border-radius: var(--radius-m);
+  background: var(--neutral-alpha-weak);
+  overflow: hidden; /* Clip fill bar within bounds */
+  position: relative;
+  cursor: pointer;
+
+  /* Slightly darker background on hover for visual feedback */
+  &:hover {
+    background: var(--neutral-alpha-medium);
+  }
+}
+
+/**
+ * The native range input element.
+ * Made invisible but kept interactive for accessibility and keyboard control.
+ */
+.slider {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* Hide native appearance while keeping functionality */
+  cursor: pointer;
+  z-index: 3; /* Above fill bar for interaction */
+  margin: 0;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  /* Focus ring for keyboard navigation */
+  &:focus-visible {
+    outline: none; /* Remove default outline */
+
+    /* Show accent border on the track when focused */
+    & + .sliderTrack {
+      box-shadow: 0 0 0 2px var(--accent-border-medium);
+    }
+  }
+}
+
+/**
+ * Visual track element (background).
+ * Shows border/focus states but doesn't interact.
+ */
+.sliderTrack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through to input */
+  border-radius: var(--radius-m);
+  transition: box-shadow var(--transition-micro-medium);
+
+  /* Fade out when slider is disabled */
+  &.disabled {
+    opacity: 0.4;
+  }
+}
+
+/**
+ * Visual fill bar showing current value.
+ * For unidirectional: fills from left (min) to current value.
+ * For bidirectional: fills from center point outward (left or right based on value).
+ */
+.sliderFill {
+  position: absolute;
+  height: 100%;
+  background: var(--accent-solid-medium); /* Accent color for active state */
+  transition:
+    width var(--transition-micro-fast),
+    left var(--transition-micro-fast); /* Smooth changes */
+  pointer-events: none; /* Let clicks pass through to input */
+  border-radius: var(--radius-m) 0 0 var(--radius-m); /* Rounded left edge */
+
+  /* Bidirectional mode uses center-based fill, no rounded edges */
+  &.bidirectional {
+    border-radius: 0;
+  }
+
+  /* Fade out when slider is disabled */
+  &.disabled {
+    opacity: 0.4;
+  }
+}
+
+/**
+ * Center marker for bidirectional sliders.
+ * Shows the neutral center/zero position.
+ */
+.centerMarker {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: var(--neutral-border-strong);
+  transform: translateX(-50%); /* Center the line */
+  pointer-events: none; /* Let clicks pass through */
+  z-index: 2; /* Above fill bar */
+}
+
+/**
+ * Mobile-specific adjustments
+ * Larger touch targets for better mobile usability
+ */
+@media (--s) {
+  .sliderContainer {
+    height: var(
+      --static-space-48
+    ); /* 48px - iOS/Android recommended touch target */
+  }
+}

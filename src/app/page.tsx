@@ -71,7 +71,7 @@ export default function Home() {
           }),
         }}
       />
-      <Column fillWidth paddingY="l" gap="m">
+      <Column fillWidth paddingBottom="l" gap="m">
         <Column maxWidth="s">
           <RevealFx
             translateY="4"
@@ -132,7 +132,8 @@ export default function Home() {
         <br />
         <br />
         <>
-          An audio visual journey will be added to the page soon, so stay tuned!
+          For a bonus audio visual journey, explore the audio panel near the
+          navigation!
         </>
       </RevealFx>
       <RevealFx delay={1.2}>

@@ -10,7 +10,7 @@ import {
   Text,
 } from "@/once-ui/components";
 import styles from "./Posts.module.scss";
-import { formatDate } from "@/app/utils/formatDate";
+import { formatDate } from "@/utils/formatDate";
 import React from "react";
 
 interface PostProps {
@@ -18,6 +18,20 @@ interface PostProps {
   thumbnail: boolean;
 }
 
+/**
+ * Displays a single blog post preview card with title, date, tags, and optional thumbnail.
+ *
+ * This component renders an individual blog post in a card format, displaying:
+ * - Optional thumbnail image
+ * - Post title
+ * - Publication date
+ * - Up to 3 tags
+ *
+ * The entire card is clickable and links to the full blog post.
+ *
+ * @param post - The blog post object containing metadata (title, image, publishedAt, tag) and slug
+ * @param thumbnail - Whether to display the post's thumbnail image
+ */
 export default function Post(postProps: PostProps) {
   const { post, thumbnail } = postProps;
 

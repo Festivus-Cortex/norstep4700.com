@@ -1,0 +1,179 @@
+/**
+ * Audio Control Panel Styles
+ *
+ * Main container for the entire audio control interface.
+ * Responsive positioning: below navbar on desktop, above navbar on mobile.
+ */
+
+/**
+ * Unified responsive container.
+ * Desktop: Fixed below header (top: 90px)
+ * Mobile: Fixed above navbar (bottom: 0)
+ */
+.container {
+  /* Fixed position locked to viewport */
+  position: fixed !important;
+  left: 0px !important;
+  right: 0px !important;
+  z-index: 8 !important; /* Above page content, below navbar (zIndex 9) */
+  padding: 0 var(--static-space-16) !important;
+  margin: 0 !important;
+  pointer-events: none !important; /* Allow clicks to pass through */
+  width: 100% !important;
+  height: auto !important;
+
+  /* Desktop positioning */
+  top: 90px !important; /* Spacer (16px) + Header (80px) - 10px adjustment */
+  bottom: auto !important;
+  display: flex !important;
+  justify-content: center !important;
+
+  /* Start hidden for fade-in animation */
+  opacity: 0;
+  /* ONLY transition opacity - nothing else */
+  transition-property: opacity !important;
+  transition-duration: 1.5s !important;
+  transition-timing-function: ease-in-out !important;
+  /* Lock to GPU layer for smooth transitions */
+  transform: translateZ(0) !important;
+
+  /* Children can receive pointer events */
+  > * {
+    pointer-events: auto !important;
+  }
+
+  /* Fade in when visible */
+  &.visible {
+    opacity: 1 !important;
+  }
+
+  /* Mobile positioning */
+  @media (--s) {
+    top: auto !important;
+    bottom: 0 !important;
+    /* Position above navbar with proper spacing */
+    padding-bottom: calc(
+      var(--static-space-80) + var(--static-space-4)
+    ) !important;
+  }
+}
+
+/**
+ * Panel content container (shown when expanded).
+ * Scrollable with hidden scrollbar for cleaner appearance.
+ */
+.panel {
+  box-shadow: var(--shadow-l); /* Large elevation for prominence */
+  max-height: 80vh; /* Limit height to 80% of viewport */
+  overflow-y: auto; /* Scroll if content is too tall */
+
+  /* Hide scrollbar while maintaining scroll functionality */
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* WebKit browsers (Chrome, Safari, Edge) */
+  }
+
+  /* Desktop spacing */
+  padding: 16px;
+  gap: 16px;
+
+  /* Animate panel appearance when expanding */
+  &.expanded {
+    animation: expandPanel var(--transition-duration-macro-medium)
+      var(--transition-eased);
+  }
+
+  /* Mobile adjustments */
+  @media (--s) {
+    padding: 12px;
+    gap: 12px;
+    max-height: 70vh; /* Reduced from 80vh */
+  }
+}
+
+/**
+ * Scroll indicator with gradient scrim and chevron button.
+ * Positioned absolutely at top or bottom of panel.
+ */
+.scrollIndicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+
+  /* Allow button to receive clicks */
+  button {
+    pointer-events: auto;
+  }
+
+  /* Top position with gradient fading down */
+  &[data-position="top"] {
+    top: 0;
+    background: linear-gradient(
+      to bottom,
+      var(--page) 0%,
+      var(--page) 30%,
+      transparent 100%
+    );
+    border-radius: var(--radius-m) var(--radius-m) 0 0;
+  }
+
+  /* Bottom position with gradient fading up */
+  &[data-position="bottom"] {
+    bottom: 0;
+    background: linear-gradient(
+      to top,
+      var(--page) 0%,
+      var(--page) 30%,
+      transparent 100%
+    );
+    border-radius: 0 0 var(--radius-m) var(--radius-m);
+  }
+}
+
+/**
+ * Error message container with responsive spacing and text size.
+ */
+.errorMessage {
+  /* Desktop spacing */
+  padding: 16px;
+  gap: 8px;
+
+  /* Mobile spacing */
+  @media (--s) {
+    padding: 12px;
+  }
+
+  /* Responsive text size */
+  p {
+    font-size: var(--body-default-m-font-size);
+
+    @media (--s) {
+      font-size: var(--body-default-s-font-size);
+    }
+  }
+}
+
+/**
+ * Expand animation keyframes.
+ * Smooth fade-in and slide-down effect.
+ *
+ * Duration: macro-medium (typically 300-400ms)
+ * Easing: eased (smooth acceleration/deceleration)
+ */
+@keyframes expandPanel {
+  from {
+    opacity: 0; /* Start invisible */
+    transform: translateY(-8px); /* Start slightly above */
+  }
+  to {
+    opacity: 1; /* Fade to visible */
+    transform: translateY(0); /* Slide to final position */
+  }
+}

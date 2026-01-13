@@ -18,7 +18,26 @@ interface TableOfContentsProps {
   };
 }
 
-const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about }) => {
+/**
+ * Fixed-position table of contents component for the about page.
+ *
+ * This component displays a hierarchical navigation menu on the left side of the viewport
+ * (hidden on mobile/medium screens). Users can click on section titles or sub-items
+ * to smoothly scroll to the corresponding content.
+ *
+ * Features:
+ * - Smooth scroll navigation with 80px offset for fixed headers
+ * - Optional sub-item display controlled by configuration
+ * - Automatically filters out sections marked as not displayable
+ * - Vertically centered in the viewport
+ *
+ * @param structure - Array of sections with titles, display flags, and items
+ * @param about - Configuration object controlling table of contents visibility and sub-items
+ */
+const TableOfContents: React.FC<TableOfContentsProps> = ({
+  structure,
+  about,
+}) => {
   const scrollTo = (id: string, offset: number) => {
     const element = document.getElementById(id);
     if (element) {
@@ -74,7 +93,11 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about }) =
                     vertical="center"
                     onClick={() => scrollTo(item, 80)}
                   >
-                    <Flex height="1" minWidth="8" background="neutral-strong"></Flex>
+                    <Flex
+                      height="1"
+                      minWidth="8"
+                      background="neutral-strong"
+                    ></Flex>
                     <Text>{item}</Text>
                   </Flex>
                 ))}

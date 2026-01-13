@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Fade, Flex, Line, ToggleButton } from "@/once-ui/components";
 import styles from "@/components/Header.module.scss";
+import { AudioControlPanel } from "@/components/audio/AudioControlPanel";
 
 import { routes, display } from "@/app/resources";
 import {
@@ -19,12 +20,18 @@ import {
 
 type TimeDisplayProps = {
   timeZone: string;
-  locale?: string; // Optionally allow locale, defaulting to 'en-GB'
+  locale?: string; // Optionally allow locale, defaulting to 'en-US'
 };
 
+/**
+ * Displays the current time in a specified timezone, updating every second.
+ *
+ * @param timeZone - IANA timezone string (e.g., "America/New_York", "Europe/London")
+ * @param locale - Optional locale for time formatting. Defaults to "en-US"
+ */
 const TimeDisplay: React.FC<TimeDisplayProps> = ({
   timeZone,
-  locale = "en-GB",
+  locale = "en-US",
 }) => {
   const [currentTime, setCurrentTime] = useState("");
 
@@ -53,6 +60,18 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({
 
 export default TimeDisplay;
 
+/**
+ * Site header component with navigation and optional time/location display.
+ *
+ * This component appears at the top of every page and includes:
+ * - Navigation toggle buttons for enabled routes (about, blog, work, gallery, resume, license)
+ * - Optional time and location display (if configured in person settings)
+ * - Audio control panel
+ * - Fade effects for better visual integration
+ *
+ * The navigation automatically highlights the current active route and adapts based on
+ * which routes are enabled in the configuration.
+ */
 export const Header = () => {
   const pathname = usePathname() ?? "";
 
@@ -87,6 +106,7 @@ export const Header = () => {
         </Flex>
         <Flex fillWidth horizontal="center">
           <Flex
+            id="nav-controls"
             background="surface"
             border="neutral-medium"
             radius="m-4"
@@ -222,6 +242,7 @@ export const Header = () => {
           </Flex>
         </Flex>
       </Flex>
+      <AudioControlPanel />
     </>
   );
 };
