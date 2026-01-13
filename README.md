@@ -64,6 +64,7 @@ are considerations for expanding.
     - balanced intensity configs for each animator
   - Consider adding better configuration controls or limits
   - Performance metrics display
+  - Expand effects
 
 - Containerize the project
 - More commenting including some templated areas
