@@ -36,7 +36,7 @@ export function Projects({ range, byTitle }: ProjectsProps) {
     );
   }
 
-  // TODO PRESTON: Consider making the sorting options more dynamic.
+  // TODO: Consider making the sorting options more dynamic.
   const sortedProjects = allProjects.sort((a, b) => {
     return (
       new Date(b.metadata.publishedAt).getTime() -

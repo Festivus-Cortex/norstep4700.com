@@ -11,6 +11,7 @@ import {
   fadeInMusicSet,
 } from "@/app/audio/musicSet";
 import { AudioDataProvider } from "@/effect/core/AudioDataProvider";
+import { resumeAudio } from "@/app/audio/audio";
 
 /**
  * Hook for managing music set loading, switching, and cleanup.
@@ -84,12 +85,17 @@ export function useAudioMusicSet() {
         );
         context.setTracks(trackStates);
 
+        // Ensure audio context is resumed BEFORE starting tracks
+        // (in case it was suspended from previous music set)
+        await resumeAudio();
+
         // Start playback of all tracks
         trackNodes.forEach((nodes) => startTrack(nodes));
 
         // Fade in the music set from 0 to target volume
         fadeInMusicSet(trackNodes, 2);
 
+        // Set playing state
         context.setPlaying(true);
 
         context.setCurrentMusicSet(musicSetId);
@@ -138,13 +144,36 @@ export function useAudioMusicSet() {
       // Don't switch if already on this music set
       if (context.currentSet === musicSetId) return;
 
-      // Unload current music set
-      unloadCurrentMusicSet();
+      // Store the old music set ID to unload after the new one loads
+      const oldMusicSetId = context.currentSet;
 
-      // Load new music set
+      if (oldMusicSetId !== null) {
+        const musicSetData = context.loadedSets.get(oldMusicSetId);
+        if (musicSetData) {
+          // Unregister track analyzers from AudioDataProvider
+          musicSetData.trackAnalyzers.forEach((_, trackId) => {
+            AudioDataProvider.unregisterTrackAnalyzer(trackId);
+          });
+
+          // Stop all tracks immediately
+          musicSetData.nodes.forEach((nodes) => stopTrack(nodes));
+
+          // Disconnect all track nodes and the music set node
+          disconnectMusicSetNodes(musicSetData.musicSetNode, musicSetData.nodes);
+
+          // Remove from loaded music sets
+          context.unloadMusicSet(oldMusicSetId);
+
+          // Clear tracks but keep currentSet to maintain effects during transition
+          context.setTracks([]);
+          context.setPlaying(false);
+        }
+      }
+
+      // Load new music set (this will set currentSet to the new ID)
       await loadMusicSet(musicSetId);
     },
-    [context.currentSet, unloadCurrentMusicSet, loadMusicSet]
+    [context, loadMusicSet]
   );
 
   return {

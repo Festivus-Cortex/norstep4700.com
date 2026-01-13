@@ -25,7 +25,7 @@ import type { EffectsConfig } from "../config/types";
  */
 export abstract class EffectFactory<
   TParams extends BaseEffectParams = BaseEffectParams,
-  TOutput extends EffectOutput = EffectOutput,
+  TOutput extends EffectOutput = EffectOutput
 > {
   /**
    * Unique identifier for this factory type.
@@ -106,12 +106,13 @@ export abstract class EffectFactory<
   }
 
   /**
-   * FIXME PRESTON: CONSIDER CASES THAT MAY NOT USE NUMBERS!
    *
    * Applies intensity scaling to a raw normalized value.
    *
    * Takes a value in the 0-1 range and maps it to an output range,
    * scaling the effective range based on the intensity level.
+   *
+   * TODO PRESTON: CONSIDER CASES THAT MAY NOT USE NUMBERS!
    *
    * @param value - Raw normalized value (0-1)
    * @param intensity - Current intensity level

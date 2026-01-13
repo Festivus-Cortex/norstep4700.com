@@ -4,15 +4,17 @@
  * Singleton class that loads and caches effect system configuration from
  * /effect/config.json. Must be loaded before using any effects by calling
  * loadEffectConfig() in an async context (e.g., useAudioMusicSet.loadMusicSet).
- *
- * TODO: Consider extracting some of this functionality to utility classes if
- * loading other static json files are needed.
  */
 
 import type { EffectSystemConfig } from "./types";
 
 /**
  * Singleton loader for effect system configuration
+ *
+ * TODO: Consider extracting some of this functionality to utility classes if
+ * loading other static json files are needed.
+ *
+ * TODO: Consider if we should load the config after music set is selected
  */
 class EffectConfigLoader {
   private static instance: EffectConfigLoader | null = null;
@@ -123,7 +125,7 @@ export async function initializeEffectConfig(): Promise<void> {
  * Returns the base defaults from config (without intensity overrides or variants).
  */
 export function getEffectDefaults<
-  T extends keyof EffectSystemConfig["effects"],
+  T extends keyof EffectSystemConfig["effects"]
 >(effectType: T): EffectSystemConfig["effects"][T]["defaults"] {
   const config = getEffectConfigSync();
   return config.effects[effectType].defaults;

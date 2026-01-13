@@ -163,11 +163,12 @@ export const AudioControlPanel: React.FC = () => {
    *
    * If not supported or config failed, show an error message instead of audio controls.
    */
-  const { audioError, configError, effectConfigError } = useAudioState();
+  const { audioError, configError, effectConfigError, config } = useAudioState();
   // Show error only if audio initialization was attempted and failed (audioError is set)
   // Don't show error if audio simply hasn't been initialized yet (lazy initialization)
   const hasAudioSupport = audioError === null;
   const hasConfigError = configError !== null || effectConfigError !== null;
+  const hasNoMusicSets = config.musicSets.length === 0;
 
   return (
     <div
@@ -283,19 +284,44 @@ export const AudioControlPanel: React.FC = () => {
                     refreshing the page.
                   </Text>
                 </Flex>
+              ) : hasNoMusicSets ? (
+                <Flex
+                  direction="column"
+                  gap="12"
+                  radius="m"
+                  background="neutral-weak"
+                  border="neutral-medium"
+                  className={styles.errorMessage}
+                >
+                  <Text variant="body-default-m" onBackground="neutral-strong">
+                    <strong>No music sets detected</strong>
+                  </Text>
+                  <Text variant="body-default-s" onBackground="neutral-medium">
+                    Please check the browser console for more details or try
+                    refreshing the page.
+                  </Text>
+                </Flex>
               ) : (
                 <>
                   {/* Master controls */}
-                  <Flex>
-                    <SmartLink href="/work/av-the-game">
-                      Music comes from my game, <i>A.V.</i>
-                    </SmartLink>
-                  </Flex>
-                  <Flex>
-                    <SmartLink href="/work/customizing-portfolio-template-instance">
-                      Learn more about this feature here.
-                    </SmartLink>
-                  </Flex>
+                  <SmartLink
+                    href="/work/av-the-game"
+                    unstyled
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Music comes from:<i>A.V.</i>
+                  </SmartLink>
+                  <SmartLink
+                    href="/work/customizing-portfolio-template-instance"
+                    unstyled
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Learn more about this feature here.
+                  </SmartLink>
+                  <Text variant="body-strong-m" onBackground="danger-weak">
+                    Please note that this feature will play intense flashing
+                    visuals.
+                  </Text>
                   <AudioControls />
 
                   {/* Track controls */}

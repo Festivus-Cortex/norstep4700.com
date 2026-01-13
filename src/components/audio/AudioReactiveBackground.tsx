@@ -13,10 +13,12 @@ import type { BackgroundProps } from "@/once-ui/components/Background";
  * allowing Background to create audio-reactive effects with config values.
  */
 export const AudioReactiveBackground: React.FC<BackgroundProps> = (props) => {
-  const { isEffectConfigInitialized, tracks } = useAudioState();
+  const { isEffectConfigInitialized, currentSet } = useAudioState();
 
-  // Only enable audio-reactive effects when tracks are loaded (music set is loaded)
-  const haveTracksLoaded = tracks.length > 0;
+  // Only enable audio-reactive effects when a music set is currently selected
+  // (regardless of whether it's loading or loaded - this prevents effects from
+  // being disabled during music set transitions)
+  const haveTracksLoaded = currentSet !== null;
 
   // Load effect configs - only when initialized
   const maskConfig = useMemo(() => {
