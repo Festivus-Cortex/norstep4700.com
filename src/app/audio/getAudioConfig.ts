@@ -6,9 +6,6 @@ import { AudioConfig, AudioConfigDefaultSettings } from "./types";
  */
 function getFallbackConfig(): AudioConfig {
   return {
-    // FIXME: The fallback audio config currently includes no music sets. Just
-    // in case the front end ever sees a config without sets then it needs to be
-    // handled gracefully. It could happen if the API call fails
     musicSets: [],
     defaultSettings: getAudioConfigDefaultSettings(),
   };
@@ -68,7 +65,9 @@ export async function getAudioConfig(): Promise<AudioConfig> {
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error("An unknown error occurred while loading audio configuration");
+    throw new Error(
+      "An unknown error occurred while loading audio configuration"
+    );
   }
 }
 
