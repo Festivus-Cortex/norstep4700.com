@@ -158,7 +158,3 @@ export async function resumeAudio(): Promise<void> {
     await audioCtx.resume();
   }
 }
-
-// Legacy exports for backward compatibility
-// These will be removed after migration is complete
-export { audioCtx, audioRoot, audioAnalyzer, audioError };

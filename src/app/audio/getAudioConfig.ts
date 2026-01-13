@@ -62,11 +62,14 @@ export async function getAudioConfig(): Promise<AudioConfig> {
     return config;
   } catch (error) {
     // Re-throw with better context
+    let expandedErrorMessage = "An unknown issue has occurred";
     if (error instanceof Error) {
-      throw error;
+      expandedErrorMessage = error.message;
     }
+
     throw new Error(
-      "An unknown error occurred while loading audio configuration"
+      "An error occurred while loading audio configuration: " +
+        expandedErrorMessage
     );
   }
 }

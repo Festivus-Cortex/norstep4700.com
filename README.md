@@ -65,6 +65,8 @@ are considerations for expanding.
   - Consider adding better configuration controls or limits
   - Performance metrics display
   - Expand effects
+    - Animate more than just the background
+    - Simplify setup of new effects
 
 - Containerize the project
 - More commenting including some templated areas
