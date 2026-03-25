@@ -91,11 +91,11 @@ const about = {
     experiences: [
       {
         company: "MahiGaming",
-        timeframe: "2015 - Present",
+        timeframe: "2015 - 2025",
         role: "Game Developer Group Lead",
         achievements: [
           <>
-            Led development for 14+ games and contributing to 40+ online slot
+            Led development for 20+ games and contributing to 66+ online slot
             games on a global real-money gambling platform with millions of
             active users
           </>,
