@@ -397,7 +397,12 @@ const resume = {
   title: "Resume",
   label: "Resume",
   description: "Resume for Preston Johnson",
-  pdfSource: "docs/Preston-Johnson-Resume.pdf",
+  versions: [
+    { label: "Game Developer", value: "gamedev", file: "docs/preston-johnson-resume-gamedev.pdf" },
+    { label: "Full-Stack / Web", value: "fullstack", file: "docs/preston-johnson-resume-fullstack.pdf" },
+    { label: "Manager / Lead", value: "manager", file: "docs/preston-johnson-resume-manager.pdf" },
+  ],
+  defaultVersion: "gamedev",
 };
 
 const license = {

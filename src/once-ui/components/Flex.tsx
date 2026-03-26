@@ -291,7 +291,10 @@ const Flex = forwardRef<HTMLDivElement, ComponentProps>(
       return undefined;
     };
 
-    const combinedStyle: CSSProperties = {
+    // Build style without undefined values — React 19 treats explicit `undefined`
+    // keys in a style object as a server/client mismatch since the server omits
+    // them from the HTML but the client includes them during reconciliation.
+    const rawStyle = {
       maxWidth: parseDimension(maxWidth, "width"),
       minWidth: parseDimension(minWidth, "width"),
       minHeight: parseDimension(minHeight, "height"),
@@ -302,6 +305,9 @@ const Flex = forwardRef<HTMLDivElement, ComponentProps>(
       textAlign: align,
       ...style,
     };
+    const combinedStyle = Object.fromEntries(
+      Object.entries(rawStyle).filter(([, v]) => v !== undefined)
+    ) as CSSProperties;
 
     return (
       <Component ref={ref} className={classes} style={combinedStyle} {...rest}>
