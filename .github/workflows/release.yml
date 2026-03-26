@@ -35,7 +35,9 @@ jobs:
           ssh-key: ${{ secrets.CI_SSH_KEY }}
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: |
+          yarn --version
+          yarn install --immutable
 
       - name: Increment Package Version
         run: |
