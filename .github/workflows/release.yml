@@ -14,8 +14,12 @@ on:
     types: [closed]
     branches: [main]
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  # Build the latest master, version it, and create a release
+  # Build the latest main branch, version it, and create a release
   build-and-release:
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: self-hosted
@@ -42,11 +46,15 @@ jobs:
       - name: Increment Package Version
         run: |
           cd ${{env.basepath}}
-          yarn version --patch --no-git-tag-version
+          yarn version --immediate patch
           git add package.json
-          git commit -m "chore: bump version [skip ci]"
-          git push origin main
-          git pull origin main
+          if git diff --cached --quiet; then
+            echo "No version change detected; skipping commit/push."
+          else
+            git commit -m "chore: bump version [skip ci]"
+            git push origin main
+            git pull origin main
+          fi
 
       - name: Build Project
         run: yarn build
@@ -70,25 +78,13 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
-          release_name: Release v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{env.releasePath}}/norstep4700-portfolio.zip
-          asset_name: norstep4700-portfolio.zip
-          asset_content_type: application/zip
+          files: ${{env.releasePath}}/norstep4700-portfolio.zip
 
       - name: Clean Release Artifacts
         run: |
