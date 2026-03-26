@@ -91,11 +91,11 @@ const about = {
     experiences: [
       {
         company: "MahiGaming",
-        timeframe: "2015 - Present",
+        timeframe: "2015 - 2025",
         role: "Game Developer Group Lead",
         achievements: [
           <>
-            Led development for 14+ games and contributing to 40+ online slot
+            Led development for 20+ games and contributing to 66+ online slot
             games on a global real-money gambling platform with millions of
             active users
           </>,
@@ -397,7 +397,12 @@ const resume = {
   title: "Resume",
   label: "Resume",
   description: "Resume for Preston Johnson",
-  pdfSource: "docs/Preston-Johnson-Resume.pdf",
+  versions: [
+    { label: "Game Developer", value: "gamedev", file: "docs/preston-johnson-resume-gamedev.pdf" },
+    { label: "Full-Stack / Web", value: "fullstack", file: "docs/preston-johnson-resume-fullstack.pdf" },
+    { label: "Manager / Lead", value: "manager", file: "docs/preston-johnson-resume-manager.pdf" },
+  ],
+  defaultVersion: "gamedev",
 };
 
 const license = {
