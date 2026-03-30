@@ -33,13 +33,15 @@ export default function ResumeViewer({ versions, defaultVersion }: ResumeViewerP
 
   return (
     <Column gap="m">
-      <Row horizontal="center">
-        <SegmentedControl
-          buttons={versions.map((v) => ({ label: v.label, value: v.value }))}
-          defaultSelected={defaultVersion}
-          onToggle={(value) => setSelected(value)}
-        />
-      </Row>
+      {false && (
+        <Row horizontal="center">
+          <SegmentedControl
+            buttons={versions.map((v) => ({ label: v.label, value: v.value }))}
+            defaultSelected={defaultVersion}
+            onToggle={(value) => setSelected(value)}
+          />
+        </Row>
+      )}
       <Column center>
         <Heading variant="display-strong-s">
           <a href={current.file} download>
