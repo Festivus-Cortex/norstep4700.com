@@ -19,6 +19,8 @@ interface CarouselProps extends React.ComponentProps<typeof Flex> {
   aspectRatio?: string;
   sizes?: string;
   revealedByDefault?: boolean;
+  transitionDelay?: number;
+  revealDelay?: number;
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -27,6 +29,8 @@ const Carousel: React.FC<CarouselProps> = ({
   aspectRatio = "16 / 9",
   sizes,
   revealedByDefault = false,
+  transitionDelay = 200,
+  revealDelay = 150,
   ...rest
 }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -61,8 +65,8 @@ const Carousel: React.FC<CarouselProps> = ({
         setTimeout(() => {
           setIsTransitioning(true);
           transitionTimeoutRef.current = undefined;
-        }, 150);
-      }, 200);
+        }, revealDelay);
+      }, transitionDelay);
     }
   };
 

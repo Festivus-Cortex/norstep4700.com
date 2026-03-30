@@ -33,6 +33,9 @@ export default function ResumeViewer({ versions, defaultVersion }: ResumeViewerP
 
   return (
     <Column gap="m">
+      {/* Resume variant selector — intentionally disabled for now.
+          Showing only the Game Dev resume by default. Code preserved here
+          so multi-resume support can be re-enabled in the future if needed. */}
       {false && (
         <Row horizontal="center">
           <SegmentedControl
