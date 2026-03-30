@@ -239,6 +239,7 @@ export const Header = () => {
             <Flex hide="s">
               {display.time && <TimeDisplay timeZone={person.timeZone} />}
             </Flex>
+
           </Flex>
         </Flex>
       </Flex>

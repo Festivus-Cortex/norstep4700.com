@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { Column, Heading, Row, SegmentedControl, Spinner } from "@/once-ui/components";
+import { Column, Row, SegmentedControl, Spinner } from "@/once-ui/components";
 
 // Dynamically import PdfViewer with SSR disabled — react-pdf uses browser-only
 // APIs (canvas, workers) that cause hydration mismatches when server-rendered.
@@ -33,20 +33,19 @@ export default function ResumeViewer({ versions, defaultVersion }: ResumeViewerP
 
   return (
     <Column gap="m">
-      <Row horizontal="center">
-        <SegmentedControl
-          buttons={versions.map((v) => ({ label: v.label, value: v.value }))}
-          defaultSelected={defaultVersion}
-          onToggle={(value) => setSelected(value)}
-        />
-      </Row>
-      <Column center>
-        <Heading variant="display-strong-s">
-          <a href={current.file} download>
-            Download a Copy
-          </a>
-        </Heading>
-      </Column>
+      {/* Resume variant selector — intentionally disabled for now.
+          Showing only the Game Dev resume by default. Code preserved here
+          so multi-resume support can be re-enabled in the future if needed. */}
+      {false && (
+        <Row horizontal="center">
+          <SegmentedControl
+            buttons={versions.map((v) => ({ label: v.label, value: v.value }))}
+            defaultSelected={defaultVersion}
+            onToggle={(value) => setSelected(value)}
+          />
+        </Row>
+      )}
+
       <Column overflow="visible">
         <PdfViewer pdfUrl={current.file} />
       </Column>
