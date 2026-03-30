@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { Column, Heading, Row, SegmentedControl, Spinner } from "@/once-ui/components";
+import { Column, Row, SegmentedControl, Spinner } from "@/once-ui/components";
 
 // Dynamically import PdfViewer with SSR disabled — react-pdf uses browser-only
 // APIs (canvas, workers) that cause hydration mismatches when server-rendered.
@@ -45,13 +45,7 @@ export default function ResumeViewer({ versions, defaultVersion }: ResumeViewerP
           />
         </Row>
       )}
-      <Column center>
-        <Heading variant="display-strong-s">
-          <a href={current.file} download>
-            Download a Copy
-          </a>
-        </Heading>
-      </Column>
+
       <Column overflow="visible">
         <PdfViewer pdfUrl={current.file} />
       </Column>

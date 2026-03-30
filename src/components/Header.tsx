@@ -239,29 +239,24 @@ export const Header = () => {
             <Flex hide="s">
               {display.time && <TimeDisplay timeZone={person.timeZone} />}
             </Flex>
-            {(() => {
-              const defaultFile = resume.versions.find(
-                (v) => v.value === resume.defaultVersion
-              )?.file;
-              return defaultFile ? (
-                <a
-                  href={`/${defaultFile}`}
-                  download
-                  style={{
-                    fontSize: "var(--font-size-body-s)",
-                    color: "var(--neutral-on-background-strong)",
-                    textDecoration: "none",
-                    padding: "4px 10px",
-                    borderRadius: "var(--radius-s)",
-                    border: "1px solid var(--neutral-alpha-medium)",
-                    whiteSpace: "nowrap",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Download Resume
-                </a>
-              ) : null;
-            })()}
+            <Flex hide="s">
+              <a
+                href={`/${(resume.versions.find((v) => v.value === resume.defaultVersion) ?? resume.versions[0]).file}`}
+                download
+                style={{
+                  fontSize: "var(--font-size-body-s)",
+                  color: "var(--neutral-on-background-strong)",
+                  textDecoration: "none",
+                  padding: "4px 10px",
+                  borderRadius: "var(--radius-s)",
+                  border: "1px solid var(--neutral-alpha-medium)",
+                  whiteSpace: "nowrap",
+                  lineHeight: 1.5,
+                }}
+              >
+                Download Resume
+              </a>
+            </Flex>
           </Flex>
         </Flex>
       </Flex>
