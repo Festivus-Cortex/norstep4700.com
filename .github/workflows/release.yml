@@ -39,11 +39,11 @@ jobs:
           ssh-key: ${{ secrets.CI_SSH_KEY }}
 
       - name: Install dependencies
-        env:
-          YARN_ENABLE_HARDENED_MODE: "0"
         run: |
           yarn --version
-          yarn install --immutable
+          # TODO: Remove --no-check-resolutions once stable Next.js releases stop pinning postcss 8.4.31 internally.
+          # The lockfile resolves postcss to the patched version, but Yarn's CI resolution check rejects that override.
+          yarn install --immutable --no-check-resolutions
 
       - name: Increment Package Version
         run: |
