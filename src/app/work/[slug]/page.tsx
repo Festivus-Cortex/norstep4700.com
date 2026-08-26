@@ -32,7 +32,7 @@ export async function generateMetadata(workParams: WorkParams) {
   // For next 15 params must be async awaited.
   const { slug } = await workParams.params;
 
-  let post = getPosts(["src", "app", "work", "projects"]).find(
+  const post = getPosts(["src", "app", "work", "projects"]).find(
     (post) => post.slug === slug
   );
 
@@ -40,7 +40,7 @@ export async function generateMetadata(workParams: WorkParams) {
     return;
   }
 
-  let {
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
@@ -48,7 +48,7 @@ export async function generateMetadata(workParams: WorkParams) {
     image,
     team,
   } = post.metadata;
-  let ogImage = image
+  const ogImage = image
     ? `https://${baseURL}${image}`
     : `https://${baseURL}/og?title=${title}`;
 
@@ -82,7 +82,7 @@ export default async function Project(workParams: WorkParams) {
   // For next 15 params must be async awaited.
   const { slug } = await workParams.params;
 
-  let post = getPosts(["src", "app", "work", "projects"]).find(
+  const post = getPosts(["src", "app", "work", "projects"]).find(
     (post) => post.slug === slug
   );
 

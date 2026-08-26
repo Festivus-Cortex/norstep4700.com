@@ -31,7 +31,7 @@ export async function generateMetadata(blogParams: BlogParams) {
   // For next 15 params must be async awaited.
   const { slug } = await blogParams.params;
 
-  let post = getPosts(["src", "app", "blog", "posts"]).find(
+  const post = getPosts(["src", "app", "blog", "posts"]).find(
     (post) => post.slug === slug
   );
 
@@ -39,7 +39,7 @@ export async function generateMetadata(blogParams: BlogParams) {
     return;
   }
 
-  let {
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
@@ -47,7 +47,7 @@ export async function generateMetadata(blogParams: BlogParams) {
     image,
     team,
   } = post.metadata;
-  let ogImage = image
+  const ogImage = image
     ? `https://${baseURL}${image}`
     : `https://${baseURL}/og?title=${title}`;
 
@@ -79,7 +79,7 @@ export default async function Blog(blogParams: BlogParams) {
   // For next 15 params must be async awaited.
   const { slug } = await (await blogParams).params;
 
-  let post = getPosts(["src", "app", "blog", "posts"]).find(
+  const post = getPosts(["src", "app", "blog", "posts"]).find(
     (post) => post.slug === slug
   );
 
