@@ -26,6 +26,10 @@ import {
 } from "@/app/audio/audio";
 import { registerAnimators } from "@/effect/animators";
 
+// Register before rendering consumers. Stable registration identities make
+// module re-evaluation during development safe.
+registerAnimators();
+
 interface AudioStateContextType extends AudioState {
   config: AudioConfig;
   configError: Error | null;
@@ -74,11 +78,8 @@ export function AudioStateProvider({ children }: { children: ReactNode }) {
       });
   }, []);
 
-  // Register animators and initialize effect config on mount (before any effects are created)
+  // Initialize effect config on mount.
   useEffect(() => {
-    // Explicitly register all animators with the EffectRegistry
-    registerAnimators();
-
     initializeEffectConfig()
       .then(() => {
         setIsEffectConfigInitialized(true);

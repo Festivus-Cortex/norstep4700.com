@@ -59,7 +59,10 @@ export function useEffectRef<TOutput extends EffectOutput>(
 
   /** Store applyValues in a ref to avoid re-subscriptions */
   const applyValuesRef = useRef(applyValues);
-  applyValuesRef.current = applyValues;
+
+  useEffect(() => {
+    applyValuesRef.current = applyValues;
+  }, [applyValues]);
 
   /** Track when element is attached to trigger useEffect re-run */
   const [hasElement, setHasElement] = useState(false);

@@ -7,7 +7,14 @@
  * Handles registration, cleanup, and parameter updates automatically.
  */
 
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { EffectEngine } from "../../effect/core/EffectEngine";
 import { EffectRegistry } from "../../effect/core/EffectRegistry";
 import {
@@ -67,8 +74,8 @@ export function useEffectSubscription<
   /** Track the instance ID for cleanup */
   const instanceIdRef = useRef<string | null>(null);
 
-  /** Track if we're subscribed */
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  /** Expose registration state without reading a mutable ref during render. */
+  const [instanceId, setInstanceId] = useState<string | null>(null);
 
   // Create and register effect instance on mount
   useEffect(() => {
@@ -103,7 +110,7 @@ export function useEffectSubscription<
           : factory.create(id, params);
         EffectEngine.registerEffect(instance);
         instanceIdRef.current = id;
-        setIsSubscribed(true);
+        setInstanceId(id);
       } catch (error) {
         console.error(
           "[useEffectSubscription] Failed to initialize effect:",
@@ -120,7 +127,7 @@ export function useEffectSubscription<
       if (instanceIdRef.current) {
         EffectEngine.unregisterEffect(instanceIdRef.current);
         instanceIdRef.current = null;
-        setIsSubscribed(false);
+        setInstanceId(null);
       }
     };
     // Note: params intentionally excluded to avoid re-creating the effect
@@ -164,24 +171,24 @@ export function useEffectSubscription<
     if (instanceIdRef.current) {
       EffectEngine.unregisterEffect(instanceIdRef.current);
       instanceIdRef.current = null;
-      setIsSubscribed(false);
+      setInstanceId(null);
     }
   }, []);
 
   // Return subscription or null if not subscribed
   const subscription = useMemo<EffectSubscription<TOutput> | null>(() => {
-    if (!isSubscribed || !instanceIdRef.current) {
+    if (!instanceId) {
       return null;
     }
 
     return {
-      id: instanceIdRef.current,
+      id: instanceId,
       getCurrentValues,
       setIntensity,
       updateParams,
       unsubscribe,
     };
-  }, [isSubscribed, getCurrentValues, setIntensity, updateParams, unsubscribe]);
+  }, [instanceId, getCurrentValues, setIntensity, updateParams, unsubscribe]);
 
   return subscription;
 }
@@ -198,19 +205,16 @@ export function useEffectSubscription<
 export function useEffectValues<TOutput extends EffectOutput>(
   effectId: string
 ): TOutput | null {
-  const [values, setValues] = useState<TOutput | null>(null);
-
-  useEffect(() => {
-    // Get initial value
-    setValues(EffectEngine.getEffectOutput<TOutput>(effectId));
-
-    // Subscribe to updates
-    const unsubscribe = EffectEngine.subscribe(effectId, () => {
-      setValues(EffectEngine.getEffectOutput<TOutput>(effectId));
-    });
-
-    return unsubscribe;
+  const subscribe = useCallback(
+    (onStoreChange: () => void) =>
+      EffectEngine.subscribe(effectId, onStoreChange),
+    [effectId]
+  );
+  const getSnapshot = useCallback(() => {
+    return EffectEngine.getEffectOutput<TOutput>(effectId);
   }, [effectId]);
+  const getServerSnapshot = useCallback((): TOutput | null => null, []);
 
-  return values;
+  // React owns snapshot timing, avoiding an extra synchronous render after mount.
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

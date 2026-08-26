@@ -66,7 +66,17 @@ function getMDXData(dir: string) {
   });
 }
 
-export function getPosts(customPath = ["", "", "", ""]) {
-  const postsDir = path.join(process.cwd(), ...customPath);
-  return getMDXData(postsDir);
+export type PostCollection = "blog" | "work";
+
+export function getPosts(collection: PostCollection) {
+  switch (collection) {
+    case "blog":
+      return getMDXData(
+        path.join(process.cwd(), "src", "app", "blog", "posts")
+      );
+    case "work":
+      return getMDXData(
+        path.join(process.cwd(), "src", "app", "work", "projects")
+      );
+  }
 }

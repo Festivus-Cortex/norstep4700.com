@@ -289,19 +289,14 @@ export default function About() {
                             key={index}
                             border="neutral-medium"
                             radius="m"
-                            //@ts-ignore
                             minWidth={image.width}
-                            //@ts-ignore
                             height={image.height}
                           >
                             <SmartImage
                               enlarge
                               radius="m"
-                              //@ts-ignore
                               sizes={image.width.toString()}
-                              //@ts-ignore
                               alt={image.alt}
-                              //@ts-ignore
                               src={image.src}
                             />
                           </Flex>
@@ -371,19 +366,19 @@ export default function About() {
                             key={index}
                             border="neutral-medium"
                             radius="m"
-                            //@ts-ignore
+                            // @ts-expect-error -- Once UI accepts these responsive image values at runtime.
                             minWidth={image.width}
-                            //@ts-ignore
+                            // @ts-expect-error -- Once UI accepts these responsive image values at runtime.
                             height={image.height}
                           >
                             <SmartImage
                               enlarge
                               radius="m"
-                              //@ts-ignore
+                              // @ts-expect-error -- Once UI accepts these responsive image values at runtime.
                               sizes={image.width.toString()}
-                              //@ts-ignore
+                              // @ts-expect-error -- Once UI accepts these responsive image values at runtime.
                               alt={image.alt}
-                              //@ts-ignore
+                              // @ts-expect-error -- Once UI accepts these responsive image values at runtime.
                               src={image.src}
                             />
                           </Flex>

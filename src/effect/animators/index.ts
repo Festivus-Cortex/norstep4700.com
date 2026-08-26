@@ -13,10 +13,29 @@ import { GradientScaleAnimatorFactory } from "./gradientScaleAnimator/GradientSc
 import { GlitchIntensityAnimatorFactory } from "./glitchIntensityAnimator/GlitchIntensityAnimatorFactory";
 import { GradientPositionAnimatorFactory } from "./gradientPositionAnimator/GradientPositionAnimatorFactory";
 
+const animatorFactories = {
+  maskRadius: new MaskRadiusAnimatorFactory(),
+  gradientTilt: new GradientTiltAnimatorFactory(),
+  elementOpacity: new ElementOpacityAnimatorFactory(),
+  gradientScale: new GradientScaleAnimatorFactory(),
+  glitchIntensity: new GlitchIntensityAnimatorFactory(),
+  gradientPosition: new GradientPositionAnimatorFactory(),
+};
+
+// Global symbols retain logical ownership across Next.js module replacement,
+// while the module-scoped instances handle repeated application initialization.
+const animatorRegistrationKeys = {
+  maskRadius: Symbol.for("norstep.effect.animator.maskRadius"),
+  gradientTilt: Symbol.for("norstep.effect.animator.gradientTilt"),
+  elementOpacity: Symbol.for("norstep.effect.animator.elementOpacity"),
+  gradientScale: Symbol.for("norstep.effect.animator.gradientScale"),
+  glitchIntensity: Symbol.for("norstep.effect.animator.glitchIntensity"),
+  gradientPosition: Symbol.for("norstep.effect.animator.gradientPosition"),
+};
+
 /**
  * Registers all animator factories with the EffectRegistry.
- * This function should be called once during application initialization,
- * before any effects are created.
+ * Repeated calls are safe, including calls made after a development hot reload.
  *
  * @example
  * ```typescript
@@ -25,12 +44,30 @@ import { GradientPositionAnimatorFactory } from "./gradientPositionAnimator/Grad
  * ```
  */
 export function registerAnimators(): void {
-  EffectRegistry.register(new MaskRadiusAnimatorFactory());
-  EffectRegistry.register(new GradientTiltAnimatorFactory());
-  EffectRegistry.register(new ElementOpacityAnimatorFactory());
-  EffectRegistry.register(new GradientScaleAnimatorFactory());
-  EffectRegistry.register(new GlitchIntensityAnimatorFactory());
-  EffectRegistry.register(new GradientPositionAnimatorFactory());
+  EffectRegistry.register(
+    animatorFactories.maskRadius,
+    animatorRegistrationKeys.maskRadius
+  );
+  EffectRegistry.register(
+    animatorFactories.gradientTilt,
+    animatorRegistrationKeys.gradientTilt
+  );
+  EffectRegistry.register(
+    animatorFactories.elementOpacity,
+    animatorRegistrationKeys.elementOpacity
+  );
+  EffectRegistry.register(
+    animatorFactories.gradientScale,
+    animatorRegistrationKeys.gradientScale
+  );
+  EffectRegistry.register(
+    animatorFactories.glitchIntensity,
+    animatorRegistrationKeys.glitchIntensity
+  );
+  EffectRegistry.register(
+    animatorFactories.gradientPosition,
+    animatorRegistrationKeys.gradientPosition
+  );
 }
 
 // Re-export factory types and params for consumer convenience

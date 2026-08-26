@@ -21,7 +21,7 @@ interface BlogParams {
 }
 
 export function generateStaticParams(): { slug: string }[] {
-  const posts = getPosts(["src", "app", "blog", "posts"]);
+  const posts = getPosts("blog");
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -31,15 +31,13 @@ export async function generateMetadata(blogParams: BlogParams) {
   // For next 15 params must be async awaited.
   const { slug } = await blogParams.params;
 
-  let post = getPosts(["src", "app", "blog", "posts"]).find(
-    (post) => post.slug === slug
-  );
+  const post = getPosts("blog").find((post) => post.slug === slug);
 
   if (!post) {
     return;
   }
 
-  let {
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
@@ -47,7 +45,7 @@ export async function generateMetadata(blogParams: BlogParams) {
     image,
     team,
   } = post.metadata;
-  let ogImage = image
+  const ogImage = image
     ? `https://${baseURL}${image}`
     : `https://${baseURL}/og?title=${title}`;
 
@@ -79,9 +77,7 @@ export default async function Blog(blogParams: BlogParams) {
   // For next 15 params must be async awaited.
   const { slug } = await (await blogParams).params;
 
-  let post = getPosts(["src", "app", "blog", "posts"]).find(
-    (post) => post.slug === slug
-  );
+  const post = getPosts("blog").find((post) => post.slug === slug);
 
   if (!post) {
     notFound();

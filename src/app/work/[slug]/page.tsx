@@ -22,7 +22,7 @@ interface WorkParams {
 }
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  const posts = getPosts(["src", "app", "work", "projects"]);
+  const posts = getPosts("work");
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -32,15 +32,13 @@ export async function generateMetadata(workParams: WorkParams) {
   // For next 15 params must be async awaited.
   const { slug } = await workParams.params;
 
-  let post = getPosts(["src", "app", "work", "projects"]).find(
-    (post) => post.slug === slug
-  );
+  const post = getPosts("work").find((post) => post.slug === slug);
 
   if (!post) {
     return;
   }
 
-  let {
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
@@ -48,7 +46,7 @@ export async function generateMetadata(workParams: WorkParams) {
     image,
     team,
   } = post.metadata;
-  let ogImage = image
+  const ogImage = image
     ? `https://${baseURL}${image}`
     : `https://${baseURL}/og?title=${title}`;
 
@@ -82,9 +80,7 @@ export default async function Project(workParams: WorkParams) {
   // For next 15 params must be async awaited.
   const { slug } = await workParams.params;
 
-  let post = getPosts(["src", "app", "work", "projects"]).find(
-    (post) => post.slug === slug
-  );
+  const post = getPosts("work").find((post) => post.slug === slug);
 
   if (!post) {
     notFound();

@@ -25,7 +25,7 @@ interface ProjectsProps {
  * @throws Error if both range and byTitle are provided, or if a specified title is not found
  */
 export function Projects({ range, byTitle }: ProjectsProps) {
-  let allProjects = getPosts(["src", "app", "work", "projects"]);
+  const allProjects = getPosts("work");
 
   // Check if both range and byTitle are provided. If so, error.
   // Otherwise fetch the appropriate project(s).
