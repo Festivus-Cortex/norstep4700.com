@@ -1,28 +1,32 @@
 /**
  * Registry for dynamic effect factory registration.
  *
- * Factories register themselves at module load time, enabling:
+ * Factories are registered during application initialization, enabling:
  * - Dynamic discovery of available effects
  * - Tree-shaking of unused factories
  * - Runtime factory lookup by type string
  */
 
-import { EffectFactory } from "./EffectFactory";
-import { BaseEffectParams, EffectOutput } from "./types";
+import type { EffectFactory } from "./EffectFactory";
+import type { BaseEffectParams, EffectOutput } from "./types";
 
 type RegisteredFactory = EffectFactory<BaseEffectParams, EffectOutput>;
+
+interface RegisteredFactoryEntry {
+  factory: RegisteredFactory;
+  registrationKey?: symbol;
+}
 
 /**
  * EffectRegistry singleton implementation.
  *
- * Maintains a map of factory type strings to factory instances.
- * Factories self-register when their module is imported.
+ * Maintains a map of factory type strings to factory registrations.
  */
 class EffectRegistryImpl {
   private static instance: EffectRegistryImpl | null = null;
 
-  /** Map of factory type to factory instance */
-  private factories: Map<string, RegisteredFactory> = new Map();
+  /** Map of factory type to factory registration */
+  private factories: Map<string, RegisteredFactoryEntry> = new Map();
 
   private constructor() {}
 
@@ -35,21 +39,41 @@ class EffectRegistryImpl {
 
   /**
    * Registers a factory with the registry.
-   * Called by factories at module load time.
-   *
    * @param factory - The factory to register
+   * @param registrationKey - Stable ownership identity. A registration with a
+   * matching key is idempotent. A refreshed instance replaces the old instance;
+   * a different key claiming the same factory type is treated as a conflict.
+   * Without a key, only re-registering the same instance is idempotent.
    */
   register<TParams extends BaseEffectParams, TOutput extends EffectOutput>(
-    factory: EffectFactory<TParams, TOutput>
+    factory: EffectFactory<TParams, TOutput>,
+    registrationKey?: symbol
   ): void {
-    if (this.factories.has(factory.type)) {
+    const existing = this.factories.get(factory.type);
+
+    if (existing) {
+      const isSameRegistration =
+        existing.factory === factory ||
+        (registrationKey !== undefined &&
+          existing.registrationKey === registrationKey);
+
+      if (isSameRegistration) {
+        // Refresh the instance after a hot reload while retaining ownership of
+        // this factory type.
+        existing.factory = factory as RegisteredFactory;
+        return;
+      }
+
       console.warn(
         `[EffectRegistry] Factory type "${factory.type}" already registered. Skipping duplicate.`
       );
       return;
     }
 
-    this.factories.set(factory.type, factory as RegisteredFactory);
+    this.factories.set(factory.type, {
+      factory: factory as RegisteredFactory,
+      registrationKey,
+    });
   }
 
   /**
@@ -61,7 +85,7 @@ class EffectRegistryImpl {
   getAnimator<TParams extends BaseEffectParams, TOutput extends EffectOutput>(
     type: string
   ): EffectFactory<TParams, TOutput> | null {
-    const factory = this.factories.get(type);
+    const factory = this.factories.get(type)?.factory;
     return (factory as EffectFactory<TParams, TOutput>) ?? null;
   }
 
@@ -86,7 +110,9 @@ class EffectRegistryImpl {
    * Useful for debugging or building UIs that list available effects.
    */
   getAllAnimators(): Map<string, RegisteredFactory> {
-    return new Map(this.factories);
+    return new Map(
+      Array.from(this.factories, ([type, entry]) => [type, entry.factory])
+    );
   }
 
   /**
@@ -114,8 +140,9 @@ export const EffectRegistry = {
   getInstance: () => EffectRegistryImpl.getInstance(),
 
   register: <TParams extends BaseEffectParams, TOutput extends EffectOutput>(
-    factory: EffectFactory<TParams, TOutput>
-  ) => EffectRegistryImpl.getInstance().register(factory),
+    factory: EffectFactory<TParams, TOutput>,
+    registrationKey?: symbol
+  ) => EffectRegistryImpl.getInstance().register(factory, registrationKey),
 
   getAnimator: <TParams extends BaseEffectParams, TOutput extends EffectOutput>(
     type: string
