@@ -19,7 +19,7 @@ interface PostsProps {
  * @param thumbnail - Whether to display post thumbnails. Defaults to false.
  */
 export function Posts({ range, columns = "1", thumbnail = false }: PostsProps) {
-  const allBlogs = getPosts(["src", "app", "blog", "posts"]);
+  const allBlogs = getPosts("blog");
 
   const sortedBlogs = allBlogs.sort((a, b) => {
     return (
