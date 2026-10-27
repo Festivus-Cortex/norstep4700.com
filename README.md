@@ -6,7 +6,22 @@ Personal portfolio website for Preston Johnson. [norstep4700.com](https://norste
 
 ## Building from Scratch
 
-This project uses `yarn` as a package manager but swapping in `npm` should work if desired.
+Use Node.js **24.22.1 or a newer patched 24.x release**. The October 2026
+security baseline is pinned in `.nvmrc`; CI reads that file and `package.json`
+limits supported runtimes to the tested Node 24 LTS line. Keep those versions
+aligned when raising the security baseline. Node 20 is end-of-life.
+
+```sh
+nvm install
+nvm use
+corepack enable
+yarn install --immutable
+```
+
+This project uses the Yarn version pinned by `packageManager` in `package.json`.
+Enable the Corepack bundled with the official Node 24 distribution as shown above.
+The self-hosted GitHub Actions runner must be version **2.327.1 or newer** to
+run `actions/setup-node@v6`.
 
 `yarn dev` will run the site in development mode with hot module swapping.
 `yarn build` will output the production site content.
@@ -49,7 +64,25 @@ The site is designed to gracefully degrade if these APIs are unavailable:
 
 [![Release Build](https://github.com/Festivus-Cortex/norstep4700.com/actions/workflows/release.yml/badge.svg)](https://github.com/Festivus-Cortex/norstep4700.com/actions/workflows/release.yml)
 
-Releases are published on GitHub via CI whenever a pull request to the `main` branch is approved. This is built in standalone mode with `next.js` so all dependencies are rolled into the release except `node.js`. On a machine with `node.js` installed, running `node {PATH_TO_RELEASE}/server.js` will start the server on port 3000.
+Releases are published on GitHub via CI whenever a pull request to the `main` branch is merged. This is built in standalone mode with `next.js` so all dependencies are rolled into the release except `node.js`. On a machine with the patched Node 24 runtime installed, running
+`node {PATH_TO_RELEASE}/server.js` will start the server on port 3000.
+
+**Upgrading CI or deploying the ZIP does not upgrade production Node.js.** The
+separate n8n deployment/process-manager configuration must select Node 24.22.1
+or a newer patched 24.x release, then restart the application with that binary.
+Verify the running process's executable and version (not just an interactive
+shell's `node --version`), and check the homepage, `/api/audio-config`, and
+`/api/check-auth` after the restart. No production runtime upgrade is performed
+by this repository change.
+
+The [October 21, 2026 Node.js security release](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases)
+fixes high-severity DNS/TLS issues and a Brotli decoder memory-corruption issue,
+among others. Exposure depends on the actual runtime and reachable code paths;
+the source version requirement alone does not prove production is patched.
+
+For rollback, retain the previous application release and process-manager
+configuration. Prefer running the previous application on the patched Node 24
+runtime; reverting to an affected Node version reintroduces the security risk.
 
 For production use, using a proxy like `nginx` to host the incoming traffic of `https` is recommended. Using `pm2` to help manage the node process is helpful also.
 
